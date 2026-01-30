@@ -1,0 +1,6 @@
+# 아래 profile 활성화는 기본적으로 dev를 유지합니다.
+spring:
+  application:
+    name: backend
+  profiles:
+    active: dev

@@ -1,0 +1,46 @@
+# Standard .gitignore for Java/Gradle/Spring Boot projects
+
+### Build ###
+.gradle/
+build/
+out/
+!gradle/wrapper/gradle-wrapper.jar
+
+### IDE ###
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# VS Code
+.vscode/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+
+### OS ###
+.DS_Store
+Thumbs.db
+
+### Logs ###
+logs/
+*.log
+
+### Secrets & Credentials ###
+# Production configuration
+application-prod.yaml
+application-prod.yml
+
+# Secret configuration (generic convention)
+application-secret.yaml
+application-secret.yml
+
+# Keys and Certificates
+*.jks
+*.p12
+*.key
+*.pem
