@@ -44,3 +44,6 @@ application-secret.yml
 *.p12
 *.key
 *.pem
+
+# local environment variables
+**/.env
