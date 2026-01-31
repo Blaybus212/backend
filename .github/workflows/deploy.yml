@@ -79,28 +79,30 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           envs: DOCKER_USERNAME,DB_USERNAME,DB_PASSWORD,POSTGRES_DB
           script: |
-            # 1. 환경 변수 업데이트 및 확인
-            # (민감한 변수는 envs로 전달되지만, docker-compose가 인식할 수 있도록 
-            #  현재 쉘 세션에 export 하거나 .env 파일에 기록해야 함)
-            # 영구 저장이 필요하면 .env 파일 사용이 안전하지만, 
-            # 'docker-compose up' 실행에는 현재 세션 export로 충분함
+            # 0. 에러 발생 시 즉시 중단
+            set -e
 
-            export SPRING_PROFILES_ACTIVE=prod
-            export DB_USERNAME=$DB_USERNAME
-            export DB_PASSWORD=$DB_PASSWORD
-            export POSTGRES_DB=$POSTGRES_DB
+            # 1. 환경 변수 설정 (.env 파일 생성)
+            # sudo 실행 시 환경 변수가 유지되지 않을 수 있으므로 .env 파일로 주입
+            echo "Creating .env file..."
+            echo "SPRING_PROFILES_ACTIVE=prod" > .env
+            echo "DB_USERNAME=$DB_USERNAME" >> .env
+            echo "DB_PASSWORD=$DB_PASSWORD" >> .env
+            echo "POSTGRES_DB=$POSTGRES_DB" >> .env
+            echo "DOCKER_USERNAME=$DOCKER_USERNAME" >> .env
 
             # 2. 최신 도커 이미지 다운로드(pull)
             echo "Pulling latest image..."
             sudo docker pull $DOCKER_USERNAME/blaybus-backend:latest
 
             # 3. 서비스 재시작
-            # (이전 단계에서 docker-compose.yml이 ~/ 경로로 자동 복사됨)
             echo "Restarting services..."
 
-            sudo docker-compose -f ~/docker-compose.yml down
-            sudo docker-compose -f ~/docker-compose.yml pull web-server
-            sudo docker-compose -f ~/docker-compose.yml up -d --force-recreate
+            # docker compose v2 사용
+            # .env 파일은 현재 디렉토리(~/)에 생성되었으므로 자동 인식됨
+            sudo docker compose -f ~/docker-compose.yml down
+            sudo docker compose -f ~/docker-compose.yml pull
+            sudo docker compose -f ~/docker-compose.yml up -d --force-recreate
 
             # 4. 정리 (미사용 이미지 삭제)
             sudo docker image prune -f
