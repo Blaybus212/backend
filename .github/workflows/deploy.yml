@@ -45,6 +45,9 @@ jobs:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
         with:
@@ -66,7 +69,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.3
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          # docker-compose 실행 시 필요한 DB 자격 증명 전달
+          # docker-compose 실행 시 필요한 DB 정보 전달
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
