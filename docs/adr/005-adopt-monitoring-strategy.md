@@ -68,4 +68,4 @@ Accepted
 
 - **Docker Compose**: `prometheus` 및 `grafana` 서비스 추가 및 볼륨 마운트 설정.
 - **Grafana Dashboard**: 'Spring Boot Statistics (Universal)' 대시보드 JSON을 커스터마이징(한글 툴팁 추가, 호환성 수정)하여 적용.
-- **Security**: Spring Security 설정에서 Actuator 엔드포인트 허용 (`.requestMatchers("/actuator/**").permitAll()`).
+- **Security**: Spring Security 설정에서 Actuator 엔드포인트 허용 (`.requestMatchers("/actuator/prometheus").permitAll()`).
