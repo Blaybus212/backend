@@ -1,5 +1,6 @@
 services:
   web-server:
+    image: ${DOCKER_USERNAME}/blaybus-backend:latest
     build:
       context: .
       dockerfile: Dockerfile.app
@@ -16,9 +17,7 @@ services:
     restart: always
 
   db:
-    build:
-      context: .
-      dockerfile: Dockerfile.db
+    image: postgres:16-alpine
     ports:
       - "5432:5432"
     environment:

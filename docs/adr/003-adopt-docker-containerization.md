@@ -32,8 +32,8 @@ Google Cloud Platform (GCP) 등 클라우드 환경 배포 시 환경 설정 비
     - Build Stage(Gradle)와 Runtime Stage(Slim JDK)를 분리하여 최종 이미지 용량을 최적화하고 빌드 도구 의존성을 제거합니다.
 
 2.  **Dockerfile의 역할 분리**:
-    - 단일 Dockerfile 대신 `Dockerfile.app` (애플리케이션 전용), `Dockerfile.db` (데이터베이스 전용) 등으로 명시적으로 파일명을 분리하여 관리합니다.
-    - 이는 추후 각 컨테이너 별 설정이 복잡해질 경우를 대비하고 단일 책임 원칙을 준수하기 위함입니다.
+    - 애플리케이션은 `Dockerfile.app`으로 명시하여 관리합니다.
+    - 데이터베이스는 별도의 `Dockerfile`을 생성하지 않고, `docker-compose.yml`에서 공식 이미지(`postgres:16-alpine`)를 직접 사용하여 관리 복잡도를 낮춥니다.
 
 3.  **환경 변수를 통한 기밀 정보 관리**:
     - DB 비밀번호 등 민감 정보는 Dockerfile이나 소스 코드에 하드코딩하지 않습니다.
@@ -73,4 +73,4 @@ Google Cloud Platform (GCP) 등 클라우드 환경 배포 시 환경 설정 비
 
 - Google Cloud 등 배포 환경에서 `docker-compose` 또는 이에 준하는 컨테이너 실행 방식을 사용할 준비가 되었습니다.
 - 로컬 개발 시 개별 환경에 따라서 환경변수 `DB_USERNAME`, `DB_PASSWORD` 등을 설정해야 합니다. (vscode 기준 `${projectRoot}/.env`)
-- 모든 인프라 변경 사항은 Docker 관련 설정 코드(`Dockerfile.*`, `docker-compose.yml`)로 관리(IaC)됩니다.
+- 모든 인프라 변경 사항은 Docker 관련 설정 코드(`Dockerfile.app`, `docker-compose.yml`)로 관리(IaC)됩니다.
