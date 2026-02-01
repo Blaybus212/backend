@@ -44,7 +44,8 @@ GCP VM 인스턴스는 이미 존재하며, 보안과 편의성을 고려한 접
     - 이 방식은 VM에 별도의 에이전트(예: Kubernetes Kubelet 등) 설치가 필요 없어 구조가 단순하고 관리가 용이합니다.
 
 5.  **Secret 주입 워크플로우 (Secret Injection Workflow)**
-    - 보안 정보(Key, Password, Token 등)는 저장소에 커밋되지 않고, 실행 시점에 메모리(Env)를 통해 안전하게 전달됩니다.
+    - 보안 정보(Key, Password, Token 등)는 저장소에 커밋되지 않고, 배포 스크립트 실행 시점에 **`.env` 파일을 생성**하여 주입합니다.
+    - 이는 `sudo` 권한으로 Docker 명령 실행 시 쉘 세션의 환경변수가 유지되지 않는 문제를 해결하기 위함입니다.
 
 ```mermaid
 sequenceDiagram
@@ -62,8 +63,8 @@ sequenceDiagram
     Runner->>VM: SSH 연결 (SSH_PRIVATE_KEY 사용)
 
     Note over VM, Docker: 3. 런타임 주입 (Runtime Injection)
-    VM->>VM: 쉘 세션에 환경변수 Export (DB_PASSWORD, ...)
-    VM->>Docker: docker-compose up (컨테이너에 환경변수 전달)
+    VM->>VM: .env 파일 생성 (DB_PASSWORD 등 기록)
+    VM->>Docker: docker-compose up (자동으로 .env 참조)
     Docker-->>VM: 시크릿이 적용된 상태로 서비스 시작
 ```
 
