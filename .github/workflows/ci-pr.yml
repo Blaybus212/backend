@@ -24,9 +24,9 @@ jobs:
       - name: Test with Gradle
         run: ./gradlew test --no-daemon
         env:
-          JWT_SECRET_KEY: test-secret-key-for-ci-only
+          JWT_SECRET_KEY: test-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-only
 
       - name: Build with Gradle
         run: ./gradlew bootJar --no-daemon
         env:
-          JWT_SECRET_KEY: test-secret-key-for-ci-only
+          JWT_SECRET_KEY: test-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-onlytest-secret-key-for-ci-only

@@ -4,4 +4,6 @@
 "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
 
 <suppressions>
+	<!-- Spotless Eclipse formatter uses different line-wrapping indentation than Checkstyle expects -->
+	<suppress checks="Indentation" files=".*\.java"/>
 </suppressions>

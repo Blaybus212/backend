@@ -198,7 +198,7 @@ The following rules in the Naver coding convention cannot be checked by this con
 		</module>
 		<module name="RightCurly">
 			<property name="option" value="alone"/>
-			<property name="tokens" value="CLASS_DEF, METHOD_DEF, CTOR_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT, INSTANCE_INIT"/>
+			<property name="tokens" value="CLASS_DEF, METHOD_DEF, LITERAL_FOR, LITERAL_WHILE, STATIC_INIT, INSTANCE_INIT"/>
 			<message key="line.alone"
 					 value="[braces-knr-style] ''{0}'' at column {1} should be alone on a line."/>
 			<message key="line.break.before"
@@ -243,6 +243,7 @@ The following rules in the Naver coding convention cannot be checked by this con
 			<property name="throwsIndent" value="4"/>
 			<property name="lineWrappingIndentation" value="4"/>
 			<property name="arrayInitIndent" value="4"/>
+			<property name="forceStrictCondition" value="false"/>
 		</module>
 
 		<!-- [line-wrapping-position] -->
