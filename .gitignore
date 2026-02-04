@@ -31,19 +31,15 @@ logs/
 *.log
 
 ### Secrets & Credentials ###
-# Production configuration
-application-prod.yaml
-application-prod.yml
+# Production configuration (환경별 설정만 포함, 기밀 정보 없음)
+# application-prod.yml은 더 이상 gitignore하지 않음
 
-# Secret configuration (generic convention)
-application-secret.yaml
-application-secret.yml
+# local environment variables
+**/.env
+!.env.gpg  # 암호화된 .env 파일은 커밋 허용
 
 # Keys and Certificates
 *.jks
 *.p12
 *.key
 *.pem
-
-# local environment variables
-**/.env
