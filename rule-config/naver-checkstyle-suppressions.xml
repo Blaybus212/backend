@@ -5,5 +5,5 @@
 
 <suppressions>
 	<!-- Spotless Eclipse formatter uses different line-wrapping indentation than Checkstyle expects -->
-	<suppress checks="Indentation" files=".*AuthController\.java" lines="22"/>
+	<suppress checks="Indentation" files=".*\.java"/>
 </suppressions>
