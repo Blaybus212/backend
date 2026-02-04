@@ -1,0 +1,4 @@
+app:
+  cors:
+    # 환경 변수로 주입
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}

@@ -20,8 +20,13 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      # CI 환경에서는 테스트를 위한 환경 변수만 설정
       - name: Test with Gradle
         run: ./gradlew test --no-daemon
+        env:
+          JWT_SECRET_KEY: test-secret-key-for-ci-only
 
       - name: Build with Gradle
         run: ./gradlew bootJar --no-daemon
+        env:
+          JWT_SECRET_KEY: test-secret-key-for-ci-only
