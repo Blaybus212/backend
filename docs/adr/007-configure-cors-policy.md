@@ -74,3 +74,4 @@ Accepted
 
 - 앞으로 프론트엔드 배포 URL이 생성되거나 변경될 때, 백엔드 담당자에게 해당 URL 등록을 요청해야 합니다.
 - CORS 관련 에러 발생 시, 우선적으로 `application-*.yml` 파일의 `allowed-origins` 목록을 확인해야 합니다.
+- CORS 설정이 `application-*.yml` 파일에 생성되었습니다. 이 파일이 없을 경우 test가 실패합니다.
