@@ -3,7 +3,6 @@ spring:
     name: backend
   profiles:
     active: dev
-    include: secret
 
 server:
   tomcat:
