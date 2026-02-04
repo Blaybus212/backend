@@ -24,3 +24,7 @@ logging:
       file-name-pattern: logs/archived/backend-dev-%d{yyyy-MM-dd}.%i.log
       max-file-size: 10MB
       max-history: 30 # 30일이 지난 로그는 자동 삭제
+
+app:
+  cors:
+    allowed-origins: http://localhost:3000
