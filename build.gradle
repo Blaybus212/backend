@@ -27,27 +27,51 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-restclient'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// Core Web & REST
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	developmentOnly 'me.paulschwarz:spring-dotenv:4.0.0'
 	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	
+	// Data Access
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly 'com.h2database:h2'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	
+	// REST Client
+	implementation 'org.springframework.boot:spring-boot-starter-restclient'
+	
+	// Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	
+	// JWT
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5'
+	
+	// Monitoring
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+	
+	// Tracing
+	implementation 'org.springframework.boot:spring-boot-micrometer-tracing-brave'
+
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-data-jdbc-test'
-	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
-	testImplementation 'org.springframework.boot:spring-boot-starter-restclient-test'
-	testImplementation 'org.springframework.boot:spring-boot-starter-security-test'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	
+	// Development Tools
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	
+	// Testing
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.springframework.security:spring-security-test'
 }
+
 
 
 tasks.named('test') {
