@@ -3,6 +3,8 @@ spring:
     name: backend
   profiles:
     active: dev
+    include: secret
+
 server:
   tomcat:
     mbeanregistry:
@@ -13,3 +15,12 @@ management:
     web:
       exposure:
         include: prometheus, health, info
+  tracing:
+    sampling:
+      probability: 1.0
+    export:
+      enabled: true
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
