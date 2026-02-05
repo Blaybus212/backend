@@ -3,6 +3,8 @@ spring:
     name: backend
   profiles:
     active: dev
+  jpa:
+    show-sql: true
 
 server:
   tomcat:

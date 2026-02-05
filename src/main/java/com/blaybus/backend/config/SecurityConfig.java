@@ -2,7 +2,6 @@ package com.blaybus.backend.config;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -23,9 +22,6 @@ import com.blaybus.backend.security.JwtTokenProvider;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
-	@Value("${app.cors.allowed-origins}")
-	private List<String> allowedOrigins;
 
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http, JwtTokenProvider jwtTokenProvider) throws Exception {
@@ -56,7 +52,7 @@ public class SecurityConfig {
 
 		// 일반 API용 CORS 설정
 		CorsConfiguration defaultCors = new CorsConfiguration();
-		defaultCors.setAllowedOrigins(allowedOrigins);
+		defaultCors.setAllowedOriginPatterns(List.of("*"));
 		defaultCors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
 		defaultCors.setAllowedHeaders(List.of("*"));
 		defaultCors.setAllowCredentials(true);
