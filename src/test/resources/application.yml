@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+logging:
+  file:
+    name: logs/backend-dev.log
+  logback:
+    rollingpolicy:
+      # 전략: 날짜별(일 단위)로 나누되, 파일 하나가 10MB를 넘으면 분할(Indexing)하여 저장
+      # 보관 위치: logs/archived/ 폴더에 날짜별로 정리되어 깔끔하게 관리됨
+      file-name-pattern: logs/archived/backend-dev-%d{yyyy-MM-dd}.%i.log
+      max-file-size: 10MB
+      max-history: 30 # 30일이 지난 로그는 자동 삭제
+
+app:
+  cors:
+    allowed-origins: http://localhost:3000
+
+jwt:
+  secret-key: test-secret-key-for-test-onlytest-secret-key-for-test-onlytest-secret-key-for-test-onlytest-secret-key-for-test-onlytest-secret-key-for-test-only
+  expiration-time: 3600000
