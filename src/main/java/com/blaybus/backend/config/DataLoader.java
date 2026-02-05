@@ -29,7 +29,7 @@ public class DataLoader implements ApplicationRunner {
 		log.info("모든 Bean이 load된 이후에 초기 mock 데이터를 삽입합니다");
 
 		// 초기 사용자 데이터 삽입 (이미 존재하면 스킵)
-		createUserIfNotExists("admin", "admin");
+		createUserIfNotExists("admin", "admin1234!");
 
 		log.info("삽입 완료!");
 	}
