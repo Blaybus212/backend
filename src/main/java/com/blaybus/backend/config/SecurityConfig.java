@@ -35,7 +35,8 @@ public class SecurityConfig {
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/health-check", "/actuator/prometheus", "/login").permitAll()
 				.anyRequest().authenticated())
-			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+				UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
 	}
@@ -47,14 +48,22 @@ public class SecurityConfig {
 
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-		configuration.setAllowedOrigins(allowedOrigins);
-		configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
-		configuration.setAllowedHeaders(List.of("*"));
-		configuration.setAllowCredentials(true);
+		// health-check 전용 CORS 설정 (모든 오리진 허용)
+		CorsConfiguration healthCheckCors = new CorsConfiguration();
+		healthCheckCors.setAllowedOriginPatterns(List.of("*"));
+		healthCheckCors.setAllowedMethods(List.of("GET", "OPTIONS"));
+		healthCheckCors.setAllowedHeaders(List.of("*"));
+
+		// 일반 API용 CORS 설정
+		CorsConfiguration defaultCors = new CorsConfiguration();
+		defaultCors.setAllowedOrigins(allowedOrigins);
+		defaultCors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+		defaultCors.setAllowedHeaders(List.of("*"));
+		defaultCors.setAllowCredentials(true);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
+		source.registerCorsConfiguration("/health-check", healthCheckCors);
+		source.registerCorsConfiguration("/**", defaultCors);
 		return source;
 	}
 }
