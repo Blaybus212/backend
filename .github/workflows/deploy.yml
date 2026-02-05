@@ -57,6 +57,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           source: "docker-compose.yml,prometheus.yml,grafana/,.env.gpg"
           target: "~/"
 
@@ -69,6 +70,7 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
           envs: DOCKER_USERNAME,GPG_PASSPHRASE
           script: |
             # 0. 에러 발생 시 즉시 중단
