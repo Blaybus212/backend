@@ -32,7 +32,14 @@ public class AuthService {
 
 		String accessToken = jwtTokenProvider.createToken(user.getUsername());
 
+		AuthDto.LoginUser loginUser = AuthDto.LoginUser.builder()
+			.username(user.getUsername())
+			.name(user.getName())
+			.isFinishOnboard(user.isOnBoardingCompleted())
+			.build();
+
 		return AuthDto.LoginResponse.builder()
+			.loginUser(loginUser)
 			.accessToken(accessToken)
 			.build();
 	}
