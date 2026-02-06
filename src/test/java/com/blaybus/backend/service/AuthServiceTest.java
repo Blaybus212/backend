@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
-import com.blaybus.backend.domain.User;
+import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.dto.AuthDto;
 import com.blaybus.backend.exception.BusinessException;
 import com.blaybus.backend.repository.UserRepository;
@@ -42,6 +42,8 @@ class AuthServiceTest {
 		User user = User.builder()
 			.username("testuser")
 			.password("encodedPassword")
+			.name("테스트유저")
+			.onBoardingCompleted(false)
 			.build();
 
 		given(userRepository.findByUsername("testuser")).willReturn(Optional.of(user));
@@ -53,6 +55,59 @@ class AuthServiceTest {
 
 		// then
 		assertThat(response.accessToken()).isEqualTo("access.token.value");
+		assertThat(response.loginUser()).isNotNull();
+		assertThat(response.loginUser().username()).isEqualTo("testuser");
+		assertThat(response.loginUser().name()).isEqualTo("테스트유저");
+		assertThat(response.loginUser().isFinishOnboard()).isFalse();
+	}
+
+	@Test
+	@DisplayName("로그인 성공 - 온보딩 완료된 사용자")
+	void login_success_onboarding_completed() {
+		// given
+		AuthDto.LoginRequest request = new AuthDto.LoginRequest("onboardeduser", "password123");
+		User user = User.builder()
+			.username("onboardeduser")
+			.password("encodedPassword")
+			.name("완료유저")
+			.onBoardingCompleted(true)
+			.build();
+
+		given(userRepository.findByUsername("onboardeduser")).willReturn(Optional.of(user));
+		given(passwordEncoder.matches("password123", "encodedPassword")).willReturn(true);
+		given(jwtTokenProvider.createToken("onboardeduser")).willReturn("access.token.value");
+
+		// when
+		AuthDto.LoginResponse response = authService.handleLogin(request);
+
+		// then
+		assertThat(response.accessToken()).isNotBlank();
+		assertThat(response.loginUser().isFinishOnboard()).isTrue();
+		assertThat(response.loginUser().name()).isEqualTo("완료유저");
+	}
+
+	@Test
+	@DisplayName("로그인 성공 - 온보딩 미완료 사용자")
+	void login_success_name_is_null() {
+		// given
+		AuthDto.LoginRequest request = new AuthDto.LoginRequest("noname", "password123");
+		User user = User.builder()
+			.username("noname")
+			.password("encodedPassword")
+			.name(null)
+			.onBoardingCompleted(false)
+			.build();
+
+		given(userRepository.findByUsername("noname")).willReturn(Optional.of(user));
+		given(passwordEncoder.matches("password123", "encodedPassword")).willReturn(true);
+		given(jwtTokenProvider.createToken("noname")).willReturn("access.token.value");
+
+		// when
+		AuthDto.LoginResponse response = authService.handleLogin(request);
+
+		// then
+		assertThat(response.loginUser().name()).isNull();
+		assertThat(response.loginUser().username()).isEqualTo("noname");
 	}
 
 	@Test

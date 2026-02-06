@@ -5,7 +5,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.blaybus.backend.domain.User;
+import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;

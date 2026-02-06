@@ -4,7 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.blaybus.backend.domain.User;
+import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.dto.AuthDto;
 import com.blaybus.backend.exception.BusinessException;
 import com.blaybus.backend.exception.CommonErrorCode;
@@ -32,7 +32,14 @@ public class AuthService {
 
 		String accessToken = jwtTokenProvider.createToken(user.getUsername());
 
+		AuthDto.LoginUser loginUser = AuthDto.LoginUser.builder()
+			.username(user.getUsername())
+			.name(user.getName())
+			.isFinishOnboard(user.isOnBoardingCompleted())
+			.build();
+
 		return AuthDto.LoginResponse.builder()
+			.loginUser(loginUser)
 			.accessToken(accessToken)
 			.build();
 	}

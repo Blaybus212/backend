@@ -1,5 +1,7 @@
 package com.blaybus.backend.domain;
 
+import com.blaybus.backend.domain.user.User;
+
 import jakarta.persistence.PreUpdate;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,8 +20,8 @@ public class UserEntityListener {
 		}
 
 		// Mock 사용자가 onboarding을 완료하려 하면 강제로 false로 되돌림
-		if (user.isOnboardingCompleted()) {
-			user.setOnboardingCompleted(false);
+		if (user.isOnBoardingCompleted()) {
+			user.setOnBoardingCompleted(false);
 			log.warn("Mock user onboarding completion prevented: username={}", user.getUsername());
 		}
 	}
