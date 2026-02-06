@@ -1,6 +1,7 @@
 package com.blaybus.backend.exception;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -30,6 +31,14 @@ public class GlobalExceptionHandler {
 		return ResponseEntity
 			.status(ex.getErrorCode().getHttpStatus())
 			.body(ErrorResponse.of(ex.getErrorCode(), getTraceId()));
+	}
+
+	// 3. JSON 파싱 오류 (Enum 변환 실패 등) - 클라이언트 요청 형식 오류
+	@ExceptionHandler(HttpMessageNotReadableException.class)
+	public ResponseEntity<ErrorResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+		return ResponseEntity
+			.badRequest()
+			.body(ErrorResponse.of(CommonErrorCode.INVALID_PARAMETER, getTraceId()));
 	}
 
 	private String getTraceId() {
