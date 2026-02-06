@@ -16,22 +16,34 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import com.blaybus.backend.security.CustomUserDetailsService;
 import com.blaybus.backend.security.JwtAuthenticationFilter;
 import com.blaybus.backend.security.JwtTokenProvider;
+
+import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
 	@Bean
-	public SecurityFilterChain filterChain(HttpSecurity http, JwtTokenProvider jwtTokenProvider) throws Exception {
+	public SecurityFilterChain filterChain(
+		HttpSecurity http,
+		JwtTokenProvider jwtTokenProvider,
+		CustomUserDetailsService userDetailsService) throws Exception {
 		http
 			.csrf(AbstractHttpConfigurer::disable)
 			.cors(Customizer.withDefaults())
+			.exceptionHandling(exception -> exception
+				.authenticationEntryPoint((request, response, authException) -> {
+					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+					response.setContentType("application/json;charset=UTF-8");
+					response.getWriter().write("{\"code\":\"UNAUTHORIZED\",\"message\":\"인증이 필요합니다.\"}");
+				}))
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/health-check", "/actuator/prometheus", "/login").permitAll()
 				.anyRequest().authenticated())
-			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
+			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService),
 				UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
