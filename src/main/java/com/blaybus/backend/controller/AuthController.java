@@ -2,7 +2,6 @@ package com.blaybus.backend.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.blaybus.backend.dto.AuthDto;
 import com.blaybus.backend.dto.OnboardDto;
+import com.blaybus.backend.security.CustomUserDetails;
 import com.blaybus.backend.service.AuthService;
 import com.blaybus.backend.service.UserService;
 
@@ -33,7 +33,7 @@ public class AuthController {
 	@PatchMapping("/onboard")
 	public ResponseEntity<Void> onboard(
 		@AuthenticationPrincipal
-		UserDetails userDetails,
+		CustomUserDetails userDetails,
 		@RequestBody
 		OnboardDto.OnboardRequest request) {
 		userService.handleOnboard(userDetails.getUsername(), request);
