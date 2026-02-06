@@ -48,8 +48,9 @@ public class User {
 	@Column(length = 50)
 	private Persona persona;
 
+	@Enumerated(EnumType.STRING)
 	@Column(length = 50)
-	private String educationLevel;
+	private EducationLevel educationLevel;
 
 	@Column(length = 50)
 	private String preferCategory;
@@ -69,7 +70,7 @@ public class User {
 		boolean isMockUser,
 		boolean onBoardingCompleted,
 		Persona persona,
-		String educationLevel,
+		EducationLevel educationLevel,
 		String preferCategory,
 		String specializedIn,
 		ThemeColor themeColor) {
