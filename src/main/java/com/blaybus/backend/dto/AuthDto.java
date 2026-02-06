@@ -18,6 +18,15 @@ public class AuthDto {
 	}
 
 	@Builder
-	public record LoginResponse(String accessToken) {
+	public record LoginUser(
+		String username,
+		String name,
+		boolean isFinishOnboard) {
+	}
+
+	@Builder
+	public record LoginResponse(
+		LoginUser loginUser,
+		String accessToken) {
 	}
 }

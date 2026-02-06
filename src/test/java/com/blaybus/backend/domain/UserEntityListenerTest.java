@@ -8,6 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.repository.UserRepository;
 
 @SpringBootTest
@@ -31,12 +32,12 @@ class UserEntityListenerTest {
 		userRepository.save(mockUser);
 
 		// When: 온보딩 완료 시도
-		mockUser.setOnboardingCompleted(true);
+		mockUser.setOnBoardingCompleted(true);
 		userRepository.save(mockUser);
 
 		// Then: @PreUpdate에 의해 false로 되돌려져야 함
 		User savedUser = userRepository.findByUsername("mock-test-user").orElseThrow();
-		assertThat(savedUser.isOnboardingCompleted()).isFalse();
+		assertThat(savedUser.isOnBoardingCompleted()).isFalse();
 	}
 
 	@Test
@@ -50,11 +51,11 @@ class UserEntityListenerTest {
 		userRepository.save(normalUser);
 
 		// When: 온보딩 완료
-		normalUser.setOnboardingCompleted(true);
+		normalUser.setOnBoardingCompleted(true);
 		userRepository.save(normalUser);
 
 		// Then: 정상적으로 true로 저장되어야 함
 		User savedUser = userRepository.findByUsername("normal-test-user").orElseThrow();
-		assertThat(savedUser.isOnboardingCompleted()).isTrue();
+		assertThat(savedUser.isOnBoardingCompleted()).isTrue();
 	}
 }
