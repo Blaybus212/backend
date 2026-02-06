@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 
-import com.blaybus.backend.domain.User;
+import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.dto.AuthDto;
 import com.blaybus.backend.exception.BusinessException;
 import com.blaybus.backend.repository.UserRepository;

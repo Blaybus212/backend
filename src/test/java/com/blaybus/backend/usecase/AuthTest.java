@@ -10,11 +10,11 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.blaybus.backend.domain.User;
 import com.blaybus.backend.repository.UserRepository;
 
 import tools.jackson.databind.ObjectMapper;
 
+import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.dto.AuthDto;
 
 import org.springframework.http.MediaType;
