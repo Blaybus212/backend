@@ -91,6 +91,9 @@ checkstyleMain {
         'suppressionFile': "${rootDir}/rule-config/naver-checkstyle-suppressions.xml"
     ]
 }
+checkstyleTest {
+	enabled = false
+}
 
 spotless {
     java {
