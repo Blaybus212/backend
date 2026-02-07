@@ -3,24 +3,34 @@ package com.blaybus.backend.domain.conversation;
 import jakarta.persistence.*;
 import lombok.*;
 
+import com.blaybus.backend.domain.scene.SceneInformation;
+import com.blaybus.backend.domain.user.User;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Getter
-@Setter
 @Builder
 @Entity
 @Table(name = "conversation", uniqueConstraints = {
                 @UniqueConstraint(columnNames = { "user_id", "scene_id" })
 })
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Conversation {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         private Long id;
 
-        @Column(name = "user_id", nullable = false)
-        private Long userId;
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "user_id", nullable = false)
+        @OnDelete(action = OnDeleteAction.CASCADE)
+        private User user;
 
-        @Column(name = "scene_id", nullable = false, length = 255)
-        private Long sceneId;
+        @ManyToOne(fetch = FetchType.LAZY)
+        @JoinColumn(name = "scene_id", nullable = false)
+        @OnDelete(action = OnDeleteAction.CASCADE)
+        private SceneInformation scene;
 
         /**
          * 현재 대화창 내용의 요약본

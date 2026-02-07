@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import lombok.*;
 
 @Getter
-@Setter
 @Builder
 @Entity
 @Table(name = "scene_ranks", uniqueConstraints = {
@@ -15,6 +14,8 @@ import lombok.*;
          */
         @UniqueConstraint(columnNames = { "aggregate_date", "category" })
 })
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class SceneRanks {
 
     @Id

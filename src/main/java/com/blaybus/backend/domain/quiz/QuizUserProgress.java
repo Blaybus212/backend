@@ -3,13 +3,19 @@ package com.blaybus.backend.domain.quiz;
 import jakarta.persistence.*;
 import lombok.*;
 
+import com.blaybus.backend.domain.scene.SceneInformation;
+import com.blaybus.backend.domain.user.User;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Getter
-@Setter
 @Builder
 @Entity
 @Table(name = "quiz_user_progress", uniqueConstraints = {
         @UniqueConstraint(columnNames = { "user_id", "scene_info_id" })
 })
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class QuizUserProgress {
 
     /**
@@ -19,11 +25,15 @@ public class QuizUserProgress {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User user;
 
-    @Column(name = "scene_info_id", nullable = false)
-    private Long sceneInfoId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "scene_info_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private SceneInformation scene;
 
     /**
      * 사용자가 마지막으로 보고 있던 퀴즈 ID

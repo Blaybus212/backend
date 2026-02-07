@@ -4,22 +4,28 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import lombok.*;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Getter
-@Setter
 @Builder
 @Entity
 @Table(name = "user_grass", uniqueConstraints = {
         // 한 사용자는 하루에 하나의 grass 데이터만 가져야 함
         @UniqueConstraint(columnNames = { "user_id", "date" })
 })
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserGrass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private User user;
 
     /**
      * 점수가 집계된 날짜

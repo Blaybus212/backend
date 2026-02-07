@@ -3,11 +3,16 @@ package com.blaybus.backend.domain.quiz;
 import jakarta.persistence.*;
 import lombok.*;
 
+import com.blaybus.backend.domain.scene.SceneInformation;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Getter
-@Setter
 @Builder
 @Entity
 @Table(name = "scene_ranks_quiz")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class SceneRanksQuiz {
 
     @Id
@@ -19,8 +24,10 @@ public class SceneRanksQuiz {
      * - scene_info 테이블의 PK
      * - 연관관계 없이 숫자 값으로만 관리
      */
-    @Column(name = "scene_info_id", nullable = false)
-    private Long sceneInfoId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "scene_info_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private SceneInformation scene;
 
     /**
      * 퀴즈의 목적

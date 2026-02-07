@@ -4,12 +4,16 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.*;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Getter
-@Setter
 @Builder
 
 @Entity
 @Table(name = "message")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Message {
 
     /**
@@ -23,13 +27,16 @@ public class Message {
     /**
      * 소속된 대화(conversation)의 식별자
      */
-    @Column(name = "conversation_id", nullable = false)
-    private Long conversationId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "conversation_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Conversation conversation;
 
     /**
      * 발신자 구분
      * 허용 값: "USER", "ASSISTANT"
      */
+    @Enumerated(EnumType.STRING)
     @Column(name = "sender", length = 11, nullable = false)
     private Sender sender;
 

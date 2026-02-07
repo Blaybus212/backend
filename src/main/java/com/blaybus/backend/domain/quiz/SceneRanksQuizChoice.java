@@ -3,11 +3,15 @@ package com.blaybus.backend.domain.quiz;
 import jakarta.persistence.*;
 import lombok.*;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 @Getter
-@Setter
 @Builder
 @Entity
 @Table(name = "scene_ranks_quiz_choice")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class SceneRanksQuizChoice {
 
     @Id
@@ -17,8 +21,10 @@ public class SceneRanksQuizChoice {
     /**
      * 소속된 퀴즈 식별자
      */
-    @Column(name = "quiz_id", nullable = false)
-    private Long quizId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "quiz_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private SceneRanksQuiz quiz;
 
     /**
      * 화면 렌더링 순서
