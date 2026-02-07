@@ -47,7 +47,7 @@ public class SceneRanksQuiz {
      * → 프론트 렌더링 방식과 채점 로직 분기 기준
      */
     @Column(name = "type", length = 10, nullable = false)
-    private String type;
+    private QuizType type;
 
     /**
      * 문제 본문

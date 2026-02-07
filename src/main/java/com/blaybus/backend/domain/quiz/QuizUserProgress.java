@@ -62,7 +62,7 @@ public class QuizUserProgress {
     private Integer failure;
 
     @Column(name = "is_complete", nullable = false)
-    private Boolean isComplete;
+    private boolean isComplete;
 
     /**
      * 퀴즈 풀이에 소요된 시간
