@@ -4,6 +4,8 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password: password
+  profiles:
+    active: test
   jpa:
     hibernate:
       ddl-auto: update
