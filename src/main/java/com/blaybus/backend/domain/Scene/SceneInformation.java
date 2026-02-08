@@ -43,12 +43,13 @@ public class SceneInformation {
 	@Column(name = "eng_title", length = 55, nullable = false)
 	private String engTitle;
 
-	/**
-	 * scene 분류값
-	 * - 기계공학, 의공학 등 도메인 구분 목적 - 추후 enum 확장
-	 */
-	@Column(name = "category", length = 20, nullable = false)
-	private String category;
+    /**
+     * scene 분류값
+     * - 기계공학, 의공학 등 도메인 구분 목적 - 추후 enum 확장
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", length = 20, nullable = false)
+    private SceneCategory category;
 
 	/**
 	 * 참석자 수

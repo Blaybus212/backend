@@ -1,5 +1,6 @@
 package com.blaybus.backend.service;
 
+import com.blaybus.backend.domain.scene.SceneCategory;
 import com.blaybus.backend.domain.scene.SceneInformation;
 import com.blaybus.backend.domain.scene.UserScene;
 import com.blaybus.backend.dto.SceneResponse;
@@ -35,11 +36,12 @@ class SceneServiceTest {
                 // given
 
                 SceneInformation scene1 = SceneInformation.builder()
-                                .id(1L).title("로봇 팔").engTitle("Robot Arm").category("기계공학")
+                                .id(1L).title("로봇 팔").engTitle("Robot Arm")
+                                .category(SceneCategory.AEROSPACE_ENGINEERING)
                                 .participantsCount(10L).thumbnailUrl("url1").build();
 
                 SceneInformation scene2 = SceneInformation.builder()
-                                .id(2L).title("심장 전문").engTitle("Heart").category("의공학")
+                                .id(2L).title("심장 전문").engTitle("Heart").category(SceneCategory.ROBOTICS)
                                 .participantsCount(3L).thumbnailUrl("url2").build();
 
                 UserScene us1 = UserScene.builder().scene(scene1).lastAccessedAt(LocalDateTime.now()).build();

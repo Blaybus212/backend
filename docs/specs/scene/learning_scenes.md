@@ -3,7 +3,7 @@ title: "학습 중인 Scene 조회 기능 명세 (Learning Scenes Spec)"
 type: "spec"
 status: "active"
 last_updated: "2026-02-08"
-author: "Antigravity"
+author: "김채원(stellaa223@gmail.com)"
 related_components:
   ["SceneController", "SceneService", "UserSceneRepository", "SceneResponse"]
 tags: ["scene", "learning", "home"]
