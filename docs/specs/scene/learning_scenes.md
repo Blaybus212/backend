@@ -45,6 +45,7 @@ Authorization: Bearer ${accessToken}
 | `scenes[].imageUrl` | string | 썸네일 이미지 URL |
 | `scenes[].progress` | number | 학습 진척도 (0~100) |
 | `scenes[].popular` | boolean | 인기 Scene 여부 |
+| `scenes[].lastAccessedAt` | string | 최근 접속 시간 (ISO 8601 형식) |
 
 **Response 예시:**
 
