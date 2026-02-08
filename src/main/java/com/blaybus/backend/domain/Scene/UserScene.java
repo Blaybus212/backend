@@ -44,7 +44,7 @@ public class UserScene {
     /**
      * 사용자 카메라 시점 정보
      */
-    @Column(name = "look_at", columnDefinition = "jsonb", nullable = false)
+    @Column(name = "look_at", nullable = false) // todo  columnDefinition = "jsonb", < - 해결하기
     private String lookAt;
 
     /**
