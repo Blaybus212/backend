@@ -47,4 +47,17 @@ public class SceneStatistics {
      */
     @Column(name = "score", nullable = false)
     private Integer score;
+
+    /**
+     * 오늘 하루 각 scene 의 랭킹
+     * - score 내림차순
+     */
+    @Column(name = "rank")
+    private Integer rank;
+
+    /**
+     * 전날 랭킹과 차이
+     */
+    @Column(name = "difference")
+    private Integer difference;
 }
