@@ -19,6 +19,8 @@ public class SceneService {
 
     private final UserSceneRepository userSceneRepository;
 
+    private static final long POPULAR_SCENE_PARTICIPANTS_THRESHOLD = 5L;
+
     public SceneResponse getLearningScenes(Long userId) {
         List<UserScene> top3UserScenes = userSceneRepository.findTop3ByUserIdOrderByLastAccessedAtDesc(userId,
                 PageRequest.of(0, 3));
@@ -34,7 +36,7 @@ public class SceneService {
                             .imageUrl(sceneInfo.getThumbnailUrl())
                             // TODO: 진척도 로직 실제 데이터 기반으로 수정 필요
                             .progress(35)
-                            .popular(sceneInfo.getParticipantsCount() >= 5)
+                            .popular(sceneInfo.getParticipantsCount() >= POPULAR_SCENE_PARTICIPANTS_THRESHOLD)
                             .lastAccessedAt(userScene.getLastAccessedAt())
                             .build();
                 })
