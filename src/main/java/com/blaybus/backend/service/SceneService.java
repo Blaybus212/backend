@@ -99,9 +99,15 @@ public class SceneService {
 
         public SceneListResponse getScenes(SceneCategory category, int page, int limit, String query,
                         SceneListOrder order) {
-                Sort sort = Sort.by("title").ascending(); // Default "가나다순"
-                if (SceneListOrder.POPULARITY.equals(order)) {
-                        sort = Sort.by("participantsCount").descending();
+                Sort sort;
+                switch (order) {
+                        case POPULARITY:
+                                sort = Sort.by("participantsCount").descending();
+                                break;
+                        case ALPHABETICAL:
+                        default:
+                                sort = Sort.by("title").ascending();
+                                break;
                 }
 
                 PageRequest pageRequest = PageRequest.of(page - 1, limit, sort);

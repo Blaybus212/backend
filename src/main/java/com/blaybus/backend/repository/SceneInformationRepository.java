@@ -13,13 +13,13 @@ import java.util.Optional;
 
 @Repository
 public interface SceneInformationRepository extends JpaRepository<SceneInformation, Long> {
-    Optional<SceneInformation> findByTitle(String title);
+        Optional<SceneInformation> findByTitle(String title);
 
-    @Query("SELECT s FROM SceneInformation s " +
-            "WHERE (:category IS NULL OR s.category = :category) " +
-            "AND (:query IS NULL OR s.title LIKE %:query% OR s.engTitle LIKE %:query%)")
-    Page<SceneInformation> findByCategoryAndQuery(
-            @Param("category") SceneCategory category,
-            @Param("query") String query,
-            Pageable pageable);
+        @Query("SELECT s FROM SceneInformation s " +
+                        "WHERE (:category IS NULL OR s.category = :category) " +
+                        "AND (:query IS NULL OR s.title LIKE CONCAT('%', :query, '%') OR s.engTitle LIKE CONCAT('%', :query, '%'))")
+        Page<SceneInformation> findByCategoryAndQuery(
+                        @Param("category") SceneCategory category,
+                        @Param("query") String query,
+                        Pageable pageable);
 }
