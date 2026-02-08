@@ -96,4 +96,24 @@ public class OpenAiDto {
 		String answer,
 		String summary) {
 	}
+
+	public record EmbeddingRequest(
+		String input,
+		String model) {
+	}
+
+	public record EmbeddingResponse(
+		List<EmbeddingData> data,
+		Usage usage) {
+
+		public record EmbeddingData(List<Double> embedding) {
+		}
+
+		public record Usage(
+			@JsonProperty("prompt_tokens")
+			int promptTokens,
+			@JsonProperty("total_tokens")
+			int totalTokens) {
+		}
+	}
 }

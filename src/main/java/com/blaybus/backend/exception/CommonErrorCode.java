@@ -22,6 +22,9 @@ public enum CommonErrorCode implements ErrorCode {
 	CONVERSATION_NOT_FOUND(HttpStatus.NOT_FOUND, "대화를 찾을 수 없습니다."),
 	COMPONENT_NOT_FOUND(HttpStatus.NOT_FOUND, "부품 정보를 찾을 수 없습니다."),
 
+	QUIZ_NOT_FOUND(HttpStatus.NOT_FOUND, "퀴즈를 찾을 수 없습니다."),
+
+	EMBEDDING_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "임베딩 API 호출에 실패했습니다."),
 	OPENAI_API_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "AI 서비스 연결에 실패했습니다."),
 	OPENAI_TOKEN_EXCEEDED(HttpStatus.BAD_REQUEST, "응답이 너무 깁니다. 질문을 더 짧게 해주세요."),
 	OPENAI_PARSE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "AI 응답 처리 중 오류가 발생했습니다."),
