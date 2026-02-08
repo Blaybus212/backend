@@ -35,6 +35,7 @@ public class SceneService {
                             // TODO: 진척도 로직 실제 데이터 기반으로 수정 필요
                             .progress(35)
                             .popular(sceneInfo.getParticipantsCount() >= 5)
+                            .lastAccessedAt(userScene.getLastAccessedAt())
                             .build();
                 })
                 .collect(Collectors.toList());

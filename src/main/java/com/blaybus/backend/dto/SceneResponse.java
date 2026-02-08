@@ -3,6 +3,7 @@ package com.blaybus.backend.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
@@ -20,5 +21,6 @@ public class SceneResponse {
         private String imageUrl;
         private int progress;
         private boolean popular;
+        private LocalDateTime lastAccessedAt;
     }
 }
