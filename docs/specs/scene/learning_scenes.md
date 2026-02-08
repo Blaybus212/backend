@@ -24,7 +24,7 @@ trigger_intent:
 ### Endpoint
 
 ```
-GET /scenes
+GET /my/recent/scenes
 ```
 
 ### Headers
