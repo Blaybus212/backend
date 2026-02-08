@@ -2,6 +2,7 @@ package com.blaybus.backend.config;
 
 import java.time.LocalDateTime;
 
+import com.blaybus.backend.domain.scene.SceneCategory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
@@ -9,9 +10,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import com.blaybus.backend.domain.scene.SceneInformation;
+import com.blaybus.backend.domain.scene.SceneStatistics;
 import com.blaybus.backend.domain.scene.UserScene;
 import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.repository.SceneInformationRepository;
+import com.blaybus.backend.repository.SceneStatisticsRepository;
 import com.blaybus.backend.repository.UserRepository;
 import com.blaybus.backend.repository.UserSceneRepository;
 
@@ -33,6 +36,7 @@ public class DataLoader implements ApplicationRunner {
 	private final PasswordEncoder passwordEncoder;
 	private final SceneInformationRepository sceneInformationRepository;
 	private final UserSceneRepository userSceneRepository;
+	private final SceneStatisticsRepository sceneStatisticsRepository;
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
@@ -42,12 +46,13 @@ public class DataLoader implements ApplicationRunner {
 		User admin = createUserIfNotExists("admin", "admin1234!");
 
 		// 초기 Scene 정보 데이터 삽입 (이미 존재하면 스킵)
-		SceneInformation scene1 = createSceneInformationIfNotExists(1L, "로봇 팔", "Robot Arm", "의공학",
+		SceneInformation scene1 = createSceneInformationIfNotExists(1L, "로봇 팔", "Robot Arm", SceneCategory.ROBOTICS,
 				45L, "심장의 펌프 작용과 혈류 역학을 3D로 학습합니다.", "https://example.com/thumb1.jpg");
-		SceneInformation scene2 = createSceneInformationIfNotExists(2L, "자동차 엔진 4행정", "4-Stroke Engine Cycle", "기계공학",
+		SceneInformation scene2 = createSceneInformationIfNotExists(2L, "자동차 엔진 4행정", "4-Stroke Engine Cycle",
+				SceneCategory.AEROSPACE_ENGINEERING,
 				32L, "내연기관의 4행정 사이클을 분해 조립하며 학습합니다.", "https://example.com/thumb2.jpg");
 		SceneInformation scene3 = createSceneInformationIfNotExists(3L, "반도체 클린룸 공정", "Semiconductor Fab Process",
-				"전자공학", 12L, "웨이퍼 가공부터 패키징까지의 클린룸 공정을 시뮬레이션합니다.", "https://example.com/thumb3.jpg");
+				SceneCategory.ROBOTICS, 12L, "웨이퍼 가공부터 패키징까지의 클린룸 공정을 시뮬레이션합니다.", "https://example.com/thumb3.jpg");
 
 		// 초기 UserScene (최근 학습 데이터) 삽입
 		if (admin != null) {
@@ -58,6 +63,21 @@ public class DataLoader implements ApplicationRunner {
 			createUserSceneIfNotExists(admin, scene3, "{\"x\": 50, \"y\": 50, \"z\": 50}", "노광 공정 파트가 복잡함. 추가 학습 예정.",
 					LocalDateTime.now().minusHours(3));
 		}
+
+		// 기본 SceneStatistics 데이터 삽입 (시연용)
+		// 어제 07:00 기준 랭킹 데이터
+		LocalDateTime yesterday7am = LocalDateTime.now().minusDays(1).withHour(7).withMinute(0).withSecond(0)
+				.withNano(0);
+		createSceneStatisticsIfNotExists(scene1, yesterday7am, 450, 1, 2);
+		createSceneStatisticsIfNotExists(scene2, yesterday7am, 320, 2, -1);
+		createSceneStatisticsIfNotExists(scene3, yesterday7am, 180, 3, 1);
+
+		// 그제 07:00 기준 랭킹 데이터 (비교용)
+		LocalDateTime dayBeforeYesterday7am = LocalDateTime.now().minusDays(2).withHour(7).withMinute(0).withSecond(0)
+				.withNano(0);
+		createSceneStatisticsIfNotExists(scene1, dayBeforeYesterday7am, 300, 3, 0);
+		createSceneStatisticsIfNotExists(scene2, dayBeforeYesterday7am, 350, 1, 0);
+		createSceneStatisticsIfNotExists(scene3, dayBeforeYesterday7am, 200, 2, 0);
 
 		log.info("삽입 완료!");
 	}
@@ -76,7 +96,7 @@ public class DataLoader implements ApplicationRunner {
 	}
 
 	private SceneInformation createSceneInformationIfNotExists(Long defaultAlignmentId, String title, String engTitle,
-			String category, Long participantsCount, String description, String thumbnailUrl) {
+			SceneCategory category, Long participantsCount, String description, String thumbnailUrl) {
 		return sceneInformationRepository.findByTitle(title)
 				.orElseGet(() -> {
 					SceneInformation scene = SceneInformation.builder()
@@ -107,6 +127,21 @@ public class DataLoader implements ApplicationRunner {
 			userSceneRepository.save(userScene);
 			log.info("Created mock user-scene mapping for user: {} and scene: {}", user.getUsername(),
 					scene.getTitle());
+		}
+	}
+
+	private void createSceneStatisticsIfNotExists(SceneInformation scene, LocalDateTime aggregatedTime,
+			Integer score, Integer rank, Integer difference) {
+		if (!sceneStatisticsRepository.existsBySceneAndAggregatedTime(scene, aggregatedTime)) {
+			SceneStatistics statistics = SceneStatistics.builder()
+					.scene(scene)
+					.aggregatedTime(aggregatedTime)
+					.score(score)
+					.rank(rank)
+					.difference(difference)
+					.build();
+			sceneStatisticsRepository.save(statistics);
+			log.info("Created mock scene statistics for scene: {} at {}", scene.getTitle(), aggregatedTime);
 		}
 	}
 }
