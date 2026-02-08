@@ -30,6 +30,7 @@
 | 010 | [학습 중인 Scene 관리 정책](./adr/010-learning-scene-management.md)                              | 학습 데이터 관리, 인기/진척도 판단 정책 확인 시 |
 | 011 | [배치 기반 Scene 통계 집계](./adr/011-batch-scene-statistics-management.md)                      | Scene 랭킹 집계 방식, 배치 처리 전략 확인 시    |
 | 012 | [오브젝트 리스트 검색 및 정렬 방식](./adr/012-scene-list-search-and-sort.md)             | 검색/정렬 방식, 스키마 변경 사유 확인 시        |
+| 013 | [UserGrass 엔티티에 Streak 데이터 직접 저장](./adr/013-store-streak-in-user-grass.md) | 연속 학습 횟수(Streak) 관리 정책 확인 시      |
 
 ## 3. Feature Specifications (도메인 로직)
 
@@ -42,4 +43,5 @@
 | [Learning Scenes](./specs/scene/learning_scenes.md) | 학습 중인 Scene 목록 조회 | 홈 화면 학습 목록 수정, 진척도/인기 여부 로직 확인 시 |
 | [Scene Ranks](./specs/scene/scene_ranks.md) | Scene 랭킹 조회 (1~5위) | 인기 Scene 순위 API 수정, 집계 시점 정책 확인 시 |
 | [Scene List](./specs/scene/scene_list.md) | 오브젝트 리스트 조회 | 검색/필터링/정렬/페이징 기능 수정 시 |
+| [User Activity](./specs/user/activity.md) | 사용자 활동 기록 및 Streak 조회 | 잔디(Heatmap) 데이터, 연속 학습 횟수 로직 확인 시 |
 
