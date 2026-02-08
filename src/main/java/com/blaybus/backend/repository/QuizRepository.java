@@ -7,5 +7,4 @@ import com.blaybus.backend.domain.quiz.SceneRanksQuiz;
 /**
  * QuizRepository provides CRUD operations for SceneRanksQuiz entities.
  */
-public interface QuizRepository extends JpaRepository<SceneRanksQuiz, Long> {
-}
+public interface QuizRepository extends JpaRepository<SceneRanksQuiz, Long> {}
