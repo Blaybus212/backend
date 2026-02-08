@@ -42,4 +42,17 @@ public class UserGrass {
      */
     @Column(name = "score", nullable = false)
     private Integer score;
+
+    /**
+     * 해당 날짜에 사용자가 맞춘 퀴즈 문항 수
+     * 한 달 동안 풀이한 총 퀴즈 문항 수 집계를 위함
+     */
+    @Column(name = "solved_count", nullable = false)
+    private Integer solvedCount;
+
+    /**
+     * 해당 날짜의 연속 학습 횟수 (오늘 기준)
+     */
+    @Column(name = "streak", nullable = false)
+    private Integer streak;
 }

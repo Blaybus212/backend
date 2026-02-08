@@ -17,6 +17,9 @@ import com.blaybus.backend.repository.SceneInformationRepository;
 import com.blaybus.backend.repository.SceneStatisticsRepository;
 import com.blaybus.backend.repository.UserRepository;
 import com.blaybus.backend.repository.UserSceneRepository;
+import com.blaybus.backend.repository.UserGrassRepository;
+import com.blaybus.backend.domain.user.UserGrass;
+import java.time.LocalDate;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +40,7 @@ public class DataLoader implements ApplicationRunner {
 	private final SceneInformationRepository sceneInformationRepository;
 	private final UserSceneRepository userSceneRepository;
 	private final SceneStatisticsRepository sceneStatisticsRepository;
+	private final UserGrassRepository userGrassRepository;
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
@@ -78,6 +82,16 @@ public class DataLoader implements ApplicationRunner {
 		createSceneStatisticsIfNotExists(scene1, dayBeforeYesterday7am, 300, 3, 0);
 		createSceneStatisticsIfNotExists(scene2, dayBeforeYesterday7am, 350, 1, 0);
 		createSceneStatisticsIfNotExists(scene3, dayBeforeYesterday7am, 200, 2, 0);
+
+		// 초기 UserGrass (잔디) 데이터 삽입
+		if (admin != null) {
+			LocalDate today = LocalDate.now();
+			createUserGrassIfNotExists(admin, today, 15, 5, 3); // 오늘: 15점, 5문제, streak 3
+			createUserGrassIfNotExists(admin, today.minusDays(1), 10, 5, 2); // 어제: 10점, 5문제, streak 2
+			createUserGrassIfNotExists(admin, today.minusDays(2), 5, 2, 1); // 그제: 5점, 2문제, streak 1
+			createUserGrassIfNotExists(admin, today.minusDays(5), 25, 10, 5); // 5일전: 25점, 10문제, streak 5
+			createUserGrassIfNotExists(admin, today.minusDays(10), 0, 0, 0); // 10일전: 0점, 0문제, streak 0
+		}
 
 		log.info("삽입 완료!");
 	}
@@ -142,6 +156,21 @@ public class DataLoader implements ApplicationRunner {
 					.build();
 			sceneStatisticsRepository.save(statistics);
 			log.info("Created mock scene statistics for scene: {} at {}", scene.getTitle(), aggregatedTime);
+		}
+	}
+
+	private void createUserGrassIfNotExists(User user, LocalDate date, Integer score, Integer solvedCount,
+			Integer streak) {
+		if (userGrassRepository.findByUserAndDate(user, date).isEmpty()) {
+			UserGrass grass = UserGrass.builder()
+					.user(user)
+					.date(date)
+					.score(score)
+					.solvedCount(solvedCount)
+					.streak(streak)
+					.build();
+			userGrassRepository.save(grass);
+			log.info("Created mock user-grass for user: {} at {}", user.getUsername(), date);
 		}
 	}
 }
