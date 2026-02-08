@@ -49,19 +49,14 @@ public class SceneStatistics {
     private Integer score;
 
     /**
-     * 해당 기간 동안 scene에 누적된 점수
-     * - score 산정 방식은 "집계 당시의 비즈니스 룰"을 따름
-     * - 이후 룰이 변경되더라도 과거 통계 값은 변경하지 않음
-     * - 통계 스냅샷의 불변성을 보장하기 위함
+     * 오늘 하루 각 scene 의 랭킹
+     * - score 내림차순
      */
     @Column(name = "rank")
     private Integer rank;
 
     /**
-     * 해당 기간 동안 scene에 누적된 점수
-     * - score 산정 방식은 "집계 당시의 비즈니스 룰"을 따름
-     * - 이후 룰이 변경되더라도 과거 통계 값은 변경하지 않음
-     * - 통계 스냅샷의 불변성을 보장하기 위함
+     * 전날 랭킹과 차이
      */
     @Column(name = "difference")
     private Integer difference;
