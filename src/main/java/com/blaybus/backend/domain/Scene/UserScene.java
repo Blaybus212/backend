@@ -6,6 +6,8 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.LocalDateTime;
+
 /**
  * UserScene
  * - 특정 사용자가 3D viewer 에서 보고 있던 scene 상태의 스냅숏
@@ -34,10 +36,15 @@ public class UserScene {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "scene_info_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private SceneInformation scene;
+
     /**
      * 사용자 카메라 시점 정보
      */
-    @Column(name = "look_at", columnDefinition = "jsonb", nullable = false)
+    @Column(name = "look_at", nullable = false) // todo  columnDefinition = "jsonb", < - 해결하기
     private String lookAt;
 
     /**
@@ -47,4 +54,11 @@ public class UserScene {
      */
     @Column(name = "note", columnDefinition = "text")
     private String note;
+
+    /**
+     * 사용자가 최근에 접속한 기록
+     * 최신순 정렬을 위함
+     */
+    @Column(name = "last_accessed_at", nullable = false)
+    private LocalDateTime lastAccessedAt;
 }

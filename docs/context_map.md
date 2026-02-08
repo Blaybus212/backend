@@ -27,6 +27,7 @@
 | 007 | [CORS 정책 설정](./adr/007-configure-cors-policy.md)                                             | CORS 에러 해결, 허용 도메인 추가 시             |
 | 008 | [TraceId 포함 전역 예외 처리](./adr/008-adopt-global-exception-handling-with-traceid.md)         | 에러 응답 형식, 예외 처리 로직 수정 시          |
 | 009 | [GPG 암호화 민감 설정 관리](./adr/009-manage-sensitive-config-with-gpg-encryption.md)            | 환경변수, 시크릿 관리, 설정 암호화 관련 작업 시 |
+| 010 | [학습 중인 Scene 관리 정책](./adr/010-learning-scene-management.md)                              | 학습 데이터 관리, 인기/진척도 판단 정책 확인 시 |
 
 ## 3. Feature Specifications (도메인 로직)
 
@@ -36,3 +37,5 @@
 | :--------------------------------------- | :----------------------------------- | :------------------------------------------------- |
 | [Login](./specs/auth/login.md)           | 로그인 API 및 인증 로직              | 로그인 구현/수정, JWT 토큰 발급, 인증 실패 처리 시 |
 | [Onboarding](./specs/user/onboarding.md) | 온보딩 API 및 사용자 프로필 업데이트 | 온보딩 프로세스 수정, 사용자 프로필 필드 변경 시   |
+| [Learning Scenes](./specs/scene/learning_scenes.md) | 학습 중인 Scene 목록 조회 | 홈 화면 학습 목록 수정, 진척도/인기 여부 로직 확인 시 |
+
