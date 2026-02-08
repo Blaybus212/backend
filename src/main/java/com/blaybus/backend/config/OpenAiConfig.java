@@ -34,12 +34,13 @@ public class OpenAiConfig {
 			.build();
 	}
 
-	@Bean
-	public ObjectMapper objectMapper() {
-		ObjectMapper mapper = new ObjectMapper();
-		mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
-		return mapper;
-	}
+    @Bean
+    @org.springframework.beans.factory.annotation.Qualifier("openAiObjectMapper")
+    public ObjectMapper openAiObjectMapper() {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        return mapper;
+    }
 
 	private ClientHttpRequestFactory clientHttpRequestFactory() {
 		SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
