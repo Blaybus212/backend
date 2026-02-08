@@ -9,6 +9,9 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+
 @Configuration
 public class OpenAiConfig {
 
@@ -29,6 +32,13 @@ public class OpenAiConfig {
 			.defaultHeader("Content-Type", "application/json")
 			.requestFactory(clientHttpRequestFactory())
 			.build();
+	}
+
+	@Bean
+	public ObjectMapper objectMapper() {
+		ObjectMapper mapper = new ObjectMapper();
+		mapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+		return mapper;
 	}
 
 	private ClientHttpRequestFactory clientHttpRequestFactory() {
