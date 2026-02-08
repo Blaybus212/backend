@@ -42,6 +42,6 @@ public enum SceneCategory {
                 return field;
             }
         }
-        throw new IllegalArgumentException("Unknown EngineeringField: " + value);
+        throw new IllegalArgumentException("Unknown SceneCategory: " + value);
     }
 }

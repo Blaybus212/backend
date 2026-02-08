@@ -97,7 +97,7 @@ public class SceneService {
          * - 현재 시각이 07:00 이전 → 그제 07:00
          */
         private LocalDateTime calculateAggregatedTime(LocalDateTime now) {
-                if (now.toLocalTime().isAfter(AGGREGATION_TIME) || now.toLocalTime().equals(AGGREGATION_TIME)) {
+                if (!now.toLocalTime().isBefore(AGGREGATION_TIME)) {
                         // 07:00 이후 → 어제 07:00
                         return now.minusDays(1).with(AGGREGATION_TIME);
                 } else {
