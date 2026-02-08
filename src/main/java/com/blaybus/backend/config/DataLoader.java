@@ -77,9 +77,7 @@ public class DataLoader implements ApplicationRunner {
 
 	private SceneInformation createSceneInformationIfNotExists(Long defaultAlignmentId, String title, String engTitle,
 			String category, Long participantsCount, String description, String thumbnailUrl) {
-		return sceneInformationRepository.findAll().stream()
-				.filter(s -> s.getTitle().equals(title))
-				.findFirst()
+		return sceneInformationRepository.findByTitle(title)
 				.orElseGet(() -> {
 					SceneInformation scene = SceneInformation.builder()
 							.defaultAlignmentId(defaultAlignmentId)
@@ -98,8 +96,7 @@ public class DataLoader implements ApplicationRunner {
 
 	private void createUserSceneIfNotExists(User user, SceneInformation scene, String lookAt, String note,
 			LocalDateTime lastAccessedAt) {
-		if (userSceneRepository.findAll().stream().noneMatch(
-				us -> us.getUser().getId().equals(user.getId()) && us.getScene().getId().equals(scene.getId()))) {
+		if (!userSceneRepository.existsByUser_IdAndScene_Id(user.getId(), scene.getId())) {
 			UserScene userScene = UserScene.builder()
 					.user(user)
 					.scene(scene)
