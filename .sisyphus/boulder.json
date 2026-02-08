@@ -34,6 +34,13 @@
       ],
       "actionable": false,
       "resolution": "Requires DevOps to deploy ai-feat branch to test environment"
+    },
+    {
+      "item": "Push to origin",
+      "reason": "Permission denied (403) to Blaybus212/backend.git",
+      "attempted": "git push origin ai-feat",
+      "actionable": false,
+      "resolution": "User with repository write access must execute the push"
     }
   ],
   "verification_status": {
