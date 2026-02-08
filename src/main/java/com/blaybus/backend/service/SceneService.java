@@ -4,12 +4,17 @@ import com.blaybus.backend.domain.scene.SceneCategory;
 import com.blaybus.backend.domain.scene.SceneInformation;
 import com.blaybus.backend.domain.scene.SceneStatistics;
 import com.blaybus.backend.domain.scene.UserScene;
+import com.blaybus.backend.dto.SceneListOrder;
+import com.blaybus.backend.dto.SceneListResponse;
 import com.blaybus.backend.dto.SceneRankResponse;
 import com.blaybus.backend.dto.SceneResponse;
+import com.blaybus.backend.repository.SceneInformationRepository;
 import com.blaybus.backend.repository.SceneStatisticsRepository;
 import com.blaybus.backend.repository.UserSceneRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,6 +32,7 @@ public class SceneService {
 
         private final UserSceneRepository userSceneRepository;
         private final SceneStatisticsRepository sceneStatisticsRepository;
+        private final SceneInformationRepository sceneInformationRepository;
 
         private static final long POPULAR_SCENE_PARTICIPANTS_THRESHOLD = 5L;
         private static final LocalTime AGGREGATION_TIME = LocalTime.of(7, 0);
@@ -88,6 +94,37 @@ public class SceneService {
                 return SceneRankResponse.builder()
                                 .today(todayFormatted)
                                 .scenes(rankDtos)
+                                .build();
+        }
+
+        public SceneListResponse getScenes(SceneCategory category, int page, int limit, String query,
+                        SceneListOrder order) {
+                Sort sort = Sort.by("title").ascending(); // Default "가나다순"
+                if (SceneListOrder.POPULARITY.equals(order)) {
+                        sort = Sort.by("participantsCount").descending();
+                }
+
+                PageRequest pageRequest = PageRequest.of(page - 1, limit, sort);
+                Page<SceneInformation> scenePage = sceneInformationRepository.findByCategoryAndQuery(category, query,
+                                pageRequest);
+
+                List<SceneListResponse.SceneDto> sceneDtos = scenePage.getContent().stream()
+                                .map(sceneInfo -> SceneListResponse.SceneDto.builder()
+                                                .id(sceneInfo.getId().toString())
+                                                .isPopular(sceneInfo
+                                                                .getParticipantsCount() >= POPULAR_SCENE_PARTICIPANTS_THRESHOLD)
+                                                .title(sceneInfo.getTitle())
+                                                .engTitle(sceneInfo.getEngTitle())
+                                                .category(sceneInfo.getCategory())
+                                                .description(sceneInfo.getDescription())
+                                                .imageUrl(sceneInfo.getThumbnailUrl())
+                                                .participantsCount(sceneInfo.getParticipantsCount())
+                                                .build())
+                                .collect(Collectors.toList());
+
+                return SceneListResponse.builder()
+                                .totalPages(scenePage.getTotalPages())
+                                .scenes(sceneDtos)
                                 .build();
         }
 
