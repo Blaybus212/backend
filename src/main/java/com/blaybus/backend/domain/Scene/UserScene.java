@@ -6,6 +6,9 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 /**
  * UserScene
  * - 특정 사용자가 3D viewer 에서 보고 있던 scene 상태의 스냅숏
@@ -47,4 +50,11 @@ public class UserScene {
      */
     @Column(name = "note", columnDefinition = "text")
     private String note;
+
+    /**
+     * 사용자가 최근에 접속한 기록
+     * 최신순 정렬을 위함
+     */
+    @Column(name = "last_accessed_at", nullable = false)
+    private LocalDateTime lastAccessedAt;
 }
