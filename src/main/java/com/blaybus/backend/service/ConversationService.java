@@ -31,6 +31,7 @@ import com.blaybus.backend.repository.ComponentRepository;
 import com.blaybus.backend.repository.ConversationRepository;
 import com.blaybus.backend.repository.MessageRepository;
 import com.blaybus.backend.repository.ReferenceRepository;
+import com.blaybus.backend.repository.SceneInformationRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,6 +43,7 @@ public class ConversationService {
 	private final MessageRepository messageRepository;
 	private final ComponentRepository componentRepository;
 	private final ReferenceRepository referenceRepository;
+	private final SceneInformationRepository sceneInformationRepository;
 	private final OpenAiService openAiService;
 	private final PromptService promptService;
 
@@ -95,11 +97,15 @@ public class ConversationService {
 	@Transactional
 	public SendMessageResponse sendMessage(User user, Long sceneId, SendMessageRequest request) {
 		Conversation conversation = conversationRepository.findByUserAndSceneId(user, sceneId)
-			.orElseGet(() -> conversationRepository.save(
-				Conversation.builder()
-					.user(user)
-					.scene(null)
-					.build()));
+			.orElseGet(() -> {
+				var scene = sceneInformationRepository.findById(sceneId)
+					.orElseThrow(() -> new BusinessException(CommonErrorCode.SCENE_NOT_FOUND));
+				return conversationRepository.save(
+					Conversation.builder()
+						.user(user)
+						.scene(scene)
+						.build());
+			});
 
 		List<Component> components = loadComponents(request.getComponentIds());
 		Map<String, ComponentInfo> componentInfoMap = components.stream()

@@ -21,6 +21,7 @@ public enum CommonErrorCode implements ErrorCode {
 	USER_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 사용자입니다."),
 	CONVERSATION_NOT_FOUND(HttpStatus.NOT_FOUND, "대화를 찾을 수 없습니다."),
 	COMPONENT_NOT_FOUND(HttpStatus.NOT_FOUND, "부품 정보를 찾을 수 없습니다."),
+	SCENE_NOT_FOUND(HttpStatus.NOT_FOUND, "씬 정보를 찾을 수 없습니다."),
 
 	QUIZ_NOT_FOUND(HttpStatus.NOT_FOUND, "퀴즈를 찾을 수 없습니다."),
 
