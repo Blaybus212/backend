@@ -38,8 +38,9 @@ public class SceneInformation {
      * scene 분류값
      * - 기계공학, 의공학 등 도메인 구분 목적 - 추후 enum 확장
      */
+    @Enumerated(EnumType.STRING)
     @Column(name = "category", length = 20, nullable = false)
-    private String category;
+    private SceneCategory category;
 
     /**
      * 참석자 수

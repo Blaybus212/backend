@@ -1,5 +1,6 @@
 package com.blaybus.backend.dto;
 
+import com.blaybus.backend.domain.scene.SceneCategory;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -17,7 +18,7 @@ public class SceneResponse {
         private String id;
         private String title;
         private String engTitle;
-        private String category;
+        private SceneCategory category;
         private String imageUrl;
         private int progress;
         private boolean popular;
