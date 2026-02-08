@@ -11,32 +11,32 @@ import org.hibernate.annotations.OnDeleteAction;
 @Entity
 @Getter
 @Table(name = "alignments", uniqueConstraints = {
-                @UniqueConstraint(columnNames = { "user_id", "scene_id", "component_id" })
+	@UniqueConstraint(columnNames = {"user_id", "scene_id", "component_id"})
 })
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Alignment {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "user_id", nullable = false)
-        @OnDelete(action = OnDeleteAction.CASCADE)
-        private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private User user;
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "scene_id", nullable = false)
-        @OnDelete(action = OnDeleteAction.CASCADE)
-        private SceneInformation scene;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "scene_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private SceneInformation scene;
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "component_id", nullable = false)
-        @OnDelete(action = OnDeleteAction.CASCADE)
-        private Component component;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "component_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private Component component;
 
-        @Column(name = "transform_matrix", columnDefinition = "json", nullable = false)
-        private String transformMatrix;
+	@Column(name = "transform_matrix", columnDefinition = "json", nullable = false)
+	private String transformMatrix;
 }

@@ -25,3 +25,12 @@ management:
 logging:
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+# OpenAI API Configuration
+openai:
+  api-key: ${OPENAI_API_KEY:}
+  base-url: https://api.openai.com/v1
+  model: gpt-5-mini
+  embedding-model: text-embedding-3-small
+  max-retries: 2
+  timeout-seconds: 30

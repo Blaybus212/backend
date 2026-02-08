@@ -25,26 +25,26 @@ import org.hibernate.annotations.OnDeleteAction;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserScene {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private User user;
 
-    /**
-     * 사용자 카메라 시점 정보
-     */
-    @Column(name = "look_at", columnDefinition = "jsonb", nullable = false)
-    private String lookAt;
+	/**
+	 * 사용자 카메라 시점 정보
+	 */
+	@Column(name = "look_at", columnDefinition = "jsonb", nullable = false)
+	private String lookAt;
 
-    /**
-     * 사용자 노트
-     * - Markdown 형식의 자유 텍스트
-     * - scene에 대한 설명, 학습 메모, 작업 기록 용도
-     */
-    @Column(name = "note", columnDefinition = "text")
-    private String note;
+	/**
+	 * 사용자 노트
+	 * - Markdown 형식의 자유 텍스트
+	 * - scene에 대한 설명, 학습 메모, 작업 기록 용도
+	 */
+	@Column(name = "note", columnDefinition = "text")
+	private String note;
 }
