@@ -8,8 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.blaybus.backend.domain.Conversation;
-import com.blaybus.backend.domain.Message;
+import com.blaybus.backend.domain.conversation.Conversation;
+import com.blaybus.backend.domain.conversation.Message;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
 

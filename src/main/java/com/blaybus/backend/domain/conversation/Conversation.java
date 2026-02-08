@@ -39,6 +39,10 @@ public class Conversation {
 	 * - 원문 대화는 별도 테이블로 관리
 	 */
 	@Lob
-	@Column(name = "summary", nullable = false)
+	@Column(name = "summary", nullable = true)
 	private String summary;
+
+	public void updateSummary(String summary) {
+		this.summary = summary;
+	}
 }

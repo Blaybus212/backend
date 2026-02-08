@@ -46,6 +46,7 @@ public class SceneRanksQuiz {
 	 * - INPUT : 주관식
 	 * → 프론트 렌더링 방식과 채점 로직 분기 기준
 	 */
+	@Enumerated(EnumType.STRING)
 	@Column(name = "type", length = 10, nullable = false)
 	private QuizType type;
 

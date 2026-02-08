@@ -5,8 +5,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
-import com.blaybus.backend.domain.Component;
-import com.blaybus.backend.domain.Message;
+import com.blaybus.backend.domain.alignment.Component;
+import com.blaybus.backend.domain.conversation.Message;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

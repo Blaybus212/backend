@@ -9,8 +9,6 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Configuration
 public class OpenAiConfig {
 
@@ -22,11 +20,6 @@ public class OpenAiConfig {
 
 	@Value("${openai.timeout-seconds:30}")
 	private int timeoutSeconds;
-
-	@Bean
-	public ObjectMapper objectMapper() {
-		return new ObjectMapper();
-	}
 
 	@Bean
 	public RestClient openAiRestClient() {
