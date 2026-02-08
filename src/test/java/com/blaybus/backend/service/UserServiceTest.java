@@ -55,7 +55,7 @@ class UserServiceTest {
 
 		// then - 모든 필드가 정상적으로 채워졌는지 검증
 		assertThat(user.getName()).isEqualTo("홍길동");
-		assertThat(user.getPreferCategory()).isEqualTo("기계공학,우주공학");
+		assertThat(user.getPreferCategory()).isEqualTo(SceneCategory.AEROSPACE_ENGINEERING);
 		assertThat(user.getEducationLevel()).isEqualTo(EducationLevel.BEGINNER);
 		assertThat(user.getSpecializedIn()).isEqualTo("전기공학");
 		assertThat(user.getPersona()).isEqualTo(Persona.FRIEND);
