@@ -2,6 +2,7 @@ package com.blaybus.backend.config;
 
 import java.time.LocalDateTime;
 
+import com.blaybus.backend.domain.scene.SceneCategory;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
@@ -42,12 +43,12 @@ public class DataLoader implements ApplicationRunner {
 		User admin = createUserIfNotExists("admin", "admin1234!");
 
 		// 초기 Scene 정보 데이터 삽입 (이미 존재하면 스킵)
-		SceneInformation scene1 = createSceneInformationIfNotExists(1L, "로봇 팔", "Robot Arm", "의공학",
+		SceneInformation scene1 = createSceneInformationIfNotExists(1L, "로봇 팔", "Robot Arm", SceneCategory.ROBOTICS,
 				45L, "심장의 펌프 작용과 혈류 역학을 3D로 학습합니다.", "https://example.com/thumb1.jpg");
-		SceneInformation scene2 = createSceneInformationIfNotExists(2L, "자동차 엔진 4행정", "4-Stroke Engine Cycle", "기계공학",
+		SceneInformation scene2 = createSceneInformationIfNotExists(2L, "자동차 엔진 4행정", "4-Stroke Engine Cycle", SceneCategory.AEROSPACE_ENGINEERING,
 				32L, "내연기관의 4행정 사이클을 분해 조립하며 학습합니다.", "https://example.com/thumb2.jpg");
 		SceneInformation scene3 = createSceneInformationIfNotExists(3L, "반도체 클린룸 공정", "Semiconductor Fab Process",
-				"전자공학", 12L, "웨이퍼 가공부터 패키징까지의 클린룸 공정을 시뮬레이션합니다.", "https://example.com/thumb3.jpg");
+				SceneCategory.ROBOTICS, 12L, "웨이퍼 가공부터 패키징까지의 클린룸 공정을 시뮬레이션합니다.", "https://example.com/thumb3.jpg");
 
 		// 초기 UserScene (최근 학습 데이터) 삽입
 		if (admin != null) {
@@ -76,7 +77,7 @@ public class DataLoader implements ApplicationRunner {
 	}
 
 	private SceneInformation createSceneInformationIfNotExists(Long defaultAlignmentId, String title, String engTitle,
-			String category, Long participantsCount, String description, String thumbnailUrl) {
+															   SceneCategory category, Long participantsCount, String description, String thumbnailUrl) {
 		return sceneInformationRepository.findByTitle(title)
 				.orElseGet(() -> {
 					SceneInformation scene = SceneInformation.builder()
