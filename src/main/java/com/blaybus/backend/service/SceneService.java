@@ -18,6 +18,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -69,15 +70,18 @@ public class SceneService {
                 List<SceneStatistics> statistics = sceneStatisticsRepository
                                 .findTop5ByAggregatedTimeAndCategory(aggregatedTime, category);
 
-                List<SceneRankResponse.SceneRankDto> rankDtos = statistics.stream()
-                                .map(stat -> SceneRankResponse.SceneRankDto.builder()
-                                                .id(stat.getScene().getId().toString())
-                                                .rank(stat.getRank())
-                                                .title(stat.getScene().getTitle())
-                                                .engTitle(stat.getScene().getEngTitle())
-                                                .rankDiff(stat.getDifference())
-                                                .build())
-                                .collect(Collectors.toList());
+                List<SceneRankResponse.SceneRankDto> rankDtos = IntStream.range(0, statistics.size())
+                                .mapToObj(i -> {
+                                        SceneStatistics stat = statistics.get(i);
+                                        return SceneRankResponse.SceneRankDto.builder()
+                                                        .id(stat.getScene().getId().toString())
+                                                        .rank(i + 1)
+                                                        .title(stat.getScene().getTitle())
+                                                        .engTitle(stat.getScene().getEngTitle())
+                                                        .rankDiff(stat.getDifference())
+                                                        .build();
+                                })
+                                .toList();
 
                 String todayFormatted = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
 

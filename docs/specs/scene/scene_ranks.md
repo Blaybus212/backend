@@ -3,7 +3,7 @@ title: "Scene 랭킹 조회 기능 명세 (Scene Ranks Spec)"
 type: "spec"
 status: "active"
 last_updated: "2026-02-08"
-author: "Antigravity"
+author: "김채원(stellaa223@gmail.com)"
 related_components:
   ["SceneController", "SceneService", "SceneStatisticsRepository", "SceneRankResponse"]
 tags: ["scene", "ranking", "statistics", "popular"]
