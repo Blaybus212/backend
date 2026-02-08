@@ -12,10 +12,11 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.blaybus.backend.domain.Component;
-import com.blaybus.backend.domain.Conversation;
-import com.blaybus.backend.domain.Message;
-import com.blaybus.backend.domain.Reference;
+import com.blaybus.backend.domain.alignment.Component;
+import com.blaybus.backend.domain.conversation.Conversation;
+import com.blaybus.backend.domain.conversation.Message;
+import com.blaybus.backend.domain.conversation.Reference;
+import com.blaybus.backend.domain.conversation.Sender;
 import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.dto.ConversationDto.ComponentInfo;
 import com.blaybus.backend.dto.ConversationDto.ConversationResponse;
@@ -97,7 +98,7 @@ public class ConversationService {
 			.orElseGet(() -> conversationRepository.save(
 				Conversation.builder()
 					.user(user)
-					.sceneId(sceneId)
+					.scene(null)
 					.build()));
 
 		List<Component> components = loadComponents(request.getComponentIds());
@@ -108,8 +109,9 @@ public class ConversationService {
 
 		Message userMessage = Message.builder()
 			.conversation(conversation)
-			.sender(Message.Sender.USER)
+			.sender(Sender.USER)
 			.content(request.content())
+			.postedAt(java.time.LocalDateTime.now())
 			.build();
 		messageRepository.save(userMessage);
 
@@ -119,12 +121,11 @@ public class ConversationService {
 				.component(component)
 				.build();
 			referenceRepository.save(reference);
-			userMessage.addReference(reference);
 		}
 
-		String systemPrompt = promptService.buildSystemPrompt(sceneId);
+		String systemPrompt = promptService.buildSystemPrompt(sceneId, user);
 		String userPrompt = promptService.buildUserPrompt(
-			conversation.getRunningSummary(),
+			conversation.getSummary(),
 			components,
 			request.content());
 
@@ -132,12 +133,13 @@ public class ConversationService {
 
 		Message assistantMessage = Message.builder()
 			.conversation(conversation)
-			.sender(Message.Sender.ASSISTANT)
+			.sender(Sender.ASSISTANT)
 			.content(aiResponse.answer())
+			.postedAt(java.time.LocalDateTime.now())
 			.build();
 		messageRepository.save(assistantMessage);
 
-		conversation.updateRunningSummary(aiResponse.summary());
+		conversation.updateSummary(aiResponse.summary());
 
 		return SendMessageResponse.from(assistantMessage, componentInfoMap);
 	}
