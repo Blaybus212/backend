@@ -58,7 +58,8 @@ public class OpenAiDto {
 		String status,
 		List<OutputItem> output,
 		@JsonProperty("incomplete_details")
-		IncompleteDetails incompleteDetails) {
+		IncompleteDetails incompleteDetails,
+		Usage usage) {
 		public boolean isComplete() {
 			return "completed".equals(status);
 		}
@@ -75,6 +76,15 @@ public class OpenAiDto {
 				.findFirst()
 				.orElse(null);
 		}
+	}
+
+	public record Usage(
+		@JsonProperty("input_tokens")
+		int inputTokens,
+		@JsonProperty("output_tokens")
+		int outputTokens,
+		@JsonProperty("total_tokens")
+		int totalTokens) {
 	}
 
 	public record OutputItem(

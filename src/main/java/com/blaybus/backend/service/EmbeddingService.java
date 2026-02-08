@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
 import com.blaybus.backend.dto.OpenAiDto.EmbeddingRequest;
@@ -12,8 +13,9 @@ import com.blaybus.backend.dto.OpenAiDto.EmbeddingResponse;
 import com.blaybus.backend.exception.BusinessException;
 import com.blaybus.backend.exception.CommonErrorCode;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.client.RestClient;
 
 @Slf4j
 @Service
@@ -21,14 +23,17 @@ public class EmbeddingService {
 
 	private final RestClient openAiRestClient;
 	private final String embeddingModel;
+	private final MeterRegistry meterRegistry;
 
 	public EmbeddingService(
 		@Qualifier("openAiRestClient")
 		RestClient openAiRestClient,
 		@Value("${openai.embedding-model:text-embedding-3-small}")
-		String embeddingModel) {
+		String embeddingModel,
+		MeterRegistry meterRegistry) {
 		this.openAiRestClient = openAiRestClient;
 		this.embeddingModel = embeddingModel;
+		this.meterRegistry = meterRegistry;
 	}
 
 	public double calculateSimilarity(String text1, String text2) {
@@ -48,6 +53,14 @@ public class EmbeddingService {
 
 			if (response == null || response.data() == null || response.data().isEmpty()) {
 				throw new BusinessException(CommonErrorCode.EMBEDDING_API_ERROR);
+			}
+
+			// Record embedding token usage metrics
+			if (response.usage() != null) {
+				Counter.builder("openai.tokens.embedding.input")
+					.description("OpenAI embedding input tokens consumed")
+					.register(meterRegistry)
+					.increment(response.usage().promptTokens());
 			}
 
 			return response.data().get(0).embedding();

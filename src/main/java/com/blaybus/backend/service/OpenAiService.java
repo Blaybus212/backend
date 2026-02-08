@@ -14,6 +14,8 @@ import com.blaybus.backend.exception.CommonErrorCode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,6 +26,7 @@ public class OpenAiService {
 	private final ObjectMapper objectMapper;
 	private final String model;
 	private final int maxRetries;
+	private final MeterRegistry meterRegistry;
 
 	public OpenAiService(
 		@Qualifier("openAiRestClient")
@@ -32,11 +35,13 @@ public class OpenAiService {
 		@Value("${openai.model}")
 		String model,
 		@Value("${openai.max-retries:2}")
-		int maxRetries) {
+		int maxRetries,
+		MeterRegistry meterRegistry) {
 		this.openAiRestClient = openAiRestClient;
 		this.objectMapper = objectMapper;
 		this.model = model;
 		this.maxRetries = maxRetries;
+		this.meterRegistry = meterRegistry;
 	}
 
 	public AssistantResponse chat(String systemPrompt, String userMessage) {
@@ -66,6 +71,19 @@ public class OpenAiService {
 				String textContent = response.getTextContent();
 				if (textContent == null) {
 					throw new BusinessException(CommonErrorCode.OPENAI_API_ERROR);
+				}
+
+				// Record token usage metrics
+				if (response.usage() != null) {
+					Counter.builder("openai.tokens.input")
+						.description("OpenAI input tokens consumed")
+						.register(meterRegistry)
+						.increment(response.usage().inputTokens());
+
+					Counter.builder("openai.tokens.output")
+						.description("OpenAI output tokens consumed")
+						.register(meterRegistry)
+						.increment(response.usage().outputTokens());
 				}
 
 				return parseAssistantResponse(textContent);
