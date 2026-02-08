@@ -7,7 +7,6 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 /**
  * UserScene
@@ -36,6 +35,11 @@ public class UserScene {
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "scene_info_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private SceneInformation scene;
 
     /**
      * 사용자 카메라 시점 정보
