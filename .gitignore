@@ -40,3 +40,8 @@ logs/
 *.p12
 *.key
 *.pem
+
+.gitattributes
+package.json
+package-lock.json
+node_modules/
