@@ -39,7 +39,7 @@ public class SceneInformation {
      * - 기계공학, 의공학 등 도메인 구분 목적 - 추후 enum 확장
      */
     @Enumerated(EnumType.STRING)
-    @Column(name = "category", length = 20, nullable = false)
+    @Column(name = "category", length = 50, nullable = false)
     private SceneCategory category;
 
     /**
