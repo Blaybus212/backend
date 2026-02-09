@@ -36,11 +36,14 @@
 
 > 비즈니스 로직과 기능 명세입니다. 기능 구현 시 가장 많이 참조됩니다.
 
-| 문서                                     | 설명                                 | ⚡ Trigger Intent (이럴 때 참조하세요)             |
-| :--------------------------------------- | :----------------------------------- | :------------------------------------------------- |
-| [Login](./specs/auth/login.md)           | 로그인 API 및 인증 로직              | 로그인 구현/수정, JWT 토큰 발급, 인증 실패 처리 시 |
-| [Onboarding](./specs/user/onboarding.md) | 온보딩 API 및 사용자 프로필 업데이트 | 온보딩 프로세스 수정, 사용자 프로필 필드 변경 시   |
+| 문서                                                  | 설명                                 | ⚡ Trigger Intent (이럴 때 참조하세요)             |
+| :---------------------------------------------------- | :----------------------------------- | :------------------------------------------------- |
+| [Login](./specs/auth/login.md)                        | 로그인 API 및 인증 로직              | 로그인 구현/수정, JWT 토큰 발급, 인증 실패 처리 시 |
+| [Onboarding](./specs/user/onboarding.md)              | 온보딩 API 및 사용자 프로필 업데이트 | 온보딩 프로세스 수정, 사용자 프로필 필드 변경 시   |
 | [Learning Scenes](./specs/scene/learning_scenes.md) | 학습 중인 Scene 목록 조회 | 홈 화면 학습 목록 수정, 진척도/인기 여부 로직 확인 시 |
 | [Scene Ranks](./specs/scene/scene_ranks.md) | Scene 랭킹 조회 (1~5위) | 인기 Scene 순위 API 수정, 집계 시점 정책 확인 시 |
 | [Scene List](./specs/scene/scene_list.md) | 오브젝트 리스트 조회 | 검색/필터링/정렬/페이징 기능 수정 시 |
 | [User Activity](./specs/user/activity.md) | 사용자 활동 기록 및 Streak 조회 | 잔디(Heatmap) 데이터, 연속 학습 횟수 로직 확인 시 |
+| [Scene Sync](./specs/scene/scene_sync.md)             | 실시간 Scene 동기화 (정렬/카메라)    | 컴포넌트 배치수정, 카메라 설정 동기화 시           |
+| [Scene Assembly](./specs/scene/scene_assembly.md)     | Scene 초기 조립 정보 저장            | 초기 씬 노드 구성 및 배치 정보 저장 시             |
+| [Scene Viewer Export](./specs/scene/viewer_export.md) | 3D Viewer ZIP 내보내기 명세          | GLTF 조립, 메타데이터 주입, Viewer ZIP 생성 시     |

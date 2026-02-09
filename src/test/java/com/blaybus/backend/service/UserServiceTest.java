@@ -35,18 +35,18 @@ class UserServiceTest {
 		// given
 		String username = "testuser";
 		User user = User.builder()
-				.username(username)
-				.password("encodedPassword")
-				.onBoardingCompleted(false)
-				.build();
+			.username(username)
+			.password("encodedPassword")
+			.onBoardingCompleted(false)
+			.build();
 
 		OnboardDto.OnboardRequest request = new OnboardDto.OnboardRequest(
-				"홍길동",
-				SceneCategory.AEROSPACE_ENGINEERING,
-				EducationLevel.BEGINNER,
-				"전기공학",
-				Persona.FRIEND,
-				ThemeColor.BLUE);
+			"홍길동",
+			SceneCategory.AEROSPACE_ENGINEERING,
+			EducationLevel.BEGINNER,
+			"전기공학",
+			Persona.FRIEND,
+			ThemeColor.BLUE);
 
 		given(userRepository.findByUsername(username)).willReturn(Optional.of(user));
 
@@ -69,17 +69,17 @@ class UserServiceTest {
 		// given
 		String username = "testuser";
 		User user = User.builder()
-				.username(username)
-				.password("encodedPassword")
-				.build();
+			.username(username)
+			.password("encodedPassword")
+			.build();
 
 		OnboardDto.OnboardRequest request = new OnboardDto.OnboardRequest(
-				"홍길동",
-				SceneCategory.ROBOTICS,
-				EducationLevel.EXPERT,
-				"전기공학",
-				Persona.PROFESSOR,
-				ThemeColor.GREEN);
+			"홍길동",
+			SceneCategory.ROBOTICS,
+			EducationLevel.EXPERT,
+			"전기공학",
+			Persona.PROFESSOR,
+			ThemeColor.GREEN);
 
 		given(userRepository.findByUsername(username)).willReturn(Optional.of(user));
 
@@ -98,20 +98,20 @@ class UserServiceTest {
 		// given
 		String username = "testuser";
 		User user = User.builder()
-				.username(username)
-				.password("encodedPassword")
-				.onBoardingCompleted(false)
-				.build();
+			.username(username)
+			.password("encodedPassword")
+			.onBoardingCompleted(false)
+			.build();
 
 		assertThat(user.isOnBoardingCompleted()).isFalse();
 
 		OnboardDto.OnboardRequest request = new OnboardDto.OnboardRequest(
-				"홍길동",
-				SceneCategory.ROBOTICS,
-				EducationLevel.INTERMEDIATE,
-				"전기공학",
-				Persona.ASSISTANT,
-				ThemeColor.PINK);
+			"홍길동",
+			SceneCategory.ROBOTICS,
+			EducationLevel.INTERMEDIATE,
+			"전기공학",
+			Persona.ASSISTANT,
+			ThemeColor.PINK);
 
 		given(userRepository.findByUsername(username)).willReturn(Optional.of(user));
 

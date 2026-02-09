@@ -1,0 +1,382 @@
+{
+  "Quadcopter Drone": {
+    "Arm_gear1": {
+      "description": "암 구동부의 기어 모듈",
+      "texture": "금속, 알루미늄, 윤활유",
+      "usage": "구동, 회전, 동력전달"
+    },
+    "Beater_disc1": {
+      "description": "회전 디스크 형태의 구동 부품",
+      "texture": "금속, 합금, 코팅",
+      "usage": "회전, 안정화, 동력전달"
+    },
+    "Gearing1": {
+      "description": "동력 전달용 기어 세트",
+      "texture": "금속, 기어오일, 합금",
+      "usage": "동력전달, 회전"
+    },
+    "Impellar_Blade1": {
+      "description": "임펠러 블레이드",
+      "texture": "금속, 복합소재",
+      "usage": "공기흐름, 추진"
+    },
+    "Leg1": {
+      "description": "드론 지지용 다리",
+      "texture": "금속, 고무, 플라스틱",
+      "usage": "지지, 착륙"
+    },
+    "Main_frame1": {
+      "description": "본체 프레임",
+      "texture": "알루미늄, 카본",
+      "usage": "구조지지, 고정"
+    },
+    "Main_frame_MIR1": {
+      "description": "프레임 미러 부품",
+      "texture": "알루미늄, 카본",
+      "usage": "구조지지, 고정"
+    },
+    "Arm_gear2": {
+      "description": "암 구동부 기어 모듈",
+      "texture": "금속, 윤활유",
+      "usage": "구동, 회전"
+    },
+    "Gearing2": {
+      "description": "동력 전달용 기어 세트",
+      "texture": "금속, 합금",
+      "usage": "동력전달, 회전"
+    },
+    "Impellar_Blade2": {
+      "description": "임펠러 블레이드",
+      "texture": "금속, 복합소재",
+      "usage": "공기흐름, 추진"
+    },
+    "Leg2": {
+      "description": "드론 지지용 다리",
+      "texture": "금속, 고무",
+      "usage": "지지, 착륙"
+    },
+    "Arm_gear3": {
+      "description": "암 구동부 기어 모듈",
+      "texture": "금속, 윤활유",
+      "usage": "구동, 회전"
+    },
+    "Gearing3": {
+      "description": "동력 전달용 기어 세트",
+      "texture": "금속, 합금",
+      "usage": "동력전달, 회전"
+    },
+    "Impellar_Blade3": {
+      "description": "임펠러 블레이드",
+      "texture": "금속, 복합소재",
+      "usage": "공기흐름, 추진"
+    },
+    "Leg3": {
+      "description": "드론 지지용 다리",
+      "texture": "금속, 고무",
+      "usage": "지지, 착륙"
+    },
+    "Arm_gear4": {
+      "description": "암 구동부 기어 모듈",
+      "texture": "금속, 윤활유",
+      "usage": "구동, 회전"
+    },
+    "Gearing4": {
+      "description": "동력 전달용 기어 세트",
+      "texture": "금속, 합금",
+      "usage": "동력전달, 회전"
+    },
+    "Impellar_Blade4": {
+      "description": "임펠러 블레이드",
+      "texture": "금속, 복합소재",
+      "usage": "공기흐름, 추진"
+    },
+    "Leg4": {
+      "description": "드론 지지용 다리",
+      "texture": "금속, 고무",
+      "usage": "지지, 착륙"
+    },
+    "Nut1": {
+      "description": "체결용 너트",
+      "texture": "금속, 아연도금",
+      "usage": "체결, 고정"
+    },
+    "Nut2": {
+      "description": "체결용 너트",
+      "texture": "금속, 아연도금",
+      "usage": "체결, 고정"
+    },
+    "Nut3": {
+      "description": "체결용 너트",
+      "texture": "금속, 아연도금",
+      "usage": "체결, 고정"
+    },
+    "Nut4": {
+      "description": "체결용 너트",
+      "texture": "금속, 아연도금",
+      "usage": "체결, 고정"
+    },
+    "Screw1": {
+      "description": "체결용 나사",
+      "texture": "금속, 코팅",
+      "usage": "체결, 고정"
+    },
+    "Screw2": {
+      "description": "체결용 나사",
+      "texture": "금속, 코팅",
+      "usage": "체결, 고정"
+    },
+    "Screw3": {
+      "description": "체결용 나사",
+      "texture": "금속, 코팅",
+      "usage": "체결, 고정"
+    },
+    "Screw4": {
+      "description": "체결용 나사",
+      "texture": "금속, 코팅",
+      "usage": "체결, 고정"
+    }
+  },
+  "Leaf Spring": {
+    "Leaf-Layer1": {
+      "description": "리프 스프링 본체 판형 부품",
+      "texture": "스틸, 코팅",
+      "usage": "충격흡수, 하중지지"
+    },
+    "Clamp-Secondary1": {
+      "description": "보조 클램프 부품",
+      "texture": "스틸, 코팅",
+      "usage": "고정, 결속"
+    },
+    "Clamp-Secondary2": {
+      "description": "보조 클램프 부품",
+      "texture": "스틸, 코팅",
+      "usage": "고정, 결속"
+    },
+    "Clamp-Primary1": {
+      "description": "메인 클램프 부품",
+      "texture": "스틸, 코팅",
+      "usage": "고정, 결속"
+    },
+    "Clamp-Primary2": {
+      "description": "메인 클램프 부품",
+      "texture": "스틸, 코팅",
+      "usage": "고정, 결속"
+    },
+    "Clamp-Center1": {
+      "description": "중앙 클램프 부품",
+      "texture": "스틸, 코팅",
+      "usage": "고정, 결속"
+    },
+    "Support1": {
+      "description": "지지 브래킷",
+      "texture": "스틸, 고무",
+      "usage": "지지, 진동완화"
+    },
+    "Support2": {
+      "description": "지지 브래킷",
+      "texture": "스틸, 고무",
+      "usage": "지지, 진동완화"
+    },
+    "Support-Rubber1": {
+      "description": "고무 지지 부품",
+      "texture": "고무, 스틸",
+      "usage": "진동완화, 완충"
+    },
+    "Support-Chassis1": {
+      "description": "차체 연결 브래킷",
+      "texture": "스틸, 코팅",
+      "usage": "체결, 연결"
+    },
+    "Support-Rubber_60mm1": {
+      "description": "고무 부싱",
+      "texture": "고무, 스틸",
+      "usage": "진동완화, 완충"
+    },
+    "Support-Chassis_Rigid1": {
+      "description": "강성 지지 브래킷",
+      "texture": "스틸, 코팅",
+      "usage": "체결, 지지"
+    }
+  },
+  "Machine Tool Vise": {
+    "Part8-grundplatte1": {
+      "description": "바이스 하부 베이스 플레이트",
+      "texture": "주철, 도장",
+      "usage": "지지, 고정"
+    },
+    "Part4_spindelsockel1": {
+      "description": "스핀들 지지대",
+      "texture": "주철, 코팅",
+      "usage": "지지, 정렬"
+    },
+    "Part2_Feste_Backe1": {
+      "description": "고정 죠(고정턱)",
+      "texture": "강철, 경화",
+      "usage": "고정, 압착"
+    },
+    "Part5-Spannbacke1": {
+      "description": "이동 죠(가동턱)",
+      "texture": "강철, 경화",
+      "usage": "고정, 압착"
+    },
+    "Part1_Fuhrung1": {
+      "description": "가이드 레일",
+      "texture": "강철, 연마",
+      "usage": "이동가이드, 정렬"
+    },
+    "Part3-lose_backe1": {
+      "description": "가동 죠 본체",
+      "texture": "강철, 경화",
+      "usage": "고정, 압착"
+    },
+    "Part5-Spannbacke2": {
+      "description": "보조 가동 턱",
+      "texture": "강철, 경화",
+      "usage": "고정, 압착"
+    },
+    "Part6-fuhrungschiene1": {
+      "description": "가이드 레일 1",
+      "texture": "강철, 연마",
+      "usage": "이동가이드"
+    },
+    "Part6-fuhrungschiene2": {
+      "description": "가이드 레일 2",
+      "texture": "강철, 연마",
+      "usage": "이동가이드"
+    },
+    "Part9-Druckhulse1": {
+      "description": "압력 슬리브",
+      "texture": "강철, 코팅",
+      "usage": "압력전달"
+    },
+    "Part7-TrapezSpindel1": {
+      "description": "트래피조이드 스핀들",
+      "texture": "강철, 윤활",
+      "usage": "회전구동, 압착"
+    }
+  },
+  "Robotic Gripper": {
+    "Base_Plate1": {
+      "description": "베이스 플레이트",
+      "texture": "알루미늄, 코팅",
+      "usage": "지지, 고정"
+    },
+    "Base_Plate2": {
+      "description": "보조 베이스 플레이트",
+      "texture": "알루미늄, 코팅",
+      "usage": "지지, 고정"
+    },
+    "Base_Mounting_bracket1": {
+      "description": "마운팅 브래킷",
+      "texture": "강철, 코팅",
+      "usage": "체결, 연결"
+    },
+    "Gear_link_11": {
+      "description": "기어 링크 1",
+      "texture": "강철, 윤활",
+      "usage": "구동, 연결"
+    },
+    "Gear_link_21": {
+      "description": "기어 링크 2",
+      "texture": "강철, 윤활",
+      "usage": "구동, 연결"
+    },
+    "Pin1": {
+      "description": "핀 1",
+      "texture": "강철, 코팅",
+      "usage": "회전축, 결합"
+    },
+    "Pin2": {
+      "description": "핀 2",
+      "texture": "강철, 코팅",
+      "usage": "회전축, 결합"
+    },
+    "Pin3": {
+      "description": "핀 3",
+      "texture": "강철, 코팅",
+      "usage": "회전축, 결합"
+    },
+    "Pin4": {
+      "description": "핀 4",
+      "texture": "강철, 코팅",
+      "usage": "회전축, 결합"
+    },
+    "Pin5": {
+      "description": "핀 5",
+      "texture": "강철, 코팅",
+      "usage": "회전축, 결합"
+    },
+    "Pin6": {
+      "description": "핀 6",
+      "texture": "강철, 코팅",
+      "usage": "회전축, 결합"
+    },
+    "Pin7": {
+      "description": "핀 7",
+      "texture": "강철, 코팅",
+      "usage": "회전축, 결합"
+    },
+    "Pin8": {
+      "description": "핀 8",
+      "texture": "강철, 코팅",
+      "usage": "회전축, 결합"
+    },
+    "Gripper1": {
+      "description": "그리퍼 죠 1",
+      "texture": "강철, 코팅",
+      "usage": "집기, 고정"
+    },
+    "Gripper2": {
+      "description": "그리퍼 죠 2",
+      "texture": "강철, 코팅",
+      "usage": "집기, 고정"
+    },
+    "Link1": {
+      "description": "링크 1",
+      "texture": "강철, 윤활",
+      "usage": "구동, 연결"
+    },
+    "Link2": {
+      "description": "링크 2",
+      "texture": "강철, 윤활",
+      "usage": "구동, 연결"
+    },
+    "Base_Gear1": {
+      "description": "베이스 기어",
+      "texture": "강철, 윤활",
+      "usage": "구동, 회전"
+    },
+    "Pin9": {
+      "description": "핀 9",
+      "texture": "강철, 코팅",
+      "usage": "회전축, 결합"
+    },
+    "Pin10": {
+      "description": "핀 10",
+      "texture": "강철, 코팅",
+      "usage": "회전축, 결합"
+    }
+  },
+  "Vehicle Suspension": {
+    "BASE1": {
+      "description": "서스펜션 베이스",
+      "texture": "강철, 코팅",
+      "usage": "지지, 고정"
+    },
+    "NUT1": {
+      "description": "체결용 너트",
+      "texture": "강철, 아연도금",
+      "usage": "체결, 고정"
+    },
+    "ROD1": {
+      "description": "로드(축)",
+      "texture": "강철, 코팅",
+      "usage": "지지, 연결"
+    },
+    "SPRING1": {
+      "description": "스프링",
+      "texture": "스틸, 탄성강",
+      "usage": "충격흡수, 복원"
+    }
+  }
+}

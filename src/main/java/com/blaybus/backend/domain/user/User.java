@@ -1,8 +1,5 @@
 package com.blaybus.backend.domain.user;
 
-import com.blaybus.backend.domain.UserEntityListener;
-
-import com.blaybus.backend.domain.scene.SceneCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -12,6 +9,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+
+import com.blaybus.backend.domain.scene.SceneCategory;
+import com.blaybus.backend.domain.UserEntityListener;
+
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

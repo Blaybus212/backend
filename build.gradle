@@ -20,15 +20,22 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+    all {
+        exclude group: 'tools.jackson.core'
+    }
 }
 
 repositories {
+	mavenLocal()
 	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
 
 dependencies {
 	// Core Web & REST
-	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	implementation platform('me.paulschwarz:spring-dotenv-bom:5.1.0')
@@ -44,6 +51,16 @@ dependencies {
 	
 	// REST Client
 	implementation 'org.springframework.boot:spring-boot-starter-restclient'
+    // Jackson 3 (tools.jackson) support removed due to resolution failure
+    // implementation 'tools.jackson.core:jackson-databind:3.0.0-SNAPSHOT' 
+    // implementation 'tools.jackson.core:jackson-core:3.0.0-SNAPSHOT'
+    // implementation 'tools.jackson.core:jackson-annotations:3.0.0-SNAPSHOT'
+    
+    // Jackson 2 (com.fasterxml.jackson) - Legacy support for existing domain models
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.0'
+    implementation 'com.fasterxml.jackson.core:jackson-annotations:2.15.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.15.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.0'
 	
 	// JSON
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
@@ -81,6 +98,9 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	useJUnitPlatform()
+	// 로컬 테스트 실행 시 Node.js 모듈 경로 인식 지원 (절대 경로 사용)
+	environment 'NODE_PATH', file('src/main/resources/scripts/node_modules').absolutePath
 }
 
 checkstyle {

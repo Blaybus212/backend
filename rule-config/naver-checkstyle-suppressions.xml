@@ -8,4 +8,6 @@
 	<suppress checks="Indentation" files=".*\.java"/>
 	<!-- Spotless removes spaces in empty braces, conflicting with checkstyle WhitespaceAround -->
 	<suppress checks="WhitespaceAround" files=".*Repository\.java"/>
+	<!-- Spotless and Checkstyle have different import ordering rules -->
+	<suppress checks="ImportOrder" files=".*User\.java"/>
 </suppressions>

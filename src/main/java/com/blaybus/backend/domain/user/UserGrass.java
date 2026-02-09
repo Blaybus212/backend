@@ -32,41 +32,41 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserGrass {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  @OnDelete(action = OnDeleteAction.CASCADE)
-  private User user;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private User user;
 
-  /**
-  * 점수가 집계된 날짜
-  * - 일 단위 grass 표현을 위함
-  * - 기간 조회 (주간 / 월간 / 연간)에 사용
-  */
-  @Column(name = "date", nullable = false)
-  private LocalDate date;
+	/**
+	* 점수가 집계된 날짜
+	* - 일 단위 grass 표현을 위함
+	* - 기간 조회 (주간 / 월간 / 연간)에 사용
+	*/
+	@Column(name = "date", nullable = false)
+	private LocalDate date;
 
-  /**
-  * 해당 날짜에 사용자가 누적한 점수
-  * - 커밋 수, 학습량, 활동량 등으로 환산 가능
-  * - 잔디 색상/크기 계산의 기준 값
-  */
-  @Column(name = "score", nullable = false)
-  private Integer score;
+	/**
+	* 해당 날짜에 사용자가 누적한 점수
+	* - 커밋 수, 학습량, 활동량 등으로 환산 가능
+	* - 잔디 색상/크기 계산의 기준 값
+	*/
+	@Column(name = "score", nullable = false)
+	private Integer score;
 
-  /**
-  * 해당 날짜에 사용자가 맞춘 퀴즈 문항 수
-  * 한 달 동안 풀이한 총 퀴즈 문항 수 집계를 위함
-  */
-  @Column(name = "solved_count", nullable = false)
-  private Integer solvedCount;
+	/**
+	* 해당 날짜에 사용자가 맞춘 퀴즈 문항 수
+	* 한 달 동안 풀이한 총 퀴즈 문항 수 집계를 위함
+	*/
+	@Column(name = "solved_count", nullable = false)
+	private Integer solvedCount;
 
-  /**
-  * 해당 날짜의 연속 학습 횟수 (오늘 기준)
-  */
-  @Column(name = "streak", nullable = false)
-  private Integer streak;
+	/**
+	* 해당 날짜의 연속 학습 횟수 (오늘 기준)
+	*/
+	@Column(name = "streak", nullable = false)
+	private Integer streak;
 }

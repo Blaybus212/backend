@@ -1,0 +1,47 @@
+[
+  {
+    "title": "로봇집게",
+    "eng_title": "Robotic Gripper",
+    "asset_path": "Robot Gripper",
+    "category": "로봇공학",
+    "participants_count": 840,
+    "description": "물건을 떨어뜨리지 않도록 양쪽에서 단단히 붙잡아 옮기는 장치",
+    "thumbnail_url": "https://placehold.co/600x400?text=Robot+Gripper"
+  },
+  {
+    "title": "서스펜션",
+    "eng_title": "Vehicle Suspension",
+    "asset_path": "Suspension",
+    "category": "자동차공학",
+    "participants_count": 2100,
+    "description": "울퉁불퉁한 길을 갈 때 차체가 흔들리지 않게 충격을 흡수하는 장치",
+    "thumbnail_url": "https://placehold.co/600x400?text=Suspension"
+  },
+  {
+    "title": "판스프링",
+    "eng_title": "Leaf Spring",
+    "asset_path": "Leaf Spring",
+    "category": "자동차공학",
+    "participants_count": 450,
+    "description": "여러 겹의 철판을 겹쳐 무거운 짐의 무게를 견디고 충격을 나누는 장치",
+    "thumbnail_url": "https://placehold.co/600x400?text=Leaf+Spring"
+  },
+  {
+    "title": "드론",
+    "eng_title": "Quadcopter Drone",
+    "asset_path": "Drone",
+    "category": "항공우주공학",
+    "participants_count": 5600,
+    "description": "4개의 프로펠러를 빠르게 돌려 하늘을 날고 방향을 조절하는 장치",
+    "thumbnail_url": "https://placehold.co/600x400?text=Drone"
+  },
+  {
+    "title": "공작기계바이스",
+    "eng_title": "Machine Tool Vise",
+    "asset_path": "Machine Vice",
+    "category": "제조공학",
+    "participants_count": 310,
+    "description": "나사를 돌려 입구를 조여서 깎으려는 물건을 꽉 고정해주는 장치",
+    "thumbnail_url": "https://placehold.co/600x400?text=Machine+Tool+Vise"
+  }
+]
