@@ -84,13 +84,15 @@ public class DataLoader implements ApplicationRunner {
 		User admin = createUserIfNotExists("admin", "admin1234!");
 
 		// 초기 Scene 정보 데이터 삽입 (이미 존재하면 스킵)
-		SceneInformation scene1 = createSceneInformationIfNotExists(1L, "로봇 팔", "Robot Arm", SceneCategory.ROBOTICS,
-			45L, "심장의 펌프 작용과 혈류 역학을 3D로 학습합니다.", "https://example.com/thumb1.jpg");
-		SceneInformation scene2 = createSceneInformationIfNotExists(2L, "자동차 엔진 4행정", "4-Stroke Engine Cycle",
-			SceneCategory.AEROSPACE_ENGINEERING,
-			32L, "내연기관의 4행정 사이클을 분해 조립하며 학습합니다.", "https://example.com/thumb2.jpg");
-		SceneInformation scene3 = createSceneInformationIfNotExists(3L, "반도체 클린룸 공정", "Semiconductor Fab Process",
-			SceneCategory.ROBOTICS, 12L, "웨이퍼 가공부터 패키징까지의 클린룸 공정을 시뮬레이션합니다.", "https://example.com/thumb3.jpg");
+		SceneInformation scene1 = createSceneInformationIfNotExists(1L, "로봇집게", "Robotic Gripper", "Robot Gripper",
+			SceneCategory.ROBOTICS,
+			45L, "물건을 떨어뜨리지 않도록 양쪽에서 단단히 붙잡아 옮기는 장치", "https://example.com/thumb1.jpg");
+		SceneInformation scene2 = createSceneInformationIfNotExists(2L, "서스펜션", "Vehicle Suspension", "Suspension",
+			SceneCategory.AUTOMOTIVE_ENGINEERING,
+			32L, "울퉁불퉁한 길을 갈 때 차체가 흔들리지 않게 충격을 흡수하는 장치", "https://example.com/thumb2.jpg");
+		SceneInformation scene3 = createSceneInformationIfNotExists(3L, "드론", "Quadcopter Drone", "Drone",
+			SceneCategory.AEROSPACE_ENGINEERING, 12L, "4개의 프로펠러를 빠르게 돌려 하늘을 날고 방향을 조절하는 장치",
+			"https://example.com/thumb3.jpg");
 
 		// 초기 UserScene (최근 학습 데이터) 삽입
 		if (admin != null) {
@@ -152,6 +154,7 @@ public class DataLoader implements ApplicationRunner {
 	}
 
 	private SceneInformation createSceneInformationIfNotExists(Long defaultAlignmentId, String title, String engTitle,
+		String assetPath,
 		SceneCategory category, Long participantsCount, String description, String thumbnailUrl) {
 		return sceneInformationRepository.findByTitle(title)
 			.orElseGet(() -> {
@@ -159,6 +162,7 @@ public class DataLoader implements ApplicationRunner {
 					.defaultAlignmentId(defaultAlignmentId)
 					.title(title)
 					.engTitle(engTitle)
+					.assetPath(assetPath)
 					.category(category)
 					.participantsCount(participantsCount)
 					.description(description)

@@ -31,9 +31,9 @@ public class QuizController {
 	public ResponseEntity<QuizDto.GradeResponse> grade(
 		@AuthenticationPrincipal
 		CustomUserDetails userDetails,
-		@PathVariable
+		@PathVariable("sceneId")
 		Long sceneId,
-		@PathVariable
+		@PathVariable("quizId")
 		Long quizId,
 		@Valid @RequestBody
 		QuizDto.GradeRequest request) {

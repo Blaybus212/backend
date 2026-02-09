@@ -21,7 +21,7 @@ public class ChatController {
 
 	@PostMapping("/scenes/{sceneId}/chat")
 	public ResponseEntity<ChatResponse> chat(
-		@PathVariable
+		@PathVariable("sceneId")
 		Long sceneId,
 		@Valid @RequestBody
 		ChatRequest request) {

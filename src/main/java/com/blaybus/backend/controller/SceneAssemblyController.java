@@ -42,7 +42,7 @@ public class SceneAssemblyController {
 	public ResponseEntity<Void> syncScene(
 		@AuthenticationPrincipal
 		CustomUserDetails userDetails,
-		@PathVariable
+		@PathVariable("sceneId")
 		Long sceneId,
 		@RequestBody
 		SceneSyncDto dto) {
@@ -55,9 +55,9 @@ public class SceneAssemblyController {
 	public ResponseEntity<byte[]> getViewer(
 		@AuthenticationPrincipal
 		CustomUserDetails userDetails,
-		@PathVariable
+		@PathVariable("sceneId")
 		Long sceneId,
-		@RequestParam(required = false, defaultValue = "both")
+		@RequestParam(name = "target", required = false, defaultValue = "both")
 		String target) {
 
 		byte[] zipBytes = sceneAssemblyService.getViewerZip(userDetails.getUserId(), sceneId, target);

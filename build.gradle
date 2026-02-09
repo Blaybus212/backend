@@ -16,6 +16,12 @@ java {
 	}
 }
 
+tasks.withType(JavaCompile) {
+	// @PathVariable이나 @RequestParam 사용 시, 변수명을 명시하지 않아도(예: Long id)
+	// 런타임에 파라미터 이름을 추론할 수 있도록 컴파일 결과에 파라미터 정보를 포함합니다.
+	options.compilerArgs << '-parameters'
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
