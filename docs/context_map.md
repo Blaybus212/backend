@@ -2,6 +2,7 @@
 
 > **AI에게:** 이 파일은 프로젝트의 네비게이션 지도입니다. 사용자의 요청을 받으면, 가장 먼저 이 파일을 읽고 **'어떤 상세 문서가 필요한지'** 판단하여 요청하세요.
 >
+
 > last updated: 2026-02-08 23:35
 
 ## 1. Core Context (기반 지식)
@@ -13,7 +14,6 @@
 | [Security Overview](./security/) | 보안 설정 관련 문서 | 인증/인가, 보안 정책 확인 시           |
 
 ## 2. Key Architecture Decisions (ADR)
-
 > 우리가 '왜' 기술적인 결정을 내렸는지에 대한 합의 사항입니다. (status: Accepted 만 포함)
 
 | ID  | 문서                                                                                             | ⚡ Trigger Intent (이럴 때 참조하세요)          |
@@ -44,4 +44,3 @@
 | [Scene Ranks](./specs/scene/scene_ranks.md) | Scene 랭킹 조회 (1~5위) | 인기 Scene 순위 API 수정, 집계 시점 정책 확인 시 |
 | [Scene List](./specs/scene/scene_list.md) | 오브젝트 리스트 조회 | 검색/필터링/정렬/페이징 기능 수정 시 |
 | [User Activity](./specs/user/activity.md) | 사용자 활동 기록 및 Streak 조회 | 잔디(Heatmap) 데이터, 연속 학습 횟수 로직 확인 시 |
-
