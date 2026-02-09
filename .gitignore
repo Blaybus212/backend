@@ -41,6 +41,7 @@ logs/
 *.key
 *.pem
 
+.gitattributes
 node_modules/
 ### Verification Artifacts ###
 verification_exports/

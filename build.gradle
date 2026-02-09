@@ -65,6 +65,9 @@ dependencies {
 	// JSON
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 	
+	// JSON
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	
 	// Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	

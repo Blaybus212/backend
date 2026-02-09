@@ -10,8 +10,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import com.blaybus.backend.domain.scene.SceneCategory;
 import com.blaybus.backend.domain.UserEntityListener;
+import com.blaybus.backend.domain.scene.SceneCategory;
 
 import lombok.AccessLevel;
 import lombok.Builder;
