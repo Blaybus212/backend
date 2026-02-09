@@ -5,7 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.blaybus.backend.domain.quiz.QuizType;
 import com.blaybus.backend.domain.quiz.QuizUserProgress;
-import com.blaybus.backend.domain.quiz.SceneRanksQuiz;
+import com.blaybus.backend.domain.quiz.Quiz;
 import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.dto.QuizDto;
 import com.blaybus.backend.exception.BusinessException;
@@ -27,50 +27,53 @@ public class QuizGradingService {
 
 	@Transactional
 	public QuizDto.GradeResponse grade(Long quizId, String userAnswer, User user) {
-		SceneRanksQuiz quiz = quizRepository.findById(quizId)
-			.orElseThrow(() -> new BusinessException(CommonErrorCode.QUIZ_NOT_FOUND));
+		Quiz quiz = quizRepository.findById(quizId)
+				.orElseThrow(() -> new BusinessException(CommonErrorCode.QUIZ_NOT_FOUND));
 
 		boolean correct;
 		double score;
+		String correctAnswer;
 
 		if (quiz.getType() == QuizType.SELECT) {
-			correct = quiz.getAnswer().equalsIgnoreCase(userAnswer.trim());
+			correctAnswer = quiz.getAnswer().split(",")[0];
+			correct = correctAnswer.equalsIgnoreCase(userAnswer.trim());
 			score = correct ? 1.0 : 0.0;
 		} else {
-			score = embeddingService.calculateSimilarity(userAnswer, quiz.getAnswer());
+			correctAnswer = quiz.getAnswer();
+			score = embeddingService.calculateSimilarity(userAnswer, correctAnswer);
 			correct = score >= SIMILARITY_THRESHOLD;
 		}
 
 		updateProgress(user, quiz, correct);
 
-		return new QuizDto.GradeResponse(correct, score, quiz.getAnswer());
+		return new QuizDto.GradeResponse(correct, score, correctAnswer);
 	}
 
-	private void updateProgress(User user, SceneRanksQuiz quiz, boolean correct) {
+	private void updateProgress(User user, Quiz quiz, boolean correct) {
 		QuizUserProgress progress = progressRepository
-			.findByUserIdAndSceneId(user.getId(), quiz.getScene().getId())
-			.orElseGet(() -> QuizUserProgress.builder()
-				.user(user)
-				.scene(quiz.getScene())
-				.lastQuizId(quiz.getId())
-				.totalQuestions(0)
-				.success(0)
-				.failure(0)
-				.isComplete(false)
-				.solveTime(0)
-				.build());
+				.findByUserIdAndSceneId(user.getId(), quiz.getScene().getId())
+				.orElseGet(() -> QuizUserProgress.builder()
+						.user(user)
+						.scene(quiz.getScene())
+						.lastQuizId(quiz.getId())
+						.totalQuestions(0)
+						.success(0)
+						.failure(0)
+						.isComplete(false)
+						.solveTime(0)
+						.build());
 
 		QuizUserProgress updated = QuizUserProgress.builder()
-			.id(progress.getId())
-			.user(progress.getUser())
-			.scene(progress.getScene())
-			.lastQuizId(quiz.getId())
-			.totalQuestions(progress.getTotalQuestions() + 1)
-			.success(correct ? progress.getSuccess() + 1 : progress.getSuccess())
-			.failure(correct ? progress.getFailure() : progress.getFailure() + 1)
-			.isComplete(progress.isComplete())
-			.solveTime(progress.getSolveTime())
-			.build();
+				.id(progress.getId())
+				.user(progress.getUser())
+				.scene(progress.getScene())
+				.lastQuizId(quiz.getId())
+				.totalQuestions(progress.getTotalQuestions() + 1)
+				.success(correct ? progress.getSuccess() + 1 : progress.getSuccess())
+				.failure(correct ? progress.getFailure() : progress.getFailure() + 1)
+				.isComplete(progress.isComplete())
+				.solveTime(progress.getSolveTime())
+				.build();
 
 		progressRepository.save(updated);
 	}

@@ -1,0 +1,72 @@
+[
+    {
+        "scene_info_title": "로봇집게",
+        "target_purpose": "명칭 및 구조 파악",
+        "type": "SELECT",
+        "question": "로봇집게에서 물건이 닿는 안쪽 부분에 마찰력을 높이기 위해 덧대는 부품은 무엇인가요?",
+        "answer": "그립 패드,링크 암,기어 스크루,실린더"
+    },
+    {
+        "scene_info_title": "로봇집게",
+        "target_purpose": "작동 원리 및 메커니즘",
+        "type": "INPUT",
+        "question": "양쪽 집게가 중심을 향해 동시에 움직이도록 동력을 전달하는 기계 부품의 이름은?",
+        "answer": "기어"
+    },
+    {
+        "scene_info_title": "서스펜션",
+        "target_purpose": "명칭 및 구조 파악",
+        "type": "SELECT",
+        "question": "서스펜션 구조에서 나선형으로 말려 있으며 충격을 받으면 길이가 변하는 부품은 무엇인가요?",
+        "answer": "코일 스프링,쇼크 업소버,컨트롤 암,너클"
+    },
+    {
+        "scene_info_title": "서스펜션",
+        "target_purpose": "작동 원리 및 메커니즘",
+        "type": "INPUT",
+        "question": "서스펜션 내부의 기름(오일) 흐름을 이용해 스프링의 흔들림을 억제하는 장치의 명칭은?",
+        "answer": "댐퍼"
+    },
+    {
+        "scene_info_title": "판스프링",
+        "target_purpose": "명칭 및 구조 파악",
+        "type": "SELECT",
+        "question": "판스프링 끝부분에서 차체와 연결되어 스프링의 길이 변화를 수용하는 부품은 무엇인가요?",
+        "answer": "셔클(Shackle),센터 볼트,유볼트,리프 클립"
+    },
+    {
+        "scene_info_title": "판스프링",
+        "target_purpose": "작동 원리 및 메커니즘",
+        "type": "INPUT",
+        "question": "판스프링이 충격을 받았을 때, 겹쳐진 철판들이 서로 문지르며 발생하는 이 힘의 이름은?",
+        "answer": "마찰력"
+    },
+    {
+        "scene_info_title": "드론",
+        "target_purpose": "명칭 및 구조 파악",
+        "type": "SELECT",
+        "question": "드론의 몸체 중심에서 프로펠러가 달린 모터까지 뻗어 있는 뼈대 부분을 무엇이라 하나요?",
+        "answer": "암(Arm),프레임,랜딩 기어,모터 마운트"
+    },
+    {
+        "scene_info_title": "드론",
+        "target_purpose": "작동 원리 및 메커니즘",
+        "type": "INPUT",
+        "question": "드론이 제자리에서 회전하기 위해 서로 마주 보는 프로펠러끼리 가져야 하는 회전 방향은?",
+        "answer": "같은 방향"
+    },
+    {
+        "scene_info_title": "공작기계바이스",
+        "target_purpose": "명칭 및 구조 파악",
+        "type": "SELECT",
+        "question": "바이스에서 물건을 직접 압착하는 두 개의 벽면 중 움직이지 않는 부분의 명칭은?",
+        "answer": "고정 조(Fixed Jaw),가동 조,핸들,슬라이드 베드"
+    },
+    {
+        "scene_info_title": "공작기계바이스",
+        "target_purpose": "AI 대화 기반 나의 취약점 공략",
+        "type": "INPUT",
+        "question": "바이스 핸들을 시계 방향으로 돌리면 입구가 어떻게 변하나요?",
+        "answer": "좁아진다"
+    }
+]

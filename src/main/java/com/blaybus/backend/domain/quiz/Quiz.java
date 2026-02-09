@@ -25,10 +25,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @Entity
-@Table(name = "scene_ranks_quiz")
+@Table(name = "quiz")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class SceneRanksQuiz {
+public class Quiz {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -76,8 +76,8 @@ public class SceneRanksQuiz {
 	/**
 	 * 정답 데이터
 	 * - SELECT:
-	 * 예) JSON / CSV / delimiter 기반 문자열
-	 * ["A","C"] 또는 "A|C"
+	 * delimiter 기반 문자열 - 가장 첫 번째 문자열이 정답
+	 * "A|C"
 	 * - INPUT:
 	 * 정답 문자열 또는 키워드 기준
 	 * → 채점 로직은 애플리케이션 레벨에서 처리
