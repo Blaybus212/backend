@@ -24,6 +24,7 @@ public enum CommonErrorCode implements ErrorCode {
 	SCENE_NOT_FOUND(HttpStatus.NOT_FOUND, "씬 정보를 찾을 수 없습니다."),
 
 	QUIZ_NOT_FOUND(HttpStatus.NOT_FOUND, "퀴즈를 찾을 수 없습니다."),
+	QUIZ_PROGRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "퀴즈 진행 상황을 찾을 수 없습니다."),
 
 	EMBEDDING_API_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "임베딩 API 호출에 실패했습니다."),
 	OPENAI_API_ERROR(HttpStatus.SERVICE_UNAVAILABLE, "AI 서비스 연결에 실패했습니다."),

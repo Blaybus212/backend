@@ -2,6 +2,7 @@ package com.blaybus.backend.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -55,5 +56,17 @@ public class QuizController {
 
 		QuizDto.GradeResponse response = gradingService.grade(quizId, request.answer(), user);
 		return ResponseEntity.ok(response);
+	}
+
+	@PatchMapping("/progress")
+	public ResponseEntity<Void> syncProgress(
+			@AuthenticationPrincipal CustomUserDetails userDetails,
+			@PathVariable Long sceneId,
+			@Valid @RequestBody QuizDto.SyncProgressRequest request) {
+		User user = userRepository.findByUsername(userDetails.getUsername())
+				.orElseThrow(() -> new BusinessException(CommonErrorCode.USER_NOT_FOUND));
+
+		quizService.syncProgress(sceneId, request, user);
+		return ResponseEntity.ok().build();
 	}
 }
