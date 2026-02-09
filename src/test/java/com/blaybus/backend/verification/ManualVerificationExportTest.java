@@ -1,15 +1,24 @@
 package com.blaybus.backend.verification;
 
+import com.blaybus.backend.config.DataLoader;
 import com.blaybus.backend.domain.scene.SceneInformation;
 import com.blaybus.backend.domain.user.User;
+import com.blaybus.backend.repository.ComponentRepository;
 import com.blaybus.backend.repository.SceneInformationRepository;
+import com.blaybus.backend.repository.SceneStatisticsRepository;
+import com.blaybus.backend.repository.UserGrassRepository;
 import com.blaybus.backend.repository.UserRepository;
+import com.blaybus.backend.repository.UserSceneRepository;
 import com.blaybus.backend.service.SceneAssemblyService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.io.File;
@@ -34,12 +43,40 @@ public class ManualVerificationExportTest {
 	private UserRepository userRepository;
 
 	@Autowired
-	private com.blaybus.backend.config.DataLoader dataLoader;
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private ComponentRepository componentRepository;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	@Autowired
+	private ResourcePatternResolver resourcePatternResolver;
+
+	@Autowired
+	private UserSceneRepository userSceneRepository;
+
+	@Autowired
+	private SceneStatisticsRepository sceneStatisticsRepository;
+
+	@Autowired
+	private UserGrassRepository userGrassRepository;
 
 	@Test
 	@DisplayName("Export ZIPs for all scenes for manual verification")
 	void exportAllScenes() throws Exception {
-		// Ensure data exists
+		// Ensure data exists - DataLoader는 @Profile("!test")로 설정되어 있어서 직접 생성
+		DataLoader dataLoader = new DataLoader(
+			userRepository,
+			passwordEncoder,
+			componentRepository,
+			objectMapper,
+			resourcePatternResolver,
+			sceneRepository,
+			userSceneRepository,
+			sceneStatisticsRepository,
+			userGrassRepository);
 		dataLoader.run(null);
 
 		// Get admin user

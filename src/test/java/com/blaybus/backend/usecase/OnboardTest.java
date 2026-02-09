@@ -53,11 +53,11 @@ class OnboardTest {
 	void init() {
 		objectMapper = new ObjectMapper();
 		testUser = User.builder()
-				.username(UUID.randomUUID().toString())
-				.password(passwordEncoder.encode("password123"))
-				.name(null)
-				.onBoardingCompleted(false)
-				.build();
+			.username(UUID.randomUUID().toString())
+			.password(passwordEncoder.encode("password123"))
+			.name(null)
+			.onBoardingCompleted(false)
+			.build();
 		userRepository.save(testUser);
 
 		// 유효한 JWT 토큰 생성
@@ -72,19 +72,19 @@ class OnboardTest {
 		@DisplayName("온보딩 성공 - 204 No Content 반환")
 		void onboard_Success() throws Exception {
 			var request = Map.of(
-					"name", "홍길동",
-					"preferCategory", "aerospace_engineering",
-					"educationLevel", "beginner",
-					"specialized", "전기공학",
-					"persona", "friend",
-					"themeColor", "blue");
+				"name", "홍길동",
+				"preferCategory", "aerospace_engineering",
+				"educationLevel", "beginner",
+				"specialized", "전기공학",
+				"persona", "friend",
+				"themeColor", "blue");
 
 			mockMvc.perform(patch("/onboard")
-					.header("Authorization", "Bearer " + validToken)
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(objectMapper.writeValueAsString(request)))
-					.andDo(print())
-					.andExpect(status().isNoContent());
+				.header("Authorization", "Bearer " + validToken)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)))
+				.andDo(print())
+				.andExpect(status().isNoContent());
 		}
 	}
 
@@ -96,17 +96,17 @@ class OnboardTest {
 		@DisplayName("온보딩 실패 - 인증 토큰 없음 (401 Unauthorized)")
 		void onboard_Fail_Unauthorized() throws Exception {
 			var request = Map.of(
-					"name", "홍길동",
-					"preferCategory", "기계공학",
-					"educationLevel", "beginner",
-					"specialized", "전기공학",
-					"persona", "friend",
-					"themeColor", "blue");
+				"name", "홍길동",
+				"preferCategory", "기계공학",
+				"educationLevel", "beginner",
+				"specialized", "전기공학",
+				"persona", "friend",
+				"themeColor", "blue");
 
 			mockMvc.perform(patch("/onboard")
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(objectMapper.writeValueAsString(request)))
-					.andExpect(status().isUnauthorized());
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)))
+				.andExpect(status().isUnauthorized());
 		}
 
 		@Test
@@ -116,75 +116,75 @@ class OnboardTest {
 			String expiredToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0dXNlciIsImlhdCI6MTYwMDAwMDAwMCwiZXhwIjoxNjAwMDAwMDAxfQ.invalid";
 
 			var request = Map.of(
-					"name", "홍길동",
-					"preferCategory", "기계공학",
-					"educationLevel", "beginner",
-					"specialized", "전기공학",
-					"persona", "friend",
-					"themeColor", "blue");
+				"name", "홍길동",
+				"preferCategory", "기계공학",
+				"educationLevel", "beginner",
+				"specialized", "전기공학",
+				"persona", "friend",
+				"themeColor", "blue");
 
 			mockMvc.perform(patch("/onboard")
-					.header("Authorization", "Bearer " + expiredToken)
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(objectMapper.writeValueAsString(request)))
-					.andExpect(status().isUnauthorized());
+				.header("Authorization", "Bearer " + expiredToken)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)))
+				.andExpect(status().isUnauthorized());
 		}
 
 		@Test
 		@DisplayName("온보딩 실패 - 잘못된 Persona 값 (400 Bad Request)")
 		void onboard_Fail_InvalidPersona() throws Exception {
 			var request = Map.of(
-					"name", "홍길동",
-					"preferCategory", "기계공학",
-					"educationLevel", "beginner",
-					"specialized", "전기공학",
-					"persona", "invalid_persona",
-					"themeColor", "blue");
+				"name", "홍길동",
+				"preferCategory", "기계공학",
+				"educationLevel", "beginner",
+				"specialized", "전기공학",
+				"persona", "invalid_persona",
+				"themeColor", "blue");
 
 			mockMvc.perform(patch("/onboard")
-					.header("Authorization", "Bearer " + validToken)
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(objectMapper.writeValueAsString(request)))
-					.andExpect(status().isBadRequest())
-					.andExpect(jsonPath("$.code").value("CommonErrorCode.INVALID_PARAMETER"));
+				.header("Authorization", "Bearer " + validToken)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.code").value("CommonErrorCode.INVALID_PARAMETER"));
 		}
 
 		@Test
 		@DisplayName("온보딩 실패 - 잘못된 ThemeColor 값 (400 Bad Request)")
 		void onboard_Fail_InvalidThemeColor() throws Exception {
 			var request = Map.of(
-					"name", "홍길동",
-					"preferCategory", "기계공학",
-					"educationLevel", "beginner",
-					"specialized", "전기공학",
-					"persona", "friend",
-					"themeColor", "red");
+				"name", "홍길동",
+				"preferCategory", "기계공학",
+				"educationLevel", "beginner",
+				"specialized", "전기공학",
+				"persona", "friend",
+				"themeColor", "red");
 
 			mockMvc.perform(patch("/onboard")
-					.header("Authorization", "Bearer " + validToken)
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(objectMapper.writeValueAsString(request)))
-					.andExpect(status().isBadRequest())
-					.andExpect(jsonPath("$.code").value("CommonErrorCode.INVALID_PARAMETER"));
+				.header("Authorization", "Bearer " + validToken)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.code").value("CommonErrorCode.INVALID_PARAMETER"));
 		}
 
 		@Test
 		@DisplayName("온보딩 실패 - 잘못된 EducationLevel 값 (400 Bad Request)")
 		void onboard_Fail_InvalidEducationLevel() throws Exception {
 			var request = Map.of(
-					"name", "홍길동",
-					"preferCategory", "기계공학",
-					"educationLevel", "advanced",
-					"specialized", "전기공학",
-					"persona", "friend",
-					"themeColor", "blue");
+				"name", "홍길동",
+				"preferCategory", "기계공학",
+				"educationLevel", "advanced",
+				"specialized", "전기공학",
+				"persona", "friend",
+				"themeColor", "blue");
 
 			mockMvc.perform(patch("/onboard")
-					.header("Authorization", "Bearer " + validToken)
-					.contentType(MediaType.APPLICATION_JSON)
-					.content(objectMapper.writeValueAsString(request)))
-					.andExpect(status().isBadRequest())
-					.andExpect(jsonPath("$.code").value("CommonErrorCode.INVALID_PARAMETER"));
+				.header("Authorization", "Bearer " + validToken)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(objectMapper.writeValueAsString(request)))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.code").value("CommonErrorCode.INVALID_PARAMETER"));
 		}
 	}
 }

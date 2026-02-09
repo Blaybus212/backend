@@ -2,10 +2,17 @@ package com.blaybus.backend.config;
 
 import com.blaybus.backend.domain.alignment.Component;
 import com.blaybus.backend.repository.ComponentRepository;
+import com.blaybus.backend.repository.SceneInformationRepository;
+import com.blaybus.backend.repository.SceneStatisticsRepository;
+import com.blaybus.backend.repository.UserGrassRepository;
+import com.blaybus.backend.repository.UserSceneRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,14 +30,45 @@ class DataLoaderIntegrationTest {
 	private ComponentRepository componentRepository;
 
 	@Autowired
-	private DataLoader dataLoader;
+	private SceneInformationRepository sceneRepository;
 
 	@Autowired
-	private com.blaybus.backend.repository.SceneInformationRepository sceneRepository;
+	private com.blaybus.backend.repository.UserRepository userRepository;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	@Autowired
+	private ResourcePatternResolver resourcePatternResolver;
+
+	@Autowired
+	private UserSceneRepository userSceneRepository;
+
+	@Autowired
+	private SceneStatisticsRepository sceneStatisticsRepository;
+
+	@Autowired
+	private UserGrassRepository userGrassRepository;
 
 	@Test
 	@DisplayName("Verify initial scenes and components are loaded from JSON")
 	void testInitialDataLoaded() throws Exception {
+		// DataLoader는 @Profile("!test")로 설정되어 있어서 test 프로파일에서는 Bean이 생성되지 않습니다.
+		// 따라서 테스트 프로파일에서도 실행되도록 DataLoader를 직접 생성하여 실행합니다.
+		DataLoader dataLoader = new DataLoader(
+			userRepository,
+			passwordEncoder,
+			componentRepository,
+			objectMapper,
+			resourcePatternResolver,
+			sceneRepository,
+			userSceneRepository,
+			sceneStatisticsRepository,
+			userGrassRepository);
+
 		// DataLoader 실행
 		dataLoader.run(null);
 

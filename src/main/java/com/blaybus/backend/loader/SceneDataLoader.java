@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.blaybus.backend.domain.alignment.Alignment;
+import com.blaybus.backend.domain.scene.SceneCategory;
 import com.blaybus.backend.domain.scene.SceneInformation;
 import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.dto.scene.SceneConfigDto;
@@ -95,7 +96,7 @@ public class SceneDataLoader implements CommandLineRunner {
 				.orElseGet(() -> sceneRepository.save(SceneInformation.builder()
 					.title(sceneName)
 					.engTitle(sceneName)
-					.category("Assembly")
+					.category(SceneCategory.MANUFACTURING_ENGINEERING)
 					.assetPath(sceneName) // 폴더명과 일치
 					.description("자동 로드된 Scene")
 					.participantsCount(0L) // 필수 필드 초기화

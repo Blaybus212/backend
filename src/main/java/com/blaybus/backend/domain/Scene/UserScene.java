@@ -68,4 +68,11 @@ public class UserScene {
 	 */
 	@Column(name = "note", columnDefinition = "text")
 	private String note;
+
+	/**
+	 * 마지막 접근 시각
+	 * - 사용자가 해당 scene을 마지막으로 확인한 시각
+	 */
+	@Column(name = "last_accessed_at")
+	private LocalDateTime lastAccessedAt;
 }

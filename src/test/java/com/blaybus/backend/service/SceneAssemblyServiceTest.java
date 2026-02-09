@@ -178,7 +178,15 @@ class SceneAssemblyServiceTest {
 		lenient().when(sceneRepository.findById(sceneId)).thenReturn(Optional.of(mockScene));
 		lenient().when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-		// Mock ResourcePatternResolver
+		// Mock ResourcePatternResolver - getResource() for config file
+		org.springframework.core.io.Resource mockConfigResource = org.mockito.Mockito
+			.mock(org.springframework.core.io.Resource.class);
+		lenient().when(mockConfigResource.exists()).thenReturn(true);
+		lenient().when(mockConfigResource.getInputStream()).thenReturn(new java.io.ByteArrayInputStream(
+			"{\"instances\":[],\"assets\":{}}".getBytes()));
+		lenient().when(resourcePatternResolver.getResource(any(String.class))).thenReturn(mockConfigResource);
+
+		// Mock ResourcePatternResolver - getResources() for assets
 		lenient().when(resourcePatternResolver.getResources(any(String.class)))
 			.thenReturn(new org.springframework.core.io.Resource[0]);
 
@@ -211,7 +219,7 @@ class SceneAssemblyServiceTest {
 			System.out.println("Export failed as expected in test env: " + e.getMessage());
 		}
 
-		// Then
+		// Then - verify that repositories were called before any potential exception
 		verify(sceneRepository).findById(sceneId);
 		verify(alignmentRepository).findByUserIdAndSceneId(userId, sceneId);
 	}
@@ -231,9 +239,15 @@ class SceneAssemblyServiceTest {
 			.build();
 		lenient().when(sceneRepository.findById(sceneId)).thenReturn(Optional.of(mockScene));
 
+		// Mock ResourcePatternResolver - getResource() for config file
+		org.springframework.core.io.Resource mockConfigResource = org.mockito.Mockito
+			.mock(org.springframework.core.io.Resource.class);
+		lenient().when(mockConfigResource.exists()).thenReturn(true);
+		lenient().when(mockConfigResource.getInputStream()).thenReturn(new java.io.ByteArrayInputStream(
+			"{\"instances\":[],\"assets\":{}}".getBytes()));
+		lenient().when(resourcePatternResolver.getResource(any(String.class))).thenReturn(mockConfigResource);
+
 		// Mock Resource loaders to avoid NPE in unit test
-		lenient().when(resourcePatternResolver.getResource(any(String.class)))
-			.thenReturn(new org.springframework.core.io.ByteArrayResource(new byte[0]));
 		lenient().when(resourcePatternResolver.getResources(any(String.class)))
 			.thenReturn(new org.springframework.core.io.Resource[0]);
 

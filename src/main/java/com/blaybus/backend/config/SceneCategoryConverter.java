@@ -11,11 +11,11 @@ import com.blaybus.backend.domain.scene.SceneCategory;
 @Component
 public class SceneCategoryConverter implements Converter<String, SceneCategory> {
 
-    @Override
-    public SceneCategory convert(String source) {
-        if (source == null || source.isBlank()) {
-            return null;
-        }
-        return SceneCategory.fromValue(source);
-    }
+	@Override
+	public SceneCategory convert(String source) {
+		if (source == null || source.isBlank()) {
+			return null;
+		}
+		return SceneCategory.fromValue(source);
+	}
 }

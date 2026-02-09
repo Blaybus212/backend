@@ -2,6 +2,7 @@ package com.blaybus.backend.integration;
 
 import com.blaybus.backend.domain.alignment.Alignment;
 import com.blaybus.backend.domain.alignment.Component;
+import com.blaybus.backend.domain.scene.SceneCategory;
 import com.blaybus.backend.domain.scene.SceneInformation;
 import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.dto.scene.ComponentStateDto;
@@ -135,7 +136,7 @@ class SceneAssemblyIntegrationTest {
 		SceneInformation scene = sceneRepository.save(SceneInformation.builder()
 			.title("Drone")
 			.engTitle("Drone")
-			.category("Assembly")
+			.category(SceneCategory.MANUFACTURING_ENGINEERING)
 			.assetPath("Drone")
 			.description("Test Drone")
 			.participantsCount(0L)
@@ -249,7 +250,7 @@ class SceneAssemblyIntegrationTest {
 		SceneInformation scene = sceneRepository.save(SceneInformation.builder()
 			.title("Drone")
 			.engTitle("Drone")
-			.category("Assembly")
+			.category(SceneCategory.MANUFACTURING_ENGINEERING)
 			.assetPath("Drone")
 			.description("Viewer Test")
 			.participantsCount(0L)
