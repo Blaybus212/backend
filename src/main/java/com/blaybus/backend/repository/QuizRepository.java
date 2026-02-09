@@ -12,5 +12,5 @@ import com.blaybus.backend.domain.quiz.Quiz;
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
     boolean existsByQuestion(String question);
 
-    List<Quiz> findAllBySceneId(Long sceneId);
+    List<Quiz> findAllBySceneIdOrderById(Long sceneId);
 }

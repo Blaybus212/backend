@@ -29,47 +29,45 @@ public class QuizService {
 	@Transactional
 	public QuizResponse getSceneQuizzes(Long sceneId, User user) {
 		SceneInformation scene = sceneRepository.findById(sceneId)
-			.orElseThrow(() -> new BusinessException(CommonErrorCode.SCENE_NOT_FOUND));
+				.orElseThrow(() -> new BusinessException(CommonErrorCode.SCENE_NOT_FOUND));
 
-		List<Quiz> quizzes = quizRepository.findAllBySceneId(sceneId);
+		List<Quiz> quizzes = quizRepository.findAllBySceneIdOrderById(sceneId);
 
 		QuizUserProgress progress = progressRepository.findByUserIdAndSceneId(user.getId(), sceneId)
-			.orElseGet(() -> {
-				QuizUserProgress newProgress = QuizUserProgress.builder()
-					.user(user)
-					.scene(scene)
-					.lastQuizId(null)
-					.totalQuestions(quizzes.size())
-					.success(0)
-					.failure(0)
-					.isComplete(false)
-					.solveTime(0)
-					.build();
-				return progressRepository.save(newProgress);
-			});
+				.orElseGet(() -> {
+					QuizUserProgress newProgress = QuizUserProgress.builder()
+							.user(user)
+							.scene(scene)
+							.lastQuizId(null)
+							.totalQuestions(quizzes.size())
+							.success(0)
+							.failure(0)
+							.isComplete(false)
+							.solveTime(0)
+							.build();
+					return progressRepository.save(newProgress);
+				});
 
 		return mapToResponse(sceneId, progress, quizzes);
 	}
 
 	private QuizResponse mapToResponse(Long sceneId, QuizUserProgress progress, List<Quiz> quizzes) {
 		QuizResponse.UserProgressDto progressDto = new QuizResponse.UserProgressDto(
-			progress.getId(),
-			progress.getLastQuizId(),
-			progress.getTotalQuestions(),
-			progress.getSuccess(),
-			progress.getFailure(),
-			progress.isComplete()
-		);
+				progress.getId(),
+				progress.getLastQuizId(),
+				progress.getTotalQuestions(),
+				progress.getSuccess(),
+				progress.getFailure(),
+				progress.isComplete());
 
 		List<QuizResponse.QuizItemDto> quizItemDtos = quizzes.stream()
-			.map(quiz -> new QuizResponse.QuizItemDto(
-				quiz.getId(),
-				quiz.getTargetPurpose(),
-				quiz.getType(),
-				quiz.getQuestion(),
-				quiz.getAnswer()
-			))
-			.toList();
+				.map(quiz -> new QuizResponse.QuizItemDto(
+						quiz.getId(),
+						quiz.getTargetPurpose(),
+						quiz.getType(),
+						quiz.getQuestion(),
+						quiz.getAnswer()))
+				.toList();
 
 		return new QuizResponse(sceneId, progressDto, quizItemDtos);
 	}
