@@ -3,10 +3,11 @@ package com.blaybus.backend.loader;
 import java.io.File;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.blaybus.backend.domain.alignment.Alignment;
 import com.blaybus.backend.domain.scene.SceneCategory;
@@ -19,13 +20,11 @@ import com.blaybus.backend.repository.SceneInformationRepository;
 import com.blaybus.backend.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
 @Profile("!test") // Mock 충돌 방지 및 컨텍스트 오염 방지를 위해 테스트 환경에서는 실행하지 않음
-@RequiredArgsConstructor
 public class SceneDataLoader implements CommandLineRunner {
 
 	private final UserRepository userRepository;
@@ -33,9 +32,25 @@ public class SceneDataLoader implements CommandLineRunner {
 	private final ComponentRepository componentRepository;
 	private final AlignmentRepository alignmentRepository;
 	private final ObjectMapper objectMapper;
+	private final PasswordEncoder passwordEncoder;
+
+	public SceneDataLoader(
+		UserRepository userRepository,
+		SceneInformationRepository sceneRepository,
+		ComponentRepository componentRepository,
+		AlignmentRepository alignmentRepository,
+		@Qualifier("objectMapper")
+		ObjectMapper objectMapper,
+		PasswordEncoder passwordEncoder) {
+		this.userRepository = userRepository;
+		this.sceneRepository = sceneRepository;
+		this.componentRepository = componentRepository;
+		this.alignmentRepository = alignmentRepository;
+		this.objectMapper = objectMapper;
+		this.passwordEncoder = passwordEncoder;
+	}
 
 	@Override
-	@Transactional
 	public void run(String... args) throws Exception {
 		log.info("🚀 Starting Scene Data Loader...");
 
@@ -44,7 +59,7 @@ public class SceneDataLoader implements CommandLineRunner {
 			log.info("Default User 생성 (ID: 1)");
 			return userRepository.save(User.builder()
 				.username("admin")
-				.password("admin1234!") // 더미 패스워드
+				.password(passwordEncoder.encode("admin1234!")) // 패스워드 암호화 저장
 				.name("Administrator")
 				.isMockUser(false)
 				.onBoardingCompleted(true)

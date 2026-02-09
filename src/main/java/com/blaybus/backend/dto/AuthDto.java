@@ -1,6 +1,7 @@
 package com.blaybus.backend.dto;
 
 import com.blaybus.backend.domain.scene.SceneCategory;
+import com.blaybus.backend.domain.user.ThemeColor;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -24,7 +25,8 @@ public class AuthDto {
 		String username,
 		String name,
 		boolean isFinishOnboard,
-		SceneCategory preferCategory) {
+		SceneCategory preferCategory,
+		ThemeColor themeColor) {
 	}
 
 	@Builder

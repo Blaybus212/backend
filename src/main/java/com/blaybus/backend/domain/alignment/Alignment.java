@@ -1,7 +1,9 @@
 package com.blaybus.backend.domain.alignment;
 
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.type.SqlTypes;
 
 import com.blaybus.backend.domain.scene.SceneInformation;
 import com.blaybus.backend.domain.user.User;
@@ -55,5 +57,6 @@ public class Alignment {
 	private String nodeName;
 
 	@Column(name = "transform_matrix", columnDefinition = "json", nullable = false)
+	@JdbcTypeCode(SqlTypes.JSON)
 	private String transformMatrix;
 }

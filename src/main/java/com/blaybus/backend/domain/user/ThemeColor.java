@@ -25,11 +25,17 @@ public enum ThemeColor {
 
 	@JsonCreator
 	public static ThemeColor fromValue(String value) {
+		String normalizedInput = normalize(value);
 		for (ThemeColor color : values()) {
-			if (color.value.equalsIgnoreCase(value)) {
+			if (normalize(color.value).equals(normalizedInput)
+				|| normalize(color.name()).equals(normalizedInput)) {
 				return color;
 			}
 		}
 		throw new IllegalArgumentException("Unknown ThemeColor: " + value);
+	}
+
+	private static String normalize(String value) {
+		return value == null ? "" : value.replace("-", "").replace("_", "").replace(" ", "").toLowerCase();
 	}
 }

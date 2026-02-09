@@ -7,6 +7,7 @@ import com.blaybus.backend.repository.ComponentRepository;
 import com.blaybus.backend.repository.SceneInformationRepository;
 import com.blaybus.backend.repository.SceneStatisticsRepository;
 import com.blaybus.backend.repository.UserGrassRepository;
+import com.blaybus.backend.repository.QuizRepository;
 import com.blaybus.backend.repository.UserRepository;
 import com.blaybus.backend.repository.UserSceneRepository;
 import com.blaybus.backend.service.SceneAssemblyService;
@@ -63,25 +64,28 @@ public class ManualVerificationExportTest {
 	@Autowired
 	private UserGrassRepository userGrassRepository;
 
+	@Autowired
+	private QuizRepository quizRepository;
+
 	@Test
 	@DisplayName("Export ZIPs for all scenes for manual verification")
 	void exportAllScenes() throws Exception {
 		// Ensure data exists - DataLoader는 @Profile("!test")로 설정되어 있어서 직접 생성
 		DataLoader dataLoader = new DataLoader(
-			userRepository,
-			passwordEncoder,
-			componentRepository,
-			objectMapper,
-			resourcePatternResolver,
-			sceneRepository,
-			userSceneRepository,
-			sceneStatisticsRepository,
-			userGrassRepository);
+				userRepository,
+				passwordEncoder,
+				componentRepository,
+				objectMapper,
+				resourcePatternResolver,
+				sceneRepository,
+				sceneStatisticsRepository,
+				userGrassRepository,
+				quizRepository);
 		dataLoader.run(null);
 
 		// Get admin user
 		User admin = userRepository.findByUsername("admin")
-			.orElseThrow(() -> new RuntimeException("Admin user not found"));
+				.orElseThrow(() -> new RuntimeException("Admin user not found"));
 
 		List<SceneInformation> scenes = sceneRepository.findAll();
 		if (scenes.isEmpty()) {

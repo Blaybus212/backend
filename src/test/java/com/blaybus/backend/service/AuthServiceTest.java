@@ -62,6 +62,7 @@ class AuthServiceTest {
 		assertThat(response.loginUser().isFinishOnboard()).isFalse();
 		assertThat(response.loginUser().preferCategory())
 			.isEqualTo(com.blaybus.backend.domain.scene.SceneCategory.ROBOTICS);
+		assertThat(response.loginUser().themeColor()).isEqualTo(com.blaybus.backend.domain.user.ThemeColor.GREEN);
 	}
 
 	@Test
@@ -75,6 +76,7 @@ class AuthServiceTest {
 			.name("완료유저")
 			.onBoardingCompleted(true)
 			.preferCategory(com.blaybus.backend.domain.scene.SceneCategory.AUTOMOTIVE_ENGINEERING)
+			.themeColor(com.blaybus.backend.domain.user.ThemeColor.BLUE)
 			.build();
 
 		given(userRepository.findByUsername("onboardeduser")).willReturn(Optional.of(user));
@@ -90,6 +92,7 @@ class AuthServiceTest {
 		assertThat(response.loginUser().name()).isEqualTo("완료유저");
 		assertThat(response.loginUser().preferCategory())
 			.isEqualTo(com.blaybus.backend.domain.scene.SceneCategory.AUTOMOTIVE_ENGINEERING);
+		assertThat(response.loginUser().themeColor()).isEqualTo(com.blaybus.backend.domain.user.ThemeColor.BLUE);
 	}
 
 	@Test

@@ -31,6 +31,7 @@ public class OpenAiService {
 	public OpenAiService(
 		@Qualifier("openAiRestClient")
 		RestClient openAiRestClient,
+		@Qualifier("openAiObjectMapper")
 		ObjectMapper objectMapper,
 		@Value("${openai.model}")
 		String model,
