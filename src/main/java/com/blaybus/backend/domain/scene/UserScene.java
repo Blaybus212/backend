@@ -78,4 +78,13 @@ public class UserScene {
 	 */
 	@Column(name = "last_accessed_at")
 	private LocalDateTime lastAccessedAt;
+
+	/**
+	 * 분해 레벨
+	 * - 0: 완전 조립 상태 (기본값)
+	 * - 100: 완전 분해 상태
+	 */
+	@Column(name = "disassembly_level", nullable = false, columnDefinition = "integer default 0")
+	@Builder.Default
+	private Integer disassemblyLevel = 0;
 }

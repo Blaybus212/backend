@@ -430,4 +430,75 @@ class SceneAssemblyIntegrationTest {
 		List<Double> dbMatrix = objectMapper.readValue(createdAlignment.getTransformMatrix(), new TypeReference<>() {});
 		assertThat(dbMatrix).isEqualTo(newMatrix);
 	}
+
+	@Test
+	@DisplayName("Disassembly Level Flow")
+	void testDisassemblyLevelFlow() throws Exception {
+		// 1. Setup Data
+		User user = userRepository.save(User.builder()
+			.username("admin_level")
+			.password("pass")
+			.name("Admin Level")
+			.isMockUser(false)
+			.onBoardingCompleted(true)
+			.build());
+
+		CustomUserDetails userDetails = new CustomUserDetails(user.getId(), user.getUsername(), null);
+
+		SceneInformation scene = sceneRepository.save(SceneInformation.builder()
+			.title("DisassemblyTest")
+			.engTitle("DisassemblyTest")
+			.category(SceneCategory.MANUFACTURING_ENGINEERING)
+			.assetPath("Drone")
+			.description("Level Test")
+			.participantsCount(0L)
+			.defaultAlignmentId(0L)
+			.build());
+
+		// 2. Initial Get (Should be default 0)
+		// Note: UserScene might not exist yet, so we expect the service/controller to
+		// handled it gracefully or we create it first?
+		// Service implementation: retrieval throws if UserScene not found.
+		// So we must ensure UserScene exists or API handles it.
+		// Wait, let's check retrieve logic:
+		// "UserScene userScene = userSceneRepository.findByUserIdAndSceneId(userId,
+		// sceneId).orElseThrow(...)"
+		// So we must Create it first OR the update creates it.
+		// Let's call Update first to create it.
+
+		// 2. Update Level to 50
+		com.blaybus.backend.dto.scene.DisassemblyLevelDto updateDto = com.blaybus.backend.dto.scene.DisassemblyLevelDto
+			.builder()
+			.disassemblyLevel(50)
+			.build();
+
+		mockMvc.perform(put("/scenes/" + scene.getId() + "/disassembly-level")
+			.with(user(userDetails))
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(updateDto)))
+			.andExpect(status().isOk());
+
+		// 3. Get Level (Should be 50)
+		mockMvc.perform(get("/scenes/" + scene.getId() + "/disassembly-level")
+			.with(user(userDetails)))
+			.andExpect(status().isOk())
+			.andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers
+				.jsonPath("$.disassemblyLevel").value(50));
+
+		// 4. Update Level to 100
+		updateDto = com.blaybus.backend.dto.scene.DisassemblyLevelDto.builder()
+			.disassemblyLevel(100)
+			.build();
+
+		mockMvc.perform(put("/scenes/" + scene.getId() + "/disassembly-level")
+			.with(user(userDetails))
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(updateDto)))
+			.andExpect(status().isOk());
+
+		// 5. Verify DB
+		com.blaybus.backend.domain.scene.UserScene dbUserScene = userSceneRepository
+			.findByUserIdAndSceneId(user.getId(), scene.getId()).orElseThrow();
+		assertThat(dbUserScene.getDisassemblyLevel()).isEqualTo(100);
+	}
 }

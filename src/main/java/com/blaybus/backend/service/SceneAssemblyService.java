@@ -24,6 +24,7 @@ import com.blaybus.backend.domain.scene.UserScene;
 import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.dto.scene.AssemblyRequestDto;
 import com.blaybus.backend.dto.scene.ComponentStateDto;
+import com.blaybus.backend.dto.scene.DisassemblyLevelDto;
 import com.blaybus.backend.dto.scene.SceneAssemblyDto;
 import com.blaybus.backend.dto.scene.SceneConfigDto;
 import com.blaybus.backend.dto.scene.SceneNodeDto;
@@ -180,6 +181,49 @@ public class SceneAssemblyService {
 		}
 
 		alignmentRepository.save(alignment);
+	}
+
+	public DisassemblyLevelDto getDisassemblyLevel(Long userId, Long sceneId) {
+		UserScene userScene = userSceneRepository.findByUserIdAndSceneId(userId, sceneId)
+			.orElseThrow(() -> new IllegalArgumentException(
+				"UserScene not found for user " + userId + " and scene " + sceneId));
+
+		return DisassemblyLevelDto.builder()
+			.disassemblyLevel(userScene.getDisassemblyLevel())
+			.build();
+	}
+
+	public void updateDisassemblyLevel(Long userId, Long sceneId, Integer level) {
+		if (level < 0 || level > 100) {
+			throw new IllegalArgumentException("Disassembly level must be between 0 and 100");
+		}
+
+		UserScene userScene = userSceneRepository.findByUserIdAndSceneId(userId, sceneId)
+			.orElseGet(() -> {
+				User user = userRepository.findById(userId)
+					.orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+				SceneInformation scene = sceneRepository.findById(sceneId)
+					.orElseThrow(() -> new IllegalArgumentException("Scene not found: " + sceneId));
+				return UserScene.builder()
+					.user(user)
+					.scene(scene)
+					.lookAt("{}")
+					.disassemblyLevel(level)
+					.build();
+			});
+
+		// Builder pattern for update because of immutability or preference
+		UserScene updatedUserScene = UserScene.builder()
+			.id(userScene.getId())
+			.user(userScene.getUser())
+			.scene(userScene.getScene())
+			.lookAt(userScene.getLookAt())
+			.note(userScene.getNote())
+			.lastAccessedAt(userScene.getLastAccessedAt())
+			.disassemblyLevel(level)
+			.build();
+
+		userSceneRepository.save(updatedUserScene);
 	}
 
 	// ... (existing methods)
