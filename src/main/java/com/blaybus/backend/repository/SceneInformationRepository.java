@@ -21,8 +21,8 @@ public interface SceneInformationRepository extends JpaRepository<SceneInformati
 
 	@Query("SELECT s FROM SceneInformation s "
 		+ "WHERE (:category IS NULL OR s.category = :category) "
-		+ "AND (:query IS NULL OR s.title LIKE CONCAT('%', :query, '%') "
-		+ "OR s.engTitle LIKE CONCAT('%', :query, '%'))")
+		+ "AND (CAST(:query AS string) IS NULL OR s.title LIKE CONCAT('%', CAST(:query AS string), '%') "
+		+ "OR s.engTitle LIKE CONCAT('%', CAST(:query AS string), '%'))")
 	Page<SceneInformation> findByCategoryAndQuery(
 		@Param("category")
 		SceneCategory category,

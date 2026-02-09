@@ -31,7 +31,7 @@ public class SceneController {
 
 	@GetMapping("/scenes/ranks")
 	public ResponseEntity<SceneRankResponse> getSceneRanks(
-		@RequestParam(required = false)
+		@RequestParam(name = "category", required = false)
 		SceneCategory category) {
 		SceneRankResponse response = sceneService.getSceneRanks(category);
 		return ResponseEntity.ok(response);
@@ -39,15 +39,15 @@ public class SceneController {
 
 	@GetMapping("/scenes")
 	public ResponseEntity<SceneListResponse> getSceneList(
-		@RequestParam(required = false)
+		@RequestParam(name = "category", required = false)
 		SceneCategory category,
-		@RequestParam(defaultValue = "1")
+		@RequestParam(name = "page", defaultValue = "1")
 		int page,
-		@RequestParam(defaultValue = "9")
+		@RequestParam(name = "limit", defaultValue = "9")
 		int limit,
-		@RequestParam(required = false)
+		@RequestParam(name = "query", required = false)
 		String query,
-		@RequestParam(defaultValue = "alphabetical")
+		@RequestParam(name = "order", defaultValue = "alphabetical")
 		SceneListOrder order) { // 가나다순 → alphabetical,
 								// 인기순 →popularity
 		SceneListResponse response = sceneService.getScenes(category, page, limit, query, order);
