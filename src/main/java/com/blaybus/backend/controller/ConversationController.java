@@ -33,11 +33,11 @@ public class ConversationController {
 
 	@GetMapping("/conversation")
 	public ResponseEntity<ConversationResponse> getConversation(
-		@PathVariable
+		@PathVariable("sceneId")
 		Long sceneId,
-		@RequestParam(defaultValue = "5")
+		@RequestParam(name = "limit", defaultValue = "5")
 		int limit,
-		@RequestParam(required = false)
+		@RequestParam(name = "cursor", required = false)
 		Long cursor,
 		@AuthenticationPrincipal
 		CustomUserDetails userDetails) {
@@ -48,7 +48,7 @@ public class ConversationController {
 
 	@PostMapping("/conversation/messages")
 	public ResponseEntity<SendMessageResponse> sendMessage(
-		@PathVariable
+		@PathVariable("sceneId")
 		Long sceneId,
 		@Valid @RequestBody
 		SendMessageRequest request,
