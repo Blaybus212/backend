@@ -53,7 +53,7 @@ POST /login
 | `loginUser.username`            | string  | 사용자 아이디                                 |
 | `loginUser.name`                | string  | 사용자 이름 (null 가능)                       |
 | `loginUser.isFinishOnboard`     | boolean | 온보딩 완료 여부 (`false`면 온보딩 화면 이동) |
-| `loginUser.preferSceneCategory` | string  | 선호 학습 분야 (null 가능)                    |
+| `loginUser.preferCategory`      | string  | 선호 학습 분야 (null 가능)                    |
 | `accessToken`                   | string  | JWT Access Token                              |
 
 **Response 예시 (200 OK):**
