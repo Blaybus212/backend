@@ -1,5 +1,7 @@
 package com.blaybus.backend.domain.scene;
 
+import java.time.LocalDateTime;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 

@@ -7,6 +7,8 @@ import com.blaybus.backend.domain.scene.SceneInformation;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -59,6 +61,7 @@ public class SceneRanksQuiz {
 	 * - INPUT : 주관식
 	 * → 프론트 렌더링 방식과 채점 로직 분기 기준
 	 */
+	@Enumerated(EnumType.STRING)
 	@Column(name = "type", length = 10, nullable = false)
 	private QuizType type;
 
