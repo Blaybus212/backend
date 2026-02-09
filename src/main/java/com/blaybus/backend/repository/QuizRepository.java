@@ -1,5 +1,7 @@
 package com.blaybus.backend.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.blaybus.backend.domain.quiz.Quiz;
@@ -9,4 +11,6 @@ import com.blaybus.backend.domain.quiz.Quiz;
  */
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
     boolean existsByQuestion(String question);
+
+    List<Quiz> findAllBySceneId(Long sceneId);
 }
