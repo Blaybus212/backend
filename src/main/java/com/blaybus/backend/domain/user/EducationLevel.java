@@ -25,11 +25,17 @@ public enum EducationLevel {
 
 	@JsonCreator
 	public static EducationLevel fromValue(String value) {
+		String normalizedInput = normalize(value);
 		for (EducationLevel level : values()) {
-			if (level.value.equalsIgnoreCase(value)) {
+			if (normalize(level.value).equals(normalizedInput)
+				|| normalize(level.name()).equals(normalizedInput)) {
 				return level;
 			}
 		}
 		throw new IllegalArgumentException("Unknown EducationLevel: " + value);
+	}
+
+	private static String normalize(String value) {
+		return value == null ? "" : value.replace("-", "").replace("_", "").replace(" ", "").toLowerCase();
 	}
 }

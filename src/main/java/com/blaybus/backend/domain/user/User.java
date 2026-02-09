@@ -62,8 +62,8 @@ public class User {
 	private String specializedIn;
 
 	@Enumerated(EnumType.STRING)
-	@Column(length = 50)
-	private ThemeColor themeColor;
+	@Column(length = 50, nullable = false)
+	private ThemeColor themeColor = ThemeColor.GREEN;
 
 	@Builder
 	public User(
@@ -86,6 +86,6 @@ public class User {
 		this.educationLevel = educationLevel;
 		this.preferCategory = preferCategory;
 		this.specializedIn = specializedIn;
-		this.themeColor = themeColor;
+		this.themeColor = themeColor != null ? themeColor : ThemeColor.GREEN;
 	}
 }

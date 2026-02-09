@@ -25,11 +25,17 @@ public enum Persona {
 
 	@JsonCreator
 	public static Persona fromValue(String value) {
+		String normalizedInput = normalize(value);
 		for (Persona persona : values()) {
-			if (persona.value.equalsIgnoreCase(value)) {
+			if (normalize(persona.value).equals(normalizedInput)
+				|| normalize(persona.name()).equals(normalizedInput)) {
 				return persona;
 			}
 		}
 		throw new IllegalArgumentException("Unknown Persona: " + value);
+	}
+
+	private static String normalize(String value) {
+		return value == null ? "" : value.replace("-", "").replace("_", "").replace(" ", "").toLowerCase();
 	}
 }
