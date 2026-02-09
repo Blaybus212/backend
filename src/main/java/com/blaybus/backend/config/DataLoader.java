@@ -20,6 +20,7 @@ import com.blaybus.backend.domain.scene.SceneInformation;
 import com.blaybus.backend.domain.scene.SceneStatistics;
 import com.blaybus.backend.domain.scene.UserScene;
 import com.blaybus.backend.domain.user.User;
+import com.blaybus.backend.domain.user.ThemeColor;
 import com.blaybus.backend.domain.user.UserGrass;
 import com.blaybus.backend.repository.ComponentRepository;
 import com.blaybus.backend.repository.SceneInformationRepository;
@@ -142,6 +143,7 @@ public class DataLoader implements ApplicationRunner {
 				.password(passwordEncoder.encode(rawPassword))
 				.onBoardingCompleted(false)
 				.isMockUser(true) // Mock 사용자로 표시
+				.themeColor(ThemeColor.GREEN)
 				.build();
 			userRepository.save(user);
 			log.info("Created mock user: {}", username);
