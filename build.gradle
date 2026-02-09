@@ -45,6 +45,9 @@ dependencies {
 	// REST Client
 	implementation 'org.springframework.boot:spring-boot-starter-restclient'
 	
+	// JSON
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	
 	// Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	

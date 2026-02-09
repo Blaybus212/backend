@@ -1,12 +1,26 @@
 package com.blaybus.backend.domain.scene;
 
-import com.blaybus.backend.domain.user.User;
-import jakarta.persistence.*;
-import lombok.*;
+import java.time.LocalDateTime;
+
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.LocalDateTime;
+import com.blaybus.backend.domain.user.User;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * UserScene
@@ -26,39 +40,39 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserScene {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private User user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "scene_info_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private SceneInformation scene;
-
-    /**
-     * 사용자 카메라 시점 정보
-     */
-    @Column(name = "look_at", nullable = false) // todo  columnDefinition = "jsonb", < - 해결하기
-    private String lookAt;
-
-    /**
-     * 사용자 노트
-     * - Markdown 형식의 자유 텍스트
-     * - scene에 대한 설명, 학습 메모, 작업 기록 용도
-     */
-    @Column(name = "note", columnDefinition = "text")
-    private String note;
-
-    /**
-     * 사용자가 최근에 접속한 기록
-     * 최신순 정렬을 위함
-     */
-    @Column(name = "last_accessed_at", nullable = false)
-    private LocalDateTime lastAccessedAt;
+  
+  @Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	
+  @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private User user;
+	
+  @ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "scene_info_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
+	private SceneInformation scene;
+	
+  /**
+	 * 사용자 카메라 시점 정보
+	 */
+	@Column(name = "look_at", nullable = false) // todo  columnDefinition = "jsonb", < - 해결하기
+	private String lookAt;
+	
+  /**
+	 * 사용자 노트
+	 * - Markdown 형식의 자유 텍스트
+	 * - scene에 대한 설명, 학습 메모, 작업 기록 용도
+	 */
+	@Column(name = "note", columnDefinition = "text")
+	private String note;
+	
+  /**
+	 * 사용자가 최근에 접속한 기록
+	 * 최신순 정렬을 위함
+	 */
+	@Column(name = "last_accessed_at", nullable = false)
+	private LocalDateTime lastAccessedAt;
 }
