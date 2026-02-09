@@ -2,8 +2,10 @@ package com.blaybus.backend.domain.scene;
 
 import java.time.LocalDateTime;
 
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.type.SqlTypes;
 
 import com.blaybus.backend.domain.user.User;
 
@@ -58,6 +60,7 @@ public class UserScene {
 	/**
 	 * 사용자 카메라 시점 정보
 	 */
+	@JdbcTypeCode(SqlTypes.JSON)
 	@Column(name = "look_at", columnDefinition = "jsonb", nullable = false)
 	private String lookAt;
 
