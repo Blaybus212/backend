@@ -23,63 +23,63 @@ import com.blaybus.backend.repository.QuizUserProgressRepository;
 @ExtendWith(MockitoExtension.class)
 class QuizServiceTest {
 
-        @Mock
-        private QuizUserProgressRepository progressRepository;
+	@Mock
+	private QuizUserProgressRepository progressRepository;
 
-        @InjectMocks
-        private QuizService quizService;
+	@InjectMocks
+	private QuizService quizService;
 
-        @Test
-        @DisplayName("퀴즈 진행 상황을 정상적으로 동기화한다.")
-        void syncProgressSuccess() {
-                // given
-                Long sceneId = 1L;
-                User user = mock(User.class);
-                given(user.getId()).willReturn(1L);
-                SceneInformation scene = SceneInformation.builder().id(sceneId).build();
-                QuizUserProgress progress = QuizUserProgress.builder()
-                                .id(1L)
-                                .user(user)
-                                .scene(scene)
-                                .totalQuestions(5)
-                                .success(2)
-                                .failure(1)
-                                .solveTime(100)
-                                .isComplete(false)
-                                .build();
+	@Test
+	@DisplayName("퀴즈 진행 상황을 정상적으로 동기화한다.")
+	void syncProgressSuccess() {
+		// given
+		Long sceneId = 1L;
+		User user = mock(User.class);
+		given(user.getId()).willReturn(1L);
+		SceneInformation scene = SceneInformation.builder().id(sceneId).build();
+		QuizUserProgress progress = QuizUserProgress.builder()
+			.id(1L)
+			.user(user)
+			.scene(scene)
+			.totalQuestions(5)
+			.success(2)
+			.failure(1)
+			.solveTime(100)
+			.isComplete(false)
+			.build();
 
-                QuizDto.SyncProgressRequest request = new QuizDto.SyncProgressRequest(
-                                3L, 5, 4, 1, 250, true);
+		QuizDto.SyncProgressRequest request = new QuizDto.SyncProgressRequest(
+			3L, 5, 4, 1, 250, true);
 
-                given(progressRepository.findByUserIdAndSceneId(user.getId(), sceneId))
-                                .willReturn(Optional.of(progress));
+		given(progressRepository.findByUserIdAndSceneId(user.getId(), sceneId))
+			.willReturn(Optional.of(progress));
 
-                // when
-                quizService.syncProgress(sceneId, request, user);
+		// when
+		quizService.syncProgress(sceneId, request, user);
 
-                // then
-                then(progressRepository).should().save(argThat(updated -> updated.getLastQuizId().equals(3L) &&
-                                updated.getSuccess().equals(4) &&
-                                updated.getSolveTime().equals(250) &&
-                                updated.isComplete()));
-        }
+		// then
+		then(progressRepository).should().save(argThat(updated -> updated.getLastQuizId().equals(3L) &&
+			updated.getSuccess().equals(4) &&
+			updated.getSolveTime().equals(250) &&
+			updated.isComplete()));
+	}
 
-        @Test
-        @DisplayName("진행 상황이 존재하지 않으면 예외를 던진다.")
-        void syncProgressNotFound() {
-                // given
-                Long sceneId = 1L;
-                User user = mock(User.class);
-                given(user.getId()).willReturn(1L);
-                QuizDto.SyncProgressRequest request = new QuizDto.SyncProgressRequest(
-                                3L, 5, 4, 1, 250, true);
+	@Test
+	@DisplayName("진행 상황이 존재하지 않으면 예외를 던진다.")
+	void syncProgressNotFound() {
+		// given
+		Long sceneId = 1L;
+		User user = mock(User.class);
+		given(user.getId()).willReturn(1L);
+		QuizDto.SyncProgressRequest request = new QuizDto.SyncProgressRequest(
+			3L, 5, 4, 1, 250, true);
 
-                given(progressRepository.findByUserIdAndSceneId(user.getId(), sceneId))
-                                .willReturn(Optional.empty());
+		given(progressRepository.findByUserIdAndSceneId(user.getId(), sceneId))
+			.willReturn(Optional.empty());
 
-                // when & then
-                assertThatThrownBy(() -> quizService.syncProgress(sceneId, request, user))
-                                .isInstanceOf(BusinessException.class)
-                                .hasFieldOrPropertyWithValue("errorCode", CommonErrorCode.QUIZ_PROGRESS_NOT_FOUND);
-        }
+		// when & then
+		assertThatThrownBy(() -> quizService.syncProgress(sceneId, request, user))
+			.isInstanceOf(BusinessException.class)
+			.hasFieldOrPropertyWithValue("errorCode", CommonErrorCode.QUIZ_PROGRESS_NOT_FOUND);
+	}
 }

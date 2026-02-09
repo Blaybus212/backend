@@ -36,10 +36,12 @@ public class QuizController {
 
 	@GetMapping
 	public ResponseEntity<QuizResponse> getQuizzes(
-			@AuthenticationPrincipal CustomUserDetails userDetails,
-			@PathVariable Long sceneId) {
+		@AuthenticationPrincipal
+		CustomUserDetails userDetails,
+		@PathVariable
+		Long sceneId) {
 		User user = userRepository.findByUsername(userDetails.getUsername())
-				.orElseThrow(() -> new BusinessException(CommonErrorCode.USER_NOT_FOUND));
+			.orElseThrow(() -> new BusinessException(CommonErrorCode.USER_NOT_FOUND));
 
 		QuizResponse response = quizService.getSceneQuizzes(sceneId, user);
 		return ResponseEntity.ok(response);
@@ -47,12 +49,16 @@ public class QuizController {
 
 	@PostMapping("/{quizId}/grade")
 	public ResponseEntity<QuizDto.GradeResponse> grade(
-			@AuthenticationPrincipal CustomUserDetails userDetails,
-			@PathVariable Long sceneId,
-			@PathVariable Long quizId,
-			@Valid @RequestBody QuizDto.GradeRequest request) {
+		@AuthenticationPrincipal
+		CustomUserDetails userDetails,
+		@PathVariable
+		Long sceneId,
+		@PathVariable
+		Long quizId,
+		@Valid @RequestBody
+		QuizDto.GradeRequest request) {
 		User user = userRepository.findByUsername(userDetails.getUsername())
-				.orElseThrow(() -> new BusinessException(CommonErrorCode.USER_NOT_FOUND));
+			.orElseThrow(() -> new BusinessException(CommonErrorCode.USER_NOT_FOUND));
 
 		QuizDto.GradeResponse response = gradingService.grade(quizId, request.answer(), user);
 		return ResponseEntity.ok(response);
@@ -60,11 +66,14 @@ public class QuizController {
 
 	@PatchMapping("/progress")
 	public ResponseEntity<Void> syncProgress(
-			@AuthenticationPrincipal CustomUserDetails userDetails,
-			@PathVariable Long sceneId,
-			@Valid @RequestBody QuizDto.SyncProgressRequest request) {
+		@AuthenticationPrincipal
+		CustomUserDetails userDetails,
+		@PathVariable
+		Long sceneId,
+		@Valid @RequestBody
+		QuizDto.SyncProgressRequest request) {
 		User user = userRepository.findByUsername(userDetails.getUsername())
-				.orElseThrow(() -> new BusinessException(CommonErrorCode.USER_NOT_FOUND));
+			.orElseThrow(() -> new BusinessException(CommonErrorCode.USER_NOT_FOUND));
 
 		quizService.syncProgress(sceneId, request, user);
 		return ResponseEntity.ok().build();

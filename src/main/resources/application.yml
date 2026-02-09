@@ -29,8 +29,8 @@ logging:
 # OpenAI API Configuration
 openai:
   api-key: ${OPENAI_API_KEY:}
-  base-url: https://api.openai.com/v1
-  model: gpt-5-mini
+  base-url: ${OPENAI_BASE_URL:https://api.openai.com/v1}
+  model: ${OPENAI_MODEL:gpt-4o-mini}
   embedding-model: text-embedding-3-small
   max-retries: 2
   timeout-seconds: 30

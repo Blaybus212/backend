@@ -51,7 +51,7 @@ public class OpenAiService {
 		for (int attempt = 0; attempt <= maxRetries; attempt++) {
 			try {
 				ResponsesResponse response = openAiRestClient.post()
-					.uri("/responses")
+					.uri("/chat/completions")
 					.body(request)
 					.retrieve()
 					.body(ResponsesResponse.class);
@@ -61,11 +61,7 @@ public class OpenAiService {
 				}
 
 				if (!response.isComplete()) {
-					log.warn("OpenAI response incomplete: {}", response.incompleteDetails());
-					if (response.incompleteDetails() != null
-						&& "max_output_tokens".equals(response.incompleteDetails().reason())) {
-						throw new BusinessException(CommonErrorCode.OPENAI_TOKEN_EXCEEDED);
-					}
+					log.warn("OpenAI response incomplete or stopped unexpectedly");
 					throw new BusinessException(CommonErrorCode.OPENAI_API_ERROR);
 				}
 

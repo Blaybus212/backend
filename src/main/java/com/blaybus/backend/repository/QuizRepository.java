@@ -10,7 +10,7 @@ import com.blaybus.backend.domain.quiz.Quiz;
  * QuizRepository provides CRUD operations for Quiz entities.
  */
 public interface QuizRepository extends JpaRepository<Quiz, Long> {
-    boolean existsByQuestion(String question);
+	boolean existsByQuestion(String question);
 
-    List<Quiz> findAllBySceneIdOrderById(Long sceneId);
+	List<Quiz> findAllBySceneIdOrderById(Long sceneId);
 }
