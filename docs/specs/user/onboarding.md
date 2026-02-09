@@ -39,7 +39,7 @@ Authorization: Bearer ${accessToken}
 | 필드명           | 타입   | 필수여부 | 설명                               |
 | :--------------- | :----- | :------- | :--------------------------------- |
 | `name`           | string | Yes      | 사용자 성명                        |
-| `preferCategory` | string | Yes      | 쉼표로 구분된 학습 분야            |
+| `preferCategory` | enum   | Yes      | 선호 학습 분야 (단일 선택)         |
 | `educationLevel` | enum   | Yes      | 교육 수준                          |
 | `specialized`    | string | Yes      | 이미 잘 알고 있는 분야 (쉼표 구분) |
 | `persona`        | enum   | Yes      | AI Assistant의 어조                |
@@ -47,18 +47,19 @@ Authorization: Bearer ${accessToken}
 
 **Enum 허용값:**
 
-| 필드             | 허용값                                              |
-| :--------------- | :-------------------------------------------------- |
-| `educationLevel` | `beginner`, `fundamental`, `intermediate`, `expert` |
-| `persona`        | `senior`, `professor`, `friend`, `assistant`        |
-| `themeColor`     | `blue`, `orange`, `green`, `pink`                   |
+| 필드             | 허용값                                                                                     |
+| :--------------- | :----------------------------------------------------------------------------------------- |
+| `preferCategory` | `robotics`, `automotive_engineering`, `aerospace_engineering`, `manufacturing_engineering` |
+| `educationLevel` | `beginner`, `fundamental`, `intermediate`, `expert`                                        |
+| `persona`        | `senior`, `professor`, `friend`, `assistant`                                               |
+| `themeColor`     | `blue`, `orange`, `green`, `pink`                                                          |
 
 **Request 예시:**
 
 ```json
 {
   "name": "홍길동",
-  "preferCategory": "기계공학,우주공학",
+  "preferCategory": "robotics",
   "educationLevel": "beginner",
   "specialized": "전기공학,컴퓨터공학",
   "persona": "friend",

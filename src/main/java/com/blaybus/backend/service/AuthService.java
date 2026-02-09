@@ -36,6 +36,7 @@ public class AuthService {
 			.username(user.getUsername())
 			.name(user.getName())
 			.isFinishOnboard(user.isOnBoardingCompleted())
+			.preferSceneCategory(user.getPreferCategory())
 			.build();
 
 		return AuthDto.LoginResponse.builder()

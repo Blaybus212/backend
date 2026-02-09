@@ -55,6 +55,7 @@ class AuthTest {
 			.password(passwordEncoder.encode("password123"))
 			.name("테스트유저")
 			.onBoardingCompleted(false)
+			.preferCategory(com.blaybus.backend.domain.scene.SceneCategory.ROBOTICS)
 			.build();
 		invalidUser = User.builder()
 			.username(UUID.randomUUID().toString())
@@ -87,7 +88,8 @@ class AuthTest {
 				// loginUser 내부 필드 검증
 				.andExpect(jsonPath("$.loginUser.username").value(user.getUsername()))
 				.andExpect(jsonPath("$.loginUser.name").value("테스트유저"))
-				.andExpect(jsonPath("$.loginUser.isFinishOnboard").value(false));
+				.andExpect(jsonPath("$.loginUser.isFinishOnboard").value(false))
+				.andExpect(jsonPath("$.loginUser.preferSceneCategory").value("robotics"));
 		}
 
 		@Test
@@ -98,6 +100,7 @@ class AuthTest {
 				.password(passwordEncoder.encode("password123"))
 				.name("완료유저")
 				.onBoardingCompleted(true)
+				.preferCategory(com.blaybus.backend.domain.scene.SceneCategory.MANUFACTURING_ENGINEERING)
 				.build();
 			userRepository.save(completedUser);
 
@@ -111,7 +114,8 @@ class AuthTest {
 				.content(objectMapper.writeValueAsString(request)))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.loginUser.isFinishOnboard").value(true))
-				.andExpect(jsonPath("$.loginUser.name").value("완료유저"));
+				.andExpect(jsonPath("$.loginUser.name").value("완료유저"))
+				.andExpect(jsonPath("$.loginUser.preferSceneCategory").value("manufacturing_engineering"));
 		}
 
 		@Test

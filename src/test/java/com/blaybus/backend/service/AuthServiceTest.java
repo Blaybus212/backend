@@ -44,6 +44,7 @@ class AuthServiceTest {
 			.password("encodedPassword")
 			.name("테스트유저")
 			.onBoardingCompleted(false)
+			.preferCategory(com.blaybus.backend.domain.scene.SceneCategory.ROBOTICS)
 			.build();
 
 		given(userRepository.findByUsername("testuser")).willReturn(Optional.of(user));
@@ -59,6 +60,8 @@ class AuthServiceTest {
 		assertThat(response.loginUser().username()).isEqualTo("testuser");
 		assertThat(response.loginUser().name()).isEqualTo("테스트유저");
 		assertThat(response.loginUser().isFinishOnboard()).isFalse();
+		assertThat(response.loginUser().preferSceneCategory())
+			.isEqualTo(com.blaybus.backend.domain.scene.SceneCategory.ROBOTICS);
 	}
 
 	@Test
@@ -71,6 +74,7 @@ class AuthServiceTest {
 			.password("encodedPassword")
 			.name("완료유저")
 			.onBoardingCompleted(true)
+			.preferCategory(com.blaybus.backend.domain.scene.SceneCategory.AUTOMOTIVE_ENGINEERING)
 			.build();
 
 		given(userRepository.findByUsername("onboardeduser")).willReturn(Optional.of(user));
@@ -84,6 +88,8 @@ class AuthServiceTest {
 		assertThat(response.accessToken()).isNotBlank();
 		assertThat(response.loginUser().isFinishOnboard()).isTrue();
 		assertThat(response.loginUser().name()).isEqualTo("완료유저");
+		assertThat(response.loginUser().preferSceneCategory())
+			.isEqualTo(com.blaybus.backend.domain.scene.SceneCategory.AUTOMOTIVE_ENGINEERING);
 	}
 
 	@Test

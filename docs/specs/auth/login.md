@@ -47,13 +47,14 @@ POST /login
 
 ### Response Body
 
-| 필드명                      | 타입    | 설명                                          |
-| :-------------------------- | :------ | :-------------------------------------------- |
-| `loginUser`                 | object  | 로그인한 사용자 정보                          |
-| `loginUser.username`        | string  | 사용자 아이디                                 |
-| `loginUser.name`            | string  | 사용자 이름 (null 가능)                       |
-| `loginUser.isFinishOnboard` | boolean | 온보딩 완료 여부 (`false`면 온보딩 화면 이동) |
-| `accessToken`               | string  | JWT Access Token                              |
+| 필드명                          | 타입    | 설명                                          |
+| :------------------------------ | :------ | :-------------------------------------------- |
+| `loginUser`                     | object  | 로그인한 사용자 정보                          |
+| `loginUser.username`            | string  | 사용자 아이디                                 |
+| `loginUser.name`                | string  | 사용자 이름 (null 가능)                       |
+| `loginUser.isFinishOnboard`     | boolean | 온보딩 완료 여부 (`false`면 온보딩 화면 이동) |
+| `loginUser.preferSceneCategory` | string  | 선호 학습 분야 (null 가능)                    |
+| `accessToken`                   | string  | JWT Access Token                              |
 
 **Response 예시 (200 OK):**
 
@@ -62,7 +63,8 @@ POST /login
   "loginUser": {
     "username": "admin",
     "name": "관리자",
-    "isFinishOnboard": false
+    "isFinishOnboard": false,
+    "preferSceneCategory": "robotics"
   },
   "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
