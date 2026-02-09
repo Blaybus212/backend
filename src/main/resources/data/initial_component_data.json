@@ -1,5 +1,5 @@
 {
-  "Drone": {
+  "Quadcopter Drone": {
     "Arm_gear1": {
       "description": "암 구동부의 기어 모듈",
       "texture": "금속, 알루미늄, 윤활유",
@@ -198,7 +198,7 @@
       "usage": "체결, 지지"
     }
   },
-  "Machine Vice": {
+  "Machine Tool Vise": {
     "Part8-grundplatte1": {
       "description": "바이스 하부 베이스 플레이트",
       "texture": "주철, 도장",
@@ -255,7 +255,7 @@
       "usage": "회전구동, 압착"
     }
   },
-  "Robot Gripper": {
+  "Robotic Gripper": {
     "Base_Plate1": {
       "description": "베이스 플레이트",
       "texture": "알루미늄, 코팅",
@@ -357,7 +357,7 @@
       "usage": "회전축, 결합"
     }
   },
-  "Suspension": {
+  "Vehicle Suspension": {
     "BASE1": {
       "description": "서스펜션 베이스",
       "texture": "강철, 코팅",

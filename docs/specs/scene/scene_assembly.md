@@ -78,3 +78,25 @@ graph TD
 
 - [Scene Sync API 명세](./scene_sync.md)
 - [Scene Viewer ZIP 내보내기 명세](./viewer_export.md)
+
+## 5. 초기 데이터 로딩 (Initial Data Loading)
+
+### 5.1 개요
+
+서버 구동 시점에 `DataLoader`를 통해 사전 정의된 메타데이터와 조립 설정 파일을 파싱하여 DB에 적재합니다.
+
+### 5.2 데이터 소스 구조
+
+- **Scene Metadata**: `src/main/resources/data/initial_scene_data.json`
+  - 씬의 기본 정보 (Title, ID, Description, Asset Path 등) 정의
+- **Component Metadata**: `src/main/resources/data/initial_component_data.json`
+  - 씬에 종속된 부품들의 메타데이터 (Description, Texture, Usage 등) 정의
+- **Assembly Config**: `src/main/resources/assets/{SceneName}/config/assembly_config.json`
+  - 씬의 초기 조립 상태 (Matrix, 부품 배치) 정의
+  - GLTF 생성 및 뷰어 로드 시 기준이 되는 **Base Configuration**
+
+### 5.3 로딩 프로세스
+
+1. **Scene 엔티티 생성**: `initial_scene_data.json`을 읽어 `SceneInformation` 테이블에 저장.
+2. **Component 엔티티 생성**: `initial_component_data.json`을 읽어 각 씬에 속한 `Component` 테이블에 저장.
+3. **Viewer 생성 시**: `assembly_config.json`을 로드하여 기본 조립 상태를 구성하고, 사용자별 `Alignment` 데이터를 병합(Merge)하여 최종 GLTF 생성.

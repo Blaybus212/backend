@@ -46,6 +46,9 @@ public class DataLoader implements ApplicationRunner {
 		// 초기 사용자 데이터 삽입 (이미 존재하면 스킵)
 		createUserIfNotExists("admin", "admin1234!");
 
+		// 초기 씬 데이터 삽입
+		loadInitialScenes();
+
 		// 초기 컴포넌트 데이터 삽입
 		loadInitialComponents();
 
@@ -63,6 +66,44 @@ public class DataLoader implements ApplicationRunner {
 			log.info("Created mock user: {}", username);
 		} else {
 			log.info("User already exists, skipping: {}", username);
+		}
+	}
+
+	private void loadInitialScenes() {
+		try {
+			Resource resource = resourcePatternResolver.getResource("classpath:data/initial_scene_data.json");
+			if (!resource.exists()) {
+				log.warn("Initial scene data file not found.");
+				return;
+			}
+			JsonNode root = objectMapper.readTree(resource.getInputStream());
+			if (!root.isArray()) {
+				log.warn("Initial scene data is not a JSON Array.");
+				return;
+			}
+
+			for (JsonNode node : root) {
+				String engTitle = node.path("eng_title").asText();
+				if (sceneRepository.findByEngTitle(engTitle).isPresent()) {
+					continue;
+				}
+
+				SceneInformation scene = SceneInformation.builder()
+					.title(node.path("title").asText())
+					.engTitle(engTitle)
+					.assetPath(node.path("asset_path").asText())
+					.category(node.path("category").asText())
+					.description(node.path("description").asText())
+					.participantsCount(node.path("participants_count").asLong(0))
+					.defaultAlignmentId(0L) // 기본값 설정
+					.build();
+
+				sceneRepository.save(scene);
+				log.info("Created scene: {}", engTitle);
+			}
+
+		} catch (IOException e) {
+			log.error("Failed to load initial scene data", e);
 		}
 	}
 

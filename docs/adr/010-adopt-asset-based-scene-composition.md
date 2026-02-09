@@ -71,3 +71,4 @@ Accepted
 - 부품과 장면의 관계를 관리하는 `Component`, `Alignment`, `SceneInformation` 테이블이 핵심 도메인 모델이 되며, 사용자별 환경값은 `UserScene`에서 관리되어 라이브 참조 중에도 개인화된 뷰를 제공합니다.
 - 서버 환경은 조립 엔진 실행을 위한 멀티 런타임(Java/Node.js)으로 운영되며, 이는 클라이언트 사이드 조립으로 전환하기 전까지의 전략적 선택입니다.
 - 운영 시 에셋의 삭제는 'Soft Delete' 또는 'Versioning'을 권장하여 장면의 파손을 방지합니다.
+- 초기 데이터 로딩 구현체(`DataLoader`)를 통해 `assembly_config.json`을 파싱하여 DB를 초기화하는 구조가 정착되었습니다. 상세 스펙은 [Scene Assembly API 명세](../specs/scene/scene_assembly.md)를 참고합니다.
