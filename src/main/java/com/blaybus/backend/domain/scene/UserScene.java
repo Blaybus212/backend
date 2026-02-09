@@ -40,39 +40,39 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class UserScene {
-  
-  @Id
+
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-  @ManyToOne(fetch = FetchType.LAZY)
+
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private User user;
-	
-  @ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "scene_info_id", nullable = false)
+
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "scene_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private SceneInformation scene;
-	
-  /**
+
+	/**
 	 * 사용자 카메라 시점 정보
 	 */
-	@Column(name = "look_at", nullable = false) // todo  columnDefinition = "jsonb", < - 해결하기
+	@Column(name = "look_at", columnDefinition = "jsonb", nullable = false)
 	private String lookAt;
-	
-  /**
+
+	/**
 	 * 사용자 노트
 	 * - Markdown 형식의 자유 텍스트
 	 * - scene에 대한 설명, 학습 메모, 작업 기록 용도
 	 */
 	@Column(name = "note", columnDefinition = "text")
 	private String note;
-	
-  /**
-	 * 사용자가 최근에 접속한 기록
-	 * 최신순 정렬을 위함
+
+	/**
+	 * 마지막 접근 시각
+	 * - 사용자가 해당 scene을 마지막으로 확인한 시각
 	 */
-	@Column(name = "last_accessed_at", nullable = false)
+	@Column(name = "last_accessed_at")
 	private LocalDateTime lastAccessedAt;
 }

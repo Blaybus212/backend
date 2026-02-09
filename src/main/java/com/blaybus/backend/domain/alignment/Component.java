@@ -53,4 +53,11 @@ public class Component {
 	 */
 	@Column(name = "usage", length = 255)
 	private String usage;
+
+	/**
+	 * GLTF 에셋 파일 경로 (상대 경로 또는 파일명)
+	 * 예: "Arm gear.gltf"
+	 */
+	@Column(name = "asset_path")
+	private String assetPath;
 }

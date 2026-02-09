@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class CellResponse {
-    private Integer score;
-    private Integer level;
+	private Integer score;
+	private Integer level;
 }

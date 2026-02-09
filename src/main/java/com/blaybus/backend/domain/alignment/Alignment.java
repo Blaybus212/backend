@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Table(name = "alignments", uniqueConstraints = {
-	@UniqueConstraint(columnNames = {"user_id", "scene_id", "component_id"})
+	@UniqueConstraint(columnNames = {"user_id", "scene_id", "node_name"})
 })
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -50,6 +50,9 @@ public class Alignment {
 	@JoinColumn(name = "component_id", nullable = false)
 	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Component component;
+
+	@Column(name = "node_name", nullable = false)
+	private String nodeName;
 
 	@Column(name = "transform_matrix", columnDefinition = "json", nullable = false)
 	private String transformMatrix;

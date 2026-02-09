@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.blaybus.backend.repository.UserRepository;
 
-import tools.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.dto.AuthDto;
