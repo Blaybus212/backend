@@ -4,6 +4,8 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password: password
+  profiles:
+    active: test
   jpa:
     hibernate:
       ddl-auto: update
@@ -30,3 +32,11 @@ app:
 jwt:
   secret-key: test-secret-key-for-test-onlytest-secret-key-for-test-onlytest-secret-key-for-test-onlytest-secret-key-for-test-onlytest-secret-key-for-test-only
   expiration-time: 3600000
+
+openai:
+  api-key: test-key-not-real
+  base-url: https://api.openai.com/v1
+  model: gpt-5-mini
+  embedding-model: text-embedding-3-small
+  max-retries: 0
+  timeout-seconds: 5

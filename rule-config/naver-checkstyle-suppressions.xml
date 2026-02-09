@@ -6,4 +6,6 @@
 <suppressions>
 	<!-- Spotless Eclipse formatter uses different line-wrapping indentation than Checkstyle expects -->
 	<suppress checks="Indentation" files=".*\.java"/>
+	<!-- Spotless removes spaces in empty braces, conflicting with checkstyle WhitespaceAround -->
+	<suppress checks="WhitespaceAround" files=".*Repository\.java"/>
 </suppressions>

@@ -2,6 +2,7 @@ package com.blaybus.backend.domain.user;
 
 import com.blaybus.backend.domain.UserEntityListener;
 
+import com.blaybus.backend.domain.scene.SceneCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -52,8 +53,9 @@ public class User {
 	@Column(length = 50)
 	private EducationLevel educationLevel;
 
+	@Enumerated(EnumType.STRING)
 	@Column(length = 50)
-	private String preferCategory;
+	private SceneCategory preferCategory;
 
 	@Column(length = 150)
 	private String specializedIn;
@@ -71,7 +73,7 @@ public class User {
 		boolean onBoardingCompleted,
 		Persona persona,
 		EducationLevel educationLevel,
-		String preferCategory,
+		SceneCategory preferCategory,
 		String specializedIn,
 		ThemeColor themeColor) {
 		this.username = username;
