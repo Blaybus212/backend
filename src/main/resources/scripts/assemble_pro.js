@@ -83,6 +83,7 @@ async function main() {
             // Inject Metadata
             if (extras) {
                 wrapperNode.setExtras(extras);
+                console.log(`   📝 Injected extras for ${name}: ${JSON.stringify(extras)}`);
             }
 
             // Do NOT reset child transforms. 

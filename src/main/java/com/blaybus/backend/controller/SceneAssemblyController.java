@@ -51,21 +51,6 @@ public class SceneAssemblyController {
 		return ResponseEntity.ok().build();
 	}
 
-	@GetMapping("/{sceneId}/export")
-	public ResponseEntity<byte[]> exportScene(
-		@AuthenticationPrincipal
-		CustomUserDetails userDetails,
-		@PathVariable
-		Long sceneId) {
-
-		byte[] gltfBytes = sceneAssemblyService.exportAssembledGltf(userDetails.getUserId(), sceneId);
-
-		return ResponseEntity.ok()
-			.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"scene_export.gltf\"")
-			.contentType(MediaType.APPLICATION_OCTET_STREAM)
-			.body(gltfBytes);
-	}
-
 	@GetMapping("/{sceneId}/viewer")
 	public ResponseEntity<byte[]> getViewer(
 		@AuthenticationPrincipal

@@ -28,6 +28,7 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -47,6 +48,10 @@ class SceneAssemblyServiceTest {
 	private com.blaybus.backend.repository.UserSceneRepository userSceneRepository;
 	@Spy
 	private ObjectMapper objectMapper;
+	@Mock
+	private org.springframework.core.io.support.ResourcePatternResolver resourcePatternResolver;
+	@Mock
+	private org.springframework.core.io.ResourceLoader resourceLoader;
 
 	@InjectMocks
 	private SceneAssemblyService sceneAssemblyService;
@@ -85,8 +90,8 @@ class SceneAssemblyServiceTest {
 					.build()))
 			.build();
 
-		given(userRepository.findById(userId)).willReturn(Optional.of(user));
-		given(sceneRepository.findByEngTitle("Drone")).willReturn(Optional.of(scene));
+		lenient().when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+		lenient().when(sceneRepository.findByEngTitle("Drone")).thenReturn(Optional.of(scene));
 
 		// Mock Component finding/creation
 		given(componentRepository.findByName("Arm gear")).willReturn(Optional.empty());
@@ -170,8 +175,12 @@ class SceneAssemblyServiceTest {
 			.title("Drone")
 			.assetPath("Drone")
 			.build();
-		given(sceneRepository.findById(sceneId)).willReturn(Optional.of(mockScene));
-		given(userRepository.findById(userId)).willReturn(Optional.of(user));
+		lenient().when(sceneRepository.findById(sceneId)).thenReturn(Optional.of(mockScene));
+		lenient().when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+		// Mock ResourcePatternResolver
+		lenient().when(resourcePatternResolver.getResources(any(String.class)))
+			.thenReturn(new org.springframework.core.io.Resource[0]);
 
 		// Mock Alignments
 		Component mockComponent = Component.builder()
@@ -220,8 +229,13 @@ class SceneAssemblyServiceTest {
 			.title("Drone")
 			.assetPath("Drone")
 			.build();
-		given(sceneRepository.findById(sceneId)).willReturn(Optional.of(mockScene));
-		given(userRepository.findById(userId)).willReturn(Optional.of(user));
+		lenient().when(sceneRepository.findById(sceneId)).thenReturn(Optional.of(mockScene));
+
+		// Mock Resource loaders to avoid NPE in unit test
+		lenient().when(resourcePatternResolver.getResource(any(String.class)))
+			.thenReturn(new org.springframework.core.io.ByteArrayResource(new byte[0]));
+		lenient().when(resourcePatternResolver.getResources(any(String.class)))
+			.thenReturn(new org.springframework.core.io.Resource[0]);
 
 		// Mock Alignments (Reuse logic from export test)
 		Component mockComponent = Component.builder().id(1L).name("Arm_gear").build();

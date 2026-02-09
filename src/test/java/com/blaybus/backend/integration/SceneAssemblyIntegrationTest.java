@@ -230,150 +230,6 @@ class SceneAssemblyIntegrationTest {
 		Alignment updated = alignmentRepository.findById(alignment.getId()).orElseThrow();
 		List<Double> dbMatrix = objectMapper.readValue(updated.getTransformMatrix(), new TypeReference<>() {});
 		assertThat(dbMatrix).isEqualTo(newMatrix);
-
-		// 3. Export
-		// Note: usage of Node.js script. If script execution fails (e.g. Node missing), verify console output.
-
-		try {
-			byte[] gltfBytes = mockMvc.perform(get("/scenes/" + scene.getId() + "/export")
-				.with(user(userDetails)))
-				.andExpect(status().isOk())
-				.andReturn().getResponse().getContentAsByteArray();
-
-			assertThat(gltfBytes).isNotEmpty();
-			assertThat(gltfBytes).isNotEmpty();
-			// Verify GLTF Format (JSON)
-			// It should start with '{' (ASCII 123)
-			assertThat(gltfBytes[0]).isEqualTo((byte)'{');
-
-			// Verify Content is Embedded (Size check)
-			// A fully embedded drone GLTF should be significant in size (> 1MB)
-			assertThat(gltfBytes.length).isGreaterThan(500_000);
-
-			// Verify Data URIs are present (indicating embedding)
-			String content = new String(gltfBytes);
-			assertThat(content).contains("data:application/octet-stream;base64,");
-
-			// Verify Metadata injection (Best effort string search in binary)
-			assertThat(content).contains("Drone의 arm_gear 부품입니다");
-
-			// Save for manual inspection
-			java.nio.file.Path outputPath = java.nio.file.Paths.get("build/Drone_assembled.gltf");
-			java.nio.file.Files.write(outputPath, gltfBytes);
-			System.out.println("✅ Generated GLTF saved to: " + outputPath.toAbsolutePath());
-			System.out.println("    Generated GLTF size: " + gltfBytes.length);
-
-		} catch (Exception e) {
-			// If caused by RuntimeException "GLTF assembly process failed", log info and pass.
-			// This happens if node environment is not set up in the test runner.
-			if (e.getCause() instanceof RuntimeException &&
-				e.getCause().getMessage() != null &&
-				e.getCause().getMessage().contains("GLTF assembly process failed")) {
-				System.out.println(
-					"TEST INFO: Node.js assembly script execution failed (likely due to missing node modules). " +
-						"Assuming Java logic is correct up to execution.");
-				return;
-			}
-			throw e;
-		}
-	}
-
-	@Test
-	@DisplayName("Export Clean Drone (No Sync Modifications)")
-	void testDroneExportClean() throws Exception {
-		// 1. Setup Data
-		User user = userRepository.save(User.builder()
-			.username("admin_clean")
-			.password("pass")
-			.name("Admin Clean")
-			.isMockUser(false)
-			.onBoardingCompleted(true)
-			.build());
-
-		CustomUserDetails userDetails = new CustomUserDetails(user.getId(), user.getUsername(), null);
-
-		SceneInformation scene = sceneRepository.save(SceneInformation.builder()
-			.title("Drone")
-			.engTitle("Drone")
-			.category("Assembly")
-			.assetPath("Drone")
-			.description("Clean Drone Test")
-			.participantsCount(0L)
-			.defaultAlignmentId(0L)
-			.build());
-
-		// 2. Setup Mock Data from Real Config
-		java.io.File configFile = new java.io.File("src/main/resources/assets/Drone/config/assembly_config.json");
-		com.fasterxml.jackson.databind.JsonNode configRoot = objectMapper.readTree(configFile);
-
-		com.fasterxml.jackson.databind.JsonNode assetsNode = configRoot.get("assets");
-		com.fasterxml.jackson.databind.JsonNode instancesNode = configRoot.get("instances");
-
-		java.util.Map<String, Component> componentMap = new java.util.HashMap<>();
-
-		if (assetsNode.isObject()) {
-			assetsNode.fields().forEachRemaining(entry -> {
-				String assetId = entry.getKey();
-				String filename = entry.getValue().asText();
-				String desc = String.format("%s의 %s 부품입니다", scene.getTitle(), assetId);
-				String usage = "제조, 조립, 용접, 도장, 검사 작업";
-				String texture = "알루미늄 합금, 탄소 섬유, 고강도 플라스틱";
-
-				Component comp = componentRepository.save(Component.builder()
-					.name(assetId)
-					.description(desc)
-					.usage(usage)
-					.texture(texture)
-					.assetPath(filename)
-					.build());
-				componentMap.put(assetId, comp);
-			});
-		}
-
-		if (instancesNode.isArray()) {
-			for (com.fasterxml.jackson.databind.JsonNode inst : instancesNode) {
-				String name = inst.get("name").asText();
-				String assetId = inst.get("assetId").asText();
-				com.fasterxml.jackson.databind.JsonNode matrixNode = inst.get("matrix");
-
-				Component comp = componentMap.get(assetId);
-				if (comp != null) {
-					alignmentRepository.save(Alignment.builder()
-						.user(user)
-						.scene(scene)
-						.component(comp)
-						.nodeName(name)
-						.transformMatrix(matrixNode.toString())
-						.build());
-				}
-			}
-		}
-
-		// 3. Export
-		try {
-			byte[] gltfBytes = mockMvc.perform(get("/scenes/" + scene.getId() + "/export")
-				.with(user(userDetails)))
-				.andExpect(status().isOk())
-				.andReturn().getResponse().getContentAsByteArray();
-
-			assertThat(gltfBytes).isNotEmpty();
-			assertThat(gltfBytes[0]).isEqualTo((byte)'{');
-
-			// Save for manual inspection
-			java.nio.file.Path outputPath = java.nio.file.Paths.get("build/Drone_assembled_clean.gltf");
-			java.nio.file.Files.write(outputPath, gltfBytes);
-			System.out.println("✅ Generated Clean GLTF saved to: " + outputPath.toAbsolutePath());
-			System.out.println("    Generated GLTF size: " + gltfBytes.length);
-
-		} catch (Exception e) {
-			if (e.getCause() instanceof RuntimeException &&
-				e.getCause().getMessage() != null &&
-				e.getCause().getMessage().contains("GLTF assembly process failed")) {
-				System.out.println("TEST INFO: Node.js assembly script execution failed.");
-				return;
-			}
-			throw e;
-		}
 	}
 
 	@Test
@@ -459,19 +315,22 @@ class SceneAssemblyIntegrationTest {
 			assertThat(zipContents).containsKey("manifest.json");
 
 			// 4. Verify Metadata Injection in Default GLTF
-			// 'generateDefaultGltf' should have injected "TEST_METADATA_INJECTION" from the DB component
 			String defaultGltfContent = new String(zipContents.get("default.gltf"));
-
-			// If assembly script failed, the content might be empty or error JSON.
-			// But we expect a GLTF JSON.
 			assertThat(defaultGltfContent).contains("TEST_METADATA_INJECTION");
+
+			// Detailed JSON check for default.gltf
+			com.fasterxml.jackson.databind.JsonNode defaultRoot = objectMapper.readTree(defaultGltfContent);
+			assertThat(defaultRoot.has("asset")).isTrue();
+			assertThat(defaultRoot.has("nodes")).isTrue();
+			assertThat(defaultRoot.path("buffers").get(0).path("uri").asText())
+				.startsWith("data:application/octet-stream;base64,");
 
 			// 5. Verify LookAt Injection in Custom GLTF
 			String customGltfContent = new String(zipContents.get("custom.gltf"));
+			com.fasterxml.jackson.databind.JsonNode customRoot = objectMapper.readTree(customGltfContent);
 
-			com.fasterxml.jackson.databind.JsonNode rootNode = objectMapper.readTree(customGltfContent);
 			// In glTF-Transform output, extras on the main scene appear in scenes[0].extras
-			com.fasterxml.jackson.databind.JsonNode extrasNode = rootNode.path("scenes").get(0).path("extras");
+			com.fasterxml.jackson.databind.JsonNode extrasNode = customRoot.path("scenes").get(0).path("extras");
 
 			assertThat(extrasNode.path("lookAt").isMissingNode()).isFalse();
 			assertThat(extrasNode.path("note").asText()).isEqualTo("Test Note");
@@ -480,14 +339,22 @@ class SceneAssemblyIntegrationTest {
 			assertThat(lookAtNode.path("position").get(0).asInt()).isEqualTo(10);
 			assertThat(lookAtNode.path("target").get(0).asInt()).isEqualTo(0);
 
-			System.out.println("✅ Viewer ZIP contains verified custom.gltf with injected lookAt/note.");
+			// 6. Verify Node Count in Custom GLTF (Best effort)
+			int nodeCount = customRoot.path("nodes").size();
+			System.out.println("📊 Nodes in custom.gltf: " + nodeCount);
+			assertThat(nodeCount).isGreaterThan(0);
 
-			System.out.println("✅ Viewer ZIP contains verified default.gltf with metadata.");
+			// Save individual files for manual inspection
+			java.io.File outputDir = new java.io.File("build/test-outputs");
+			if (!outputDir.exists())
+				outputDir.mkdirs();
+			java.nio.file.Files.write(new java.io.File(outputDir, "default.gltf").toPath(),
+				zipContents.get("default.gltf"));
+			java.nio.file.Files.write(new java.io.File(outputDir, "custom.gltf").toPath(),
+				zipContents.get("custom.gltf"));
 
-			// Save ZIP for manual inspection
-			java.nio.file.Path outputPath = java.nio.file.Paths.get("build/viewer_assets.zip");
-			java.nio.file.Files.write(outputPath, zipBytes);
-			System.out.println("💾 Saved Viewer ZIP to: " + outputPath.toAbsolutePath());
+			System.out.println("✅ Viewer ZIP Content Verified: default.gltf and custom.gltf are valid and enriched.");
+			System.out.println("� Individual GLTF files saved to: build/test-outputs/");
 
 		} catch (Exception e) {
 			if (e.getCause() instanceof RuntimeException &&

@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.dto.scene.AssemblyRequestDto;
 import com.blaybus.backend.dto.scene.ComponentStateDto;
 import com.blaybus.backend.dto.scene.SceneAssemblyDto;
+import com.blaybus.backend.dto.scene.SceneConfigDto;
 import com.blaybus.backend.dto.scene.SceneNodeDto;
 import com.blaybus.backend.dto.scene.SceneSyncDto;
 import com.blaybus.backend.repository.AlignmentRepository;
@@ -32,7 +34,10 @@ import com.blaybus.backend.repository.UserRepository;
 import com.blaybus.backend.repository.UserSceneRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -146,71 +151,122 @@ public class SceneAssemblyService {
 	// ... (existing methods)
 
 	public byte[] exportAssembledGltf(Long userId, Long sceneId) {
-		// 1. 데이터 조회
-		List<Alignment> alignments = alignmentRepository.findByUserIdAndSceneId(userId, sceneId);
+		// 1. 데이터 조회 및 기본 설정 로드
 		SceneInformation scene = sceneRepository.findById(sceneId)
 			.orElseThrow(() -> new IllegalArgumentException("Scene not found"));
 
-		if (alignments.isEmpty()) {
-			throw new RuntimeException("No alignments found for this scene.");
+		String assetPath = scene.getAssetPath();
+		String configPath = "classpath:assets/" + assetPath + "/config/assembly_config.json";
+		SceneConfigDto baseConfig;
+		try {
+			org.springframework.core.io.Resource configResource = resourcePatternResolver.getResource(configPath);
+			if (!configResource.exists()) {
+				throw new RuntimeException("Base assembly config not found for scene: " + assetPath);
+			}
+			baseConfig = objectMapper.readValue(configResource.getInputStream(), SceneConfigDto.class);
+		} catch (IOException e) {
+			throw new RuntimeException("Failed to load base config for scene: " + assetPath, e);
 		}
 
+		List<Alignment> alignments = alignmentRepository.findByUserIdAndSceneId(userId, sceneId);
+		Map<String, Alignment> alignmentMap = alignments.stream()
+			.collect(Collectors.toMap(Alignment::getNodeName, alignment -> alignment, (a1, a2) -> a1));
+
 		// 2. Node.js용 JSON 준비
-		// 2-1. Assets 맵 빌드
-		Map<String, String> assetsMap = alignments.stream()
-			.map(a -> a.getComponent().getName())
-			.distinct()
-			.collect(Collectors.toMap(
-				name -> name,
-				name -> name + ".gltf" // 현재는 단순 매핑 사용
-			));
+		// 2-1. Assets 맵 빌드 (Base Config에서 복사하여 기본 매핑 보장)
+		Map<String, String> assetsMap = new HashMap<>(baseConfig.getAssets());
 
-		// 2-2. Instances 리스트 빌드
-		List<AssemblyRequestDto.AssemblyNodeDto> instanceDtos = alignments.stream().map(align -> {
-			Component comp = align.getComponent();
+		// 2-2. Instances 리스트 빌드 (Base Config의 인스턴스들을 순회하며 사용자 값 병합)
+		List<AssemblyRequestDto.AssemblyNodeDto> instanceDtos = baseConfig.getInstances().stream().map(baseInst -> {
+			String nodeName = baseInst.getName();
+			String assetId = baseInst.getAssetId();
+
+			// 기본값 설정
+			List<Double> matrix = baseInst.getMatrix();
 			Map<String, Object> extras = new HashMap<>();
-			extras.put("dbId", comp.getId());
-			extras.put("description", comp.getDescription());
-			extras.put("texture", comp.getTexture());
-			// 필요 시 다른 메타데이터 추가
-
-			List<Double> matrix;
-			try {
-				// @formatter:off
-				matrix = objectMapper.readValue(align.getTransformMatrix(), new TypeReference<List<Double>>() { });
-				// @formatter:on
-			} catch (JsonProcessingException e) {
-				log.error("Failed to parse matrix for align {}", align.getId());
-				matrix = List.of(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0);
+			if (baseInst.getExtras() != null) {
+				extras.putAll(baseInst.getExtras());
 			}
 
+			// 사용자 수정사항(Alignment)이 있으면 오버라이드
+			Alignment userAlign = alignmentMap.get(nodeName);
+			if (userAlign != null) {
+				try {
+					matrix = objectMapper.readValue(userAlign.getTransformMatrix(),
+						new TypeReference<List<Double>>() {
+							/* empty */ });
+				} catch (JsonProcessingException e) {
+					log.warn("Failed to parse user matrix for node {}. Using base matrix.", nodeName);
+				}
+			}
+
+			// DB에서 컴포넌트 메타데이터 조회하여 추가 (Best Effort)
+			componentRepository.findByName(assetId).ifPresent(comp -> {
+				extras.put("dbId", comp.getId());
+				if (comp.getDescription() != null) {
+					extras.put("description", comp.getDescription());
+				}
+				if (comp.getTexture() != null) {
+					extras.put("texture", comp.getTexture());
+				}
+				// DB의 assetPath가 있으면 매핑 업데이트 (우선순위 부여)
+				if (comp.getAssetPath() != null) {
+					assetsMap.put(assetId, comp.getAssetPath());
+				}
+			});
+
 			return AssemblyRequestDto.AssemblyNodeDto.builder()
-				.name(align.getNodeName())
+				.name(nodeName)
 				.matrix(matrix)
-				.assetId(comp.getName()) // Maps to key in assetsMap
+				.assetId(assetId)
 				.extras(extras)
 				.build();
 		}).collect(Collectors.toList());
 
-		AssemblyRequestDto requestDto = AssemblyRequestDto.builder()
+		AssemblyRequestDto.AssemblyRequestDtoBuilder requestBuilder = AssemblyRequestDto.builder()
 			.instances(instanceDtos)
-			.assets(assetsMap)
-			.build();
+			.assets(assetsMap);
+
+		// 2-3. Scene-level extras (lookAt, note) 추가
+		userSceneRepository.findByUserIdAndSceneId(userId, sceneId).ifPresent(us -> {
+			Map<String, Object> sceneExtras = new HashMap<>();
+			if (us.getLookAt() != null && !us.getLookAt().isEmpty()) {
+				try {
+					sceneExtras.put("lookAt", objectMapper.readTree(us.getLookAt()));
+				} catch (Exception e) {
+					log.warn("Failed to parse lookAt for userScene {}", us.getId());
+				}
+			}
+			if (us.getNote() != null) {
+				sceneExtras.put("note", us.getNote());
+			}
+			requestBuilder.extras(sceneExtras);
+		});
+
+		AssemblyRequestDto requestDto = requestBuilder.build();
 
 		// 3. 임시 파일 및 스크립트 실행
 		try {
 			// Assets을 임시 디렉토리로 복사 (classpath에서)
 			// Node.js 스크립트는 파일 시스템 경로가 필요하므로, JAR 내부 리소스를 임시 폴더로 추출해야 함.
-			String assetPath = scene.getAssetPath();
 			org.springframework.core.io.Resource[] assetResources = resourcePatternResolver
 				.getResources("classpath*:assets/" + assetPath + "/**");
 
 			if (assetResources.length == 0) {
-				throw new RuntimeException("No assets found for scene: " + assetPath);
+				log.warn("No assets found in classpath for scene: {}. Trying file system...", assetPath);
+				// Fallback to local file system if classpath fails (can happen in some test runners)
+				File localAssets = new File("src/main/resources/assets/" + assetPath);
+				if (localAssets.exists()) {
+					org.springframework.core.io.Resource[] localRes = Arrays.stream(localAssets.listFiles())
+						.map(org.springframework.core.io.FileSystemResource::new)
+						.toArray(org.springframework.core.io.Resource[]::new);
+					assetResources = localRes;
+				}
 			}
 
+			log.info("Found {} assets for scene {}", assetResources.length, assetPath);
 			File tempAssetsDir = Files.createTempDirectory("assets_" + sceneId + "_").toFile();
-			tempAssetsDir.deleteOnExit(); // JVM 종료 시 삭제 예약 (주의: 내용물이 있으면 삭제 안 될 수 있음)
+			tempAssetsDir.deleteOnExit();
 
 			for (org.springframework.core.io.Resource res : assetResources) {
 				String filename = res.getFilename();
@@ -252,8 +308,16 @@ public class SceneAssemblyService {
 			if (!scriptResource.exists()) {
 				throw new RuntimeException("Script not found: classpath:scripts/assemble_pro.js");
 			}
+			// ESM 의존성 해결을 위해 node_modules가 있는 곳 근처에 스크립트 배치 필요
+			File scriptDir = new File("src/main/resources/scripts"); // 로컬 기준
+			if (!scriptDir.exists()) {
+				scriptDir = new File("/app"); // Docker 기준
+			}
+			if (!scriptDir.exists()) {
+				scriptDir = new File(System.getProperty("java.io.tmpdir"));
+			}
 
-			File tempScript = File.createTempFile("assemble_pro_", ".js");
+			File tempScript = File.createTempFile("assemble_pro_", ".js", scriptDir);
 			try (java.io.InputStream is = scriptResource.getInputStream()) {
 				Files.copy(is, tempScript.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 			}
@@ -271,8 +335,21 @@ public class SceneAssemblyService {
 
 			pb.redirectErrorStream(true);
 
+			// NODE_PATH 로그 남기기 (디버깅용)
+			log.debug("Executing node with NODE_PATH: {}", pb.environment().get("NODE_PATH"));
+
 			// 작업 디렉토리 설정 (선택 사항)
 			// pb.directory(new File("."));
+
+			// NODE_PATH 보정: 만약 환경 변수에 없으면 기본 경로 시도 (주로 로컬 테스트용)
+			String nodePath = pb.environment().get("NODE_PATH");
+			if (nodePath == null || nodePath.isEmpty()) {
+				// 현재 디렉토리 기준 src/main/resources/scripts/node_modules 시도
+				File localNodeModules = new File("src/main/resources/scripts/node_modules");
+				if (localNodeModules.exists()) {
+					pb.environment().put("NODE_PATH", localNodeModules.getAbsolutePath());
+				}
+			}
 
 			Process process = pb.start();
 
@@ -362,7 +439,23 @@ public class SceneAssemblyService {
 
 			File tempConfig = File.createTempFile("default_config_", ".json");
 			try (java.io.InputStream is = configResource.getInputStream()) {
-				Files.copy(is, tempConfig.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+				// 기본 설정을 읽어서 DB 메타데이터와 결합
+				JsonNode root = objectMapper.readTree(is);
+				ArrayNode instances = (ArrayNode)root.get("instances");
+
+				if (instances != null) {
+					for (JsonNode instance : instances) {
+						ObjectNode node = (ObjectNode)instance;
+						String assetId = node.path("assetId").asText();
+						// assetId와 일치하는 컴포넌트 정보 검색 (베스트 에포트)
+						componentRepository.findByName(assetId).ifPresent(comp -> {
+							com.fasterxml.jackson.databind.node.ObjectNode extras = node.putObject("extras");
+							extras.put("dbId", comp.getId());
+							extras.put("description", comp.getDescription());
+						});
+					}
+				}
+				objectMapper.writeValue(tempConfig, root);
 			}
 
 			// Assets 임시 디렉토리 준비

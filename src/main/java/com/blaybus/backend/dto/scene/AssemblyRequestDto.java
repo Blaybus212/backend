@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class AssemblyRequestDto {
 	private List<AssemblyNodeDto> instances;
 	private Map<String, String> assets;
+	private Map<String, Object> extras;
 
 	@Getter
 	@Builder
