@@ -10,6 +10,7 @@ import com.blaybus.backend.domain.quiz.QuizType;
 import com.blaybus.backend.domain.quiz.QuizUserProgress;
 import com.blaybus.backend.domain.scene.SceneInformation;
 import com.blaybus.backend.domain.user.User;
+import com.blaybus.backend.dto.QuizDto;
 import com.blaybus.backend.dto.QuizResponse;
 import com.blaybus.backend.exception.BusinessException;
 import com.blaybus.backend.exception.CommonErrorCode;
@@ -50,6 +51,26 @@ public class QuizService {
 				});
 
 		return mapToResponse(sceneId, progress, quizzes);
+	}
+
+	@Transactional
+	public void syncProgress(Long sceneId, QuizDto.SyncProgressRequest request, User user) {
+		QuizUserProgress progress = progressRepository.findByUserIdAndSceneId(user.getId(), sceneId)
+				.orElseThrow(() -> new BusinessException(CommonErrorCode.QUIZ_PROGRESS_NOT_FOUND));
+
+		QuizUserProgress updated = QuizUserProgress.builder()
+				.id(progress.getId())
+				.user(progress.getUser())
+				.scene(progress.getScene())
+				.lastQuizId(request.lastQuizId())
+				.totalQuestions(request.totalQuestions())
+				.success(request.success())
+				.failure(request.failure())
+				.solveTime(request.solveTime())
+				.isComplete(request.isComplete())
+				.build();
+
+		progressRepository.save(updated);
 	}
 
 	private QuizResponse mapToResponse(Long sceneId, QuizUserProgress progress, List<Quiz> quizzes) {

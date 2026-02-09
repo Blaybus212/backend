@@ -32,18 +32,21 @@ public class QuizGradingService {
 
 		boolean correct;
 		double score;
+		String correctAnswer;
 
 		if (quiz.getType() == QuizType.SELECT) {
-			correct = quiz.getAnswer().split("|")[0].equalsIgnoreCase(userAnswer.trim());
+			correctAnswer = quiz.getAnswer().split(",")[0];
+			correct = correctAnswer.equalsIgnoreCase(userAnswer.trim());
 			score = correct ? 1.0 : 0.0;
 		} else {
-			score = embeddingService.calculateSimilarity(userAnswer, quiz.getAnswer());
+			correctAnswer = quiz.getAnswer();
+			score = embeddingService.calculateSimilarity(userAnswer, correctAnswer);
 			correct = score >= SIMILARITY_THRESHOLD;
 		}
 
 		updateProgress(user, quiz, correct);
 
-		return new QuizDto.GradeResponse(correct, score, quiz.getAnswer());
+		return new QuizDto.GradeResponse(correct, score, correctAnswer);
 	}
 
 	private void updateProgress(User user, Quiz quiz, boolean correct) {
