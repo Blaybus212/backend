@@ -9,6 +9,7 @@ import com.blaybus.backend.repository.SceneStatisticsRepository;
 import com.blaybus.backend.repository.UserGrassRepository;
 import com.blaybus.backend.repository.QuizRepository;
 import com.blaybus.backend.repository.UserRepository;
+import com.blaybus.backend.repository.UserSceneRepository;
 import com.blaybus.backend.service.SceneAssemblyService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -53,6 +54,9 @@ public class ManualVerificationExportTest {
 
 	@Autowired
 	private ResourcePatternResolver resourcePatternResolver;
+
+	@Autowired
+	private UserSceneRepository userSceneRepository;
 
 	@Autowired
 	private SceneStatisticsRepository sceneStatisticsRepository;

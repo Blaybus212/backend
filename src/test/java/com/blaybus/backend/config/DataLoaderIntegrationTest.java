@@ -6,6 +6,7 @@ import com.blaybus.backend.repository.QuizRepository;
 import com.blaybus.backend.repository.SceneInformationRepository;
 import com.blaybus.backend.repository.SceneStatisticsRepository;
 import com.blaybus.backend.repository.UserGrassRepository;
+import com.blaybus.backend.repository.UserSceneRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,9 @@ class DataLoaderIntegrationTest {
 
 	@Autowired
 	private ResourcePatternResolver resourcePatternResolver;
+
+	@Autowired
+	private UserSceneRepository userSceneRepository;
 
 	@Autowired
 	private SceneStatisticsRepository sceneStatisticsRepository;

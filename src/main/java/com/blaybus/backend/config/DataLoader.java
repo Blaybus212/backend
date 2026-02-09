@@ -55,23 +55,22 @@ public class DataLoader implements ApplicationRunner {
 	private final QuizRepository quizRepository;
 
 	public DataLoader(
-		UserRepository userRepository,
-		PasswordEncoder passwordEncoder,
-		ComponentRepository componentRepository,
-		@Qualifier("objectMapper")
-		ObjectMapper objectMapper,
-		ResourcePatternResolver resourcePatternResolver,
-		SceneInformationRepository sceneInformationRepository,
-		UserSceneRepository userSceneRepository,
-		SceneStatisticsRepository sceneStatisticsRepository,
-		UserGrassRepository userGrassRepository) {
+			UserRepository userRepository,
+			PasswordEncoder passwordEncoder,
+			ComponentRepository componentRepository,
+			@Qualifier("objectMapper") ObjectMapper objectMapper,
+			ResourcePatternResolver resourcePatternResolver,
+			SceneInformationRepository sceneInformationRepository,
+			SceneStatisticsRepository sceneStatisticsRepository,
+			UserGrassRepository userGrassRepository,
+			QuizRepository quizRepository) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.componentRepository = componentRepository;
 		this.objectMapper = objectMapper;
 		this.resourcePatternResolver = resourcePatternResolver;
 		this.sceneInformationRepository = sceneInformationRepository;
-		this.userSceneRepository = userSceneRepository;
+		this.quizRepository = quizRepository;
 		this.sceneStatisticsRepository = sceneStatisticsRepository;
 		this.userGrassRepository = userGrassRepository;
 	}
