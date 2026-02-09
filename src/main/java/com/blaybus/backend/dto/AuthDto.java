@@ -1,5 +1,7 @@
 package com.blaybus.backend.dto;
 
+import com.blaybus.backend.domain.scene.SceneCategory;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
@@ -21,7 +23,8 @@ public class AuthDto {
 	public record LoginUser(
 		String username,
 		String name,
-		boolean isFinishOnboard) {
+		boolean isFinishOnboard,
+		SceneCategory preferCategory) {
 	}
 
 	@Builder
