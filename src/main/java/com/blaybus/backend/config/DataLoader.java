@@ -310,15 +310,20 @@ public class DataLoader implements ApplicationRunner {
 
 				String sceneTitle = node.path("scene_info_title").asText();
 				sceneInformationRepository.findByTitle(sceneTitle).ifPresentOrElse(scene -> {
-					Quiz quiz = Quiz.builder()
-							.scene(scene)
-							.targetPurpose(node.path("target_purpose").asText())
-							.type(QuizType.valueOf(node.path("type").asText()))
-							.question(question)
-							.answer(node.path("answer").asText())
-							.build();
-					quizRepository.save(quiz);
-					log.info("Created quiz for scene: {}", sceneTitle);
+					try {
+						Quiz quiz = Quiz.builder()
+								.scene(scene)
+								.targetPurpose(node.path("target_purpose").asText())
+								.type(QuizType.valueOf(node.path("type").asText().toUpperCase()))
+								.question(question)
+								.answer(node.path("answer").asText())
+								.build();
+						quizRepository.save(quiz);
+						log.info("Created quiz for scene: {}", sceneTitle);
+					} catch (IllegalArgumentException e) {
+						log.warn("Skipping quiz with invalid type for question [{}]: {}", question,
+								node.path("type").asText());
+					}
 				}, () -> log.warn("Scene not found for quiz: {}", sceneTitle));
 			}
 
