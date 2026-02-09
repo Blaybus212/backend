@@ -140,6 +140,7 @@ public class DataLoader implements ApplicationRunner {
 			User user = User.builder()
 				.username(username)
 				.password(passwordEncoder.encode(rawPassword))
+				.onBoardingCompleted(false)
 				.isMockUser(true) // Mock 사용자로 표시
 				.build();
 			userRepository.save(user);

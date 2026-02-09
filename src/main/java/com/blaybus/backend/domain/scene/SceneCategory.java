@@ -38,11 +38,17 @@ public enum SceneCategory {
 
 	@JsonCreator
 	public static SceneCategory fromValue(String value) {
+		String normalizedInput = normalize(value);
 		for (SceneCategory field : values()) {
-			if (field.value.equalsIgnoreCase(value)) {
+			if (normalize(field.value).equals(normalizedInput)
+				|| normalize(field.name()).equals(normalizedInput)) {
 				return field;
 			}
 		}
 		throw new IllegalArgumentException("Unknown SceneCategory: " + value);
+	}
+
+	private static String normalize(String value) {
+		return value == null ? "" : value.replace("-", "").replace("_", "").replace(" ", "").toLowerCase();
 	}
 }
