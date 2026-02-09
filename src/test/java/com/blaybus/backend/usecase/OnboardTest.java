@@ -19,7 +19,7 @@ import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.repository.UserRepository;
 import com.blaybus.backend.security.JwtTokenProvider;
 
-import tools.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
