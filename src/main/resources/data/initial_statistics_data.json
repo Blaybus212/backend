@@ -1,0 +1,44 @@
+[
+    {
+        "scene_info_title": "로봇집게",
+        "days_ago": 1,
+        "score": 450,
+        "rank": 1,
+        "difference": 2
+    },
+    {
+        "scene_info_title": "서스펜션",
+        "days_ago": 1,
+        "score": 320,
+        "rank": 2,
+        "difference": -1
+    },
+    {
+        "scene_info_title": "판스프링",
+        "days_ago": 1,
+        "score": 180,
+        "rank": 3,
+        "difference": 1
+    },
+    {
+        "scene_info_title": "로봇집게",
+        "days_ago": 2,
+        "score": 300,
+        "rank": 3,
+        "difference": 0
+    },
+    {
+        "scene_info_title": "서스펜션",
+        "days_ago": 2,
+        "score": 350,
+        "rank": 1,
+        "difference": 0
+    },
+    {
+        "scene_info_title": "판스프링",
+        "days_ago": 2,
+        "score": 200,
+        "rank": 2,
+        "difference": 0
+    }
+]
