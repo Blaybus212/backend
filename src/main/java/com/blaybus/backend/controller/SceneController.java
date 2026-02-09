@@ -1,6 +1,8 @@
 package com.blaybus.backend.controller;
 
 import com.blaybus.backend.domain.scene.SceneCategory;
+import com.blaybus.backend.dto.SceneListOrder;
+import com.blaybus.backend.dto.SceneListResponse;
 import com.blaybus.backend.dto.SceneRankResponse;
 import com.blaybus.backend.dto.SceneResponse;
 import com.blaybus.backend.security.CustomUserDetails;
@@ -28,6 +30,18 @@ public class SceneController {
     public ResponseEntity<SceneRankResponse> getSceneRanks(
             @RequestParam(required = false) SceneCategory category) {
         SceneRankResponse response = sceneService.getSceneRanks(category);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/scenes")
+    public ResponseEntity<SceneListResponse> getSceneList(
+            @RequestParam(required = false) SceneCategory category,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "9") int limit,
+            @RequestParam(required = false) String query,
+            @RequestParam(defaultValue = "alphabetical") SceneListOrder order) { // 가나다순 → alphabetical,
+                                                                                 // 인기순 →popularity
+        SceneListResponse response = sceneService.getScenes(category, page, limit, query, order);
         return ResponseEntity.ok(response);
     }
 }

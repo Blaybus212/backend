@@ -3,7 +3,10 @@ package com.blaybus.backend.service;
 import com.blaybus.backend.domain.scene.SceneCategory;
 import com.blaybus.backend.domain.scene.SceneInformation;
 import com.blaybus.backend.domain.scene.UserScene;
+import com.blaybus.backend.dto.SceneListOrder;
+import com.blaybus.backend.dto.SceneListResponse;
 import com.blaybus.backend.dto.SceneResponse;
+import com.blaybus.backend.repository.SceneInformationRepository;
 import com.blaybus.backend.repository.UserSceneRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,7 +14,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,6 +32,9 @@ class SceneServiceTest {
 
         @Mock
         private UserSceneRepository userSceneRepository;
+
+        @Mock
+        private SceneInformationRepository sceneInformationRepository;
 
         @InjectMocks
         private SceneService sceneService;
@@ -66,5 +75,31 @@ class SceneServiceTest {
                 assertThat(response.getScenes().get(1).getTitle()).isEqualTo("심장 전문");
                 assertThat(response.getScenes().get(1).isPopular()).isFalse();
                 assertThat(response.getScenes().get(1).getProgress()).isEqualTo(35);
+        }
+
+        @Test
+        @DisplayName("Scene 리스트를 필터링 및 페이징하여 가져온다.")
+        void getScenesTest() {
+                // given
+                SceneInformation scene1 = SceneInformation.builder()
+                                .id(1L).title("A Scene").engTitle("A Scene Eng")
+                                .category(SceneCategory.ROBOTICS)
+                                .participantsCount(10L).build();
+
+                Page<SceneInformation> page = new PageImpl<>(List.of(scene1),
+                                PageRequest.of(0, 9, Sort.by("title").ascending()), 1);
+
+                given(sceneInformationRepository.findByCategoryAndQuery(eq(SceneCategory.ROBOTICS), eq("A"),
+                                any(PageRequest.class)))
+                                .willReturn(page);
+
+                // when
+                SceneListResponse response = sceneService.getScenes(SceneCategory.ROBOTICS, 1, 9, "A",
+                                SceneListOrder.ALPHABETICAL);
+
+                // then
+                assertThat(response.getScenes()).hasSize(1);
+                assertThat(response.getScenes().get(0).getTitle()).isEqualTo("A Scene");
+                assertThat(response.getTotalPages()).isEqualTo(1);
         }
 }
