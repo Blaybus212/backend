@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Profile;
@@ -29,7 +30,6 @@ import com.blaybus.backend.repository.UserSceneRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -40,7 +40,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 @Profile("!test")
-@RequiredArgsConstructor
 public class DataLoader implements ApplicationRunner {
 
 	private final UserRepository userRepository;
@@ -53,6 +52,28 @@ public class DataLoader implements ApplicationRunner {
 	private final UserSceneRepository userSceneRepository;
 	private final SceneStatisticsRepository sceneStatisticsRepository;
 	private final UserGrassRepository userGrassRepository;
+
+	public DataLoader(
+		UserRepository userRepository,
+		PasswordEncoder passwordEncoder,
+		ComponentRepository componentRepository,
+		@Qualifier("objectMapper")
+		ObjectMapper objectMapper,
+		ResourcePatternResolver resourcePatternResolver,
+		SceneInformationRepository sceneInformationRepository,
+		UserSceneRepository userSceneRepository,
+		SceneStatisticsRepository sceneStatisticsRepository,
+		UserGrassRepository userGrassRepository) {
+		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.componentRepository = componentRepository;
+		this.objectMapper = objectMapper;
+		this.resourcePatternResolver = resourcePatternResolver;
+		this.sceneInformationRepository = sceneInformationRepository;
+		this.userSceneRepository = userSceneRepository;
+		this.sceneStatisticsRepository = sceneStatisticsRepository;
+		this.userGrassRepository = userGrassRepository;
+	}
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {

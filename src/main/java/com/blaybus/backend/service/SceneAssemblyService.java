@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,12 +40,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class SceneAssemblyService {
 
@@ -55,6 +54,24 @@ public class SceneAssemblyService {
 	private final UserSceneRepository userSceneRepository;
 	private final ObjectMapper objectMapper;
 	private final ResourcePatternResolver resourcePatternResolver;
+
+	public SceneAssemblyService(
+		SceneInformationRepository sceneRepository,
+		AlignmentRepository alignmentRepository,
+		ComponentRepository componentRepository,
+		UserRepository userRepository,
+		UserSceneRepository userSceneRepository,
+		@Qualifier("objectMapper")
+		ObjectMapper objectMapper,
+		ResourcePatternResolver resourcePatternResolver) {
+		this.sceneRepository = sceneRepository;
+		this.alignmentRepository = alignmentRepository;
+		this.componentRepository = componentRepository;
+		this.userRepository = userRepository;
+		this.userSceneRepository = userSceneRepository;
+		this.objectMapper = objectMapper;
+		this.resourcePatternResolver = resourcePatternResolver;
+	}
 
 	public void saveAssembly(Long userId, SceneAssemblyDto dto) {
 		// 1. User 조회
