@@ -24,7 +24,7 @@ public class AuthDto {
 		String username,
 		String name,
 		boolean isFinishOnboard,
-		SceneCategory preferSceneCategory) {
+		SceneCategory preferCategory) {
 	}
 
 	@Builder
