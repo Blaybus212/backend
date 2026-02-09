@@ -64,7 +64,7 @@ POST /login
     "username": "admin",
     "name": "관리자",
     "isFinishOnboard": false,
-    "preferSceneCategory": "robotics"
+    "preferCategory": "robotics"
   },
   "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }

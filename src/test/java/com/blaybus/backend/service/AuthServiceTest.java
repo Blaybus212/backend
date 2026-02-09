@@ -60,7 +60,7 @@ class AuthServiceTest {
 		assertThat(response.loginUser().username()).isEqualTo("testuser");
 		assertThat(response.loginUser().name()).isEqualTo("테스트유저");
 		assertThat(response.loginUser().isFinishOnboard()).isFalse();
-		assertThat(response.loginUser().preferSceneCategory())
+		assertThat(response.loginUser().preferCategory())
 			.isEqualTo(com.blaybus.backend.domain.scene.SceneCategory.ROBOTICS);
 	}
 
@@ -88,7 +88,7 @@ class AuthServiceTest {
 		assertThat(response.accessToken()).isNotBlank();
 		assertThat(response.loginUser().isFinishOnboard()).isTrue();
 		assertThat(response.loginUser().name()).isEqualTo("완료유저");
-		assertThat(response.loginUser().preferSceneCategory())
+		assertThat(response.loginUser().preferCategory())
 			.isEqualTo(com.blaybus.backend.domain.scene.SceneCategory.AUTOMOTIVE_ENGINEERING);
 	}
 

@@ -89,7 +89,7 @@ class AuthTest {
 				.andExpect(jsonPath("$.loginUser.username").value(user.getUsername()))
 				.andExpect(jsonPath("$.loginUser.name").value("테스트유저"))
 				.andExpect(jsonPath("$.loginUser.isFinishOnboard").value(false))
-				.andExpect(jsonPath("$.loginUser.preferSceneCategory").value("robotics"));
+				.andExpect(jsonPath("$.loginUser.preferCategory").value("robotics"));
 		}
 
 		@Test
@@ -115,7 +115,7 @@ class AuthTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.loginUser.isFinishOnboard").value(true))
 				.andExpect(jsonPath("$.loginUser.name").value("완료유저"))
-				.andExpect(jsonPath("$.loginUser.preferSceneCategory").value("manufacturing_engineering"));
+				.andExpect(jsonPath("$.loginUser.preferCategory").value("manufacturing_engineering"));
 		}
 
 		@Test
