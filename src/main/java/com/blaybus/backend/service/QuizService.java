@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.blaybus.backend.domain.quiz.Quiz;
+import com.blaybus.backend.domain.quiz.QuizType;
 import com.blaybus.backend.domain.quiz.QuizUserProgress;
 import com.blaybus.backend.domain.scene.SceneInformation;
 import com.blaybus.backend.domain.user.User;
@@ -66,7 +67,7 @@ public class QuizService {
 						quiz.getTargetPurpose(),
 						quiz.getType(),
 						quiz.getQuestion(),
-						quiz.getAnswer()))
+						quiz.getType().equals(QuizType.SELECT) ? quiz.getAnswer() : null))
 				.toList();
 
 		return new QuizResponse(sceneId, progressDto, quizItemDtos);

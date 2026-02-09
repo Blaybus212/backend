@@ -34,7 +34,7 @@ public class QuizGradingService {
 		double score;
 
 		if (quiz.getType() == QuizType.SELECT) {
-			correct = quiz.getAnswer().equalsIgnoreCase(userAnswer.trim());
+			correct = quiz.getAnswer().split("|")[0].equalsIgnoreCase(userAnswer.trim());
 			score = correct ? 1.0 : 0.0;
 		} else {
 			score = embeddingService.calculateSimilarity(userAnswer, quiz.getAnswer());
