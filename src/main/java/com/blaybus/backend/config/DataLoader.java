@@ -97,7 +97,7 @@ public class DataLoader implements ApplicationRunner {
 		// 초기 UserGrass (잔디) 데이터 삽입
 		if (admin != null) {
 			LocalDate today = LocalDate.now();
-			createUserGrassIfNotExists(admin, today, 15, 5, 3); // 오늘: 15점, 5문제, streak 3
+			createUserGrassIfNotExists(admin, today, 0, 0, 3); // 오늘: 15점, 5문제, streak 3
 			createUserGrassIfNotExists(admin, today.minusDays(1), 10, 5, 2); // 어제: 10점, 5문제, streak 2
 			createUserGrassIfNotExists(admin, today.minusDays(2), 5, 2, 1); // 그제: 5점, 2문제, streak 1
 			createUserGrassIfNotExists(admin, today.minusDays(5), 25, 10, 5); // 5일전: 25점, 10문제, streak 5
