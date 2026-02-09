@@ -41,7 +41,7 @@ public class SecurityConfig {
 					response.getWriter().write("{\"code\":\"UNAUTHORIZED\",\"message\":\"인증이 필요합니다.\"}");
 				}))
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/health-check", "/actuator/prometheus", "/login", "/scenes/*/chat").permitAll()
+				.requestMatchers("/health-check", "/actuator/prometheus", "/login").permitAll()
 				.anyRequest().authenticated())
 			.addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider, userDetailsService),
 				UsernamePasswordAuthenticationFilter.class);
