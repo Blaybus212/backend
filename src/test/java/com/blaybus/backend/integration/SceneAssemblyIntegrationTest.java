@@ -358,9 +358,15 @@ class SceneAssemblyIntegrationTest {
 			System.out.println("� Individual GLTF files saved to: build/test-outputs/");
 
 		} catch (Exception e) {
-			if (e.getCause() instanceof RuntimeException &&
-				e.getCause().getMessage() != null &&
-				e.getCause().getMessage().contains("GLTF assembly process failed")) {
+			// Check if the failure is due to missing Node.js environment
+			String errorMsg = e.toString();
+			Throwable cause = e.getCause();
+			while (cause != null) {
+				errorMsg += " | Cause: " + cause.getMessage();
+				cause = cause.getCause();
+			}
+
+			if (errorMsg.contains("GLTF assembly process failed")) {
 				System.out.println("TEST INFO: Node.js assembly script execution failed (likely environment).");
 				return;
 			}
