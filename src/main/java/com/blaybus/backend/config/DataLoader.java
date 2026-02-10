@@ -26,6 +26,8 @@ import com.blaybus.backend.domain.user.UserGrass;
 import com.blaybus.backend.repository.ComponentRepository;
 import com.blaybus.backend.repository.QuizRepository;
 import com.blaybus.backend.repository.SceneInformationRepository;
+import com.blaybus.backend.domain.quiz.Quiz;
+import com.blaybus.backend.domain.quiz.QuizType;
 import com.blaybus.backend.repository.SceneStatisticsRepository;
 import com.blaybus.backend.repository.UserGrassRepository;
 import com.blaybus.backend.repository.UserRepository;

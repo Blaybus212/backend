@@ -68,7 +68,7 @@ public class QuizGradingService {
 			.user(progress.getUser())
 			.scene(progress.getScene())
 			.lastQuizId(quiz.getId())
-			.totalQuestions(progress.getTotalQuestions() + 1)
+			.totalQuestions(progress.getTotalQuestions())
 			.success(correct ? progress.getSuccess() + 1 : progress.getSuccess())
 			.failure(correct ? progress.getFailure() : progress.getFailure() + 1)
 			.isComplete(progress.isComplete())
