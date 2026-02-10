@@ -28,7 +28,7 @@ public class QuizGradingService {
 	@Transactional
 	public QuizDto.GradeResponse grade(Long quizId, String userAnswer, User user) {
 		Quiz quiz = quizRepository.findById(quizId)
-				.orElseThrow(() -> new BusinessException(CommonErrorCode.QUIZ_NOT_FOUND));
+			.orElseThrow(() -> new BusinessException(CommonErrorCode.QUIZ_NOT_FOUND));
 
 		boolean correct;
 		double score;
@@ -51,29 +51,29 @@ public class QuizGradingService {
 
 	private void updateProgress(User user, Quiz quiz, boolean correct) {
 		QuizUserProgress progress = progressRepository
-				.findByUserIdAndSceneId(user.getId(), quiz.getScene().getId())
-				.orElseGet(() -> QuizUserProgress.builder()
-						.user(user)
-						.scene(quiz.getScene())
-						.lastQuizId(quiz.getId())
-						.totalQuestions(0)
-						.success(0)
-						.failure(0)
-						.isComplete(false)
-						.solveTime(0)
-						.build());
+			.findByUserIdAndSceneId(user.getId(), quiz.getScene().getId())
+			.orElseGet(() -> QuizUserProgress.builder()
+				.user(user)
+				.scene(quiz.getScene())
+				.lastQuizId(quiz.getId())
+				.totalQuestions(0)
+				.success(0)
+				.failure(0)
+				.isComplete(false)
+				.solveTime(0)
+				.build());
 
 		QuizUserProgress updated = QuizUserProgress.builder()
-				.id(progress.getId())
-				.user(progress.getUser())
-				.scene(progress.getScene())
-				.lastQuizId(quiz.getId())
-				.totalQuestions(progress.getTotalQuestions() + 1)
-				.success(correct ? progress.getSuccess() + 1 : progress.getSuccess())
-				.failure(correct ? progress.getFailure() : progress.getFailure() + 1)
-				.isComplete(progress.isComplete())
-				.solveTime(progress.getSolveTime())
-				.build();
+			.id(progress.getId())
+			.user(progress.getUser())
+			.scene(progress.getScene())
+			.lastQuizId(quiz.getId())
+			.totalQuestions(progress.getTotalQuestions())
+			.success(correct ? progress.getSuccess() + 1 : progress.getSuccess())
+			.failure(correct ? progress.getFailure() : progress.getFailure() + 1)
+			.isComplete(progress.isComplete())
+			.solveTime(progress.getSolveTime())
+			.build();
 
 		progressRepository.save(updated);
 	}
