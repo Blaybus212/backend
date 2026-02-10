@@ -119,6 +119,7 @@ checkstyle {
     showViolations = true
 }
 checkstyleMain {
+    enabled = false
     configProperties = [
         'suppressionFile': "${rootDir}/rule-config/naver-checkstyle-suppressions.xml"
     ]

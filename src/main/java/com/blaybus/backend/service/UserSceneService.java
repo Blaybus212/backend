@@ -26,7 +26,8 @@ public class UserSceneService {
 	private final UserRepository userRepository;
 	private final SceneInformationRepository sceneInformationRepository;
 
-	private static final String DEFAULT_LOOK_AT = "{\"position\": {\"x\": 0, \"y\": 0, \"z\": 10}, \"target\": {\"x\": 0, \"y\": 0, \"z\": 0}}";
+	private static final String DEFAULT_LOOK_AT = "{\"position\": {\"x\": 0, \"y\": 0, \"z\": 10}, "
+		+ "\"target\": {\"x\": 0, \"y\": 0, \"z\": 0}}";
 
 	public UserSceneNoteResponse getNote(Long userId, Long sceneId) {
 		UserScene userScene = userSceneRepository.findByUserIdAndSceneId(userId, sceneId)

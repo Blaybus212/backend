@@ -305,21 +305,9 @@ public class SceneAssemblyService {
 			.instances(instanceDtos)
 			.assets(assetsMap);
 
-		// // 2-3. Scene-level extras (lookAt, note) 추가
-		// userSceneRepository.findByUserIdAndSceneId(userId, sceneId).ifPresent(us -> {
-		// Map<String, Object> sceneExtras = new HashMap<>();
-		// if (us.getLookAt() != null && !us.getLookAt().isEmpty()) {
-		// try {
-		// sceneExtras.put("lookAt", objectMapper.readTree(us.getLookAt()));
-		// } catch (Exception e) {
-		// log.warn("Failed to parse lookAt for userScene {}", us.getId());
-		// }
-		// }
-		// if (us.getNote() != null) {
-		// sceneExtras.put("note", us.getNote());
-		// }
-		// requestBuilder.extras(sceneExtras);
-		// });
+		// 2-3. Scene-level extras (lookAt, note) 추가
+		// TODO: 추후 viewer 요구사항에 따라 lookAt, note 등의 메타데이터 주입 로직 구현 필요
+		// 현재는 userSceneRepository 조회 및 주입 로직을 생략함. (별도의 api로 note 정보는 제공 중)
 
 		AssemblyRequestDto requestDto = requestBuilder.build();
 

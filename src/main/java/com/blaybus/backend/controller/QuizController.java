@@ -1,7 +1,10 @@
 package com.blaybus.backend.controller;
 
+import jakarta.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,19 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.dto.QuizDto;
+import com.blaybus.backend.dto.QuizResponse;
 import com.blaybus.backend.exception.BusinessException;
 import com.blaybus.backend.exception.CommonErrorCode;
 import com.blaybus.backend.repository.UserRepository;
 import com.blaybus.backend.security.CustomUserDetails;
 import com.blaybus.backend.service.QuizGradingService;
-
-import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
-
-import com.blaybus.backend.dto.QuizResponse;
 import com.blaybus.backend.service.QuizService;
 
-import org.springframework.web.bind.annotation.GetMapping;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/scenes/{sceneId}/quizzes")
