@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.blaybus.backend.dto.scene.DisassemblyLevelDto;
 import com.blaybus.backend.dto.scene.SceneAssemblyDto;
 import com.blaybus.backend.dto.scene.SceneSyncDto;
 import com.blaybus.backend.security.CustomUserDetails;
@@ -66,5 +67,29 @@ public class SceneAssemblyController {
 			.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"viewer_assets.zip\"")
 			.contentType(MediaType.APPLICATION_OCTET_STREAM)
 			.body(zipBytes);
+	}
+
+	@GetMapping("/{sceneId}/disassembly-level")
+	public ResponseEntity<DisassemblyLevelDto> getDisassemblyLevel(
+		@AuthenticationPrincipal
+		CustomUserDetails userDetails,
+		@PathVariable("sceneId")
+		Long sceneId) {
+
+		DisassemblyLevelDto response = sceneAssemblyService.getDisassemblyLevel(userDetails.getUserId(), sceneId);
+		return ResponseEntity.ok(response);
+	}
+
+	@PutMapping("/{sceneId}/disassembly-level")
+	public ResponseEntity<Void> updateDisassemblyLevel(
+		@AuthenticationPrincipal
+		CustomUserDetails userDetails,
+		@PathVariable("sceneId")
+		Long sceneId,
+		@RequestBody
+		DisassemblyLevelDto dto) {
+
+		sceneAssemblyService.updateDisassemblyLevel(userDetails.getUserId(), sceneId, dto.getDisassemblyLevel());
+		return ResponseEntity.ok().build();
 	}
 }

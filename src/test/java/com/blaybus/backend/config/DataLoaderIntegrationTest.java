@@ -63,15 +63,15 @@ class DataLoaderIntegrationTest {
 		// DataLoader는 @Profile("!test")로 설정되어 있어서 test 프로파일에서는 Bean이 생성되지 않습니다.
 		// 따라서 테스트 프로파일에서도 실행되도록 DataLoader를 직접 생성하여 실행합니다.
 		DataLoader dataLoader = new DataLoader(
-				userRepository,
-				passwordEncoder,
-				componentRepository,
-				objectMapper,
-				resourcePatternResolver,
-				sceneRepository,
-				sceneStatisticsRepository,
-				userGrassRepository,
-				quizRepository);
+			userRepository,
+			passwordEncoder,
+			componentRepository,
+			objectMapper,
+			resourcePatternResolver,
+			sceneRepository,
+			sceneStatisticsRepository,
+			userGrassRepository,
+			quizRepository);
 
 		// DataLoader 실행
 		dataLoader.run(null);

@@ -102,4 +102,38 @@ class SceneServiceTest {
 		assertThat(response.getScenes().get(0).getTitle()).isEqualTo("A Scene");
 		assertThat(response.getTotalPages()).isEqualTo(1);
 	}
+
+	@Test
+	@DisplayName("Scene 상세 정보를 가져온다.")
+	void getSceneDetailTest() {
+		// given
+		SceneInformation scene = SceneInformation.builder()
+			.id(1L)
+			.title("Test Scene")
+			.engTitle("Test Scene Eng")
+			.description("Description")
+			.build();
+
+		given(sceneInformationRepository.findById(1L)).willReturn(java.util.Optional.of(scene));
+
+		// when
+		com.blaybus.backend.dto.SceneDetailResponse response = sceneService.getSceneDetail(1L);
+
+		// then
+		assertThat(response.getTitle()).isEqualTo("Test Scene");
+		assertThat(response.getEngTitle()).isEqualTo("Test Scene Eng");
+		assertThat(response.getDescription()).isEqualTo("Description");
+		assertThat(response.getIsSceneInformation()).isTrue();
+	}
+
+	@Test
+	@DisplayName("존재하지 않는 Scene ID로 조회 시 예외가 발생한다.")
+	void getSceneDetailNotFoundTest() {
+		// given
+		given(sceneInformationRepository.findById(999L)).willReturn(java.util.Optional.empty());
+
+		// when & then
+		org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class,
+			() -> sceneService.getSceneDetail(999L));
+	}
 }

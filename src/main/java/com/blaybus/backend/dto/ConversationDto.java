@@ -92,4 +92,10 @@ public class ConversationDto {
 		boolean hasNext,
 		int limit) {
 	}
+
+	public record ConversationSummaryResponse(
+		String summary,
+		int totalConversations,
+		int totalMessages) {
+	}
 }

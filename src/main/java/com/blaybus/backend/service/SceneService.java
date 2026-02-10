@@ -150,4 +150,14 @@ public class SceneService {
 			return now.minusDays(2).with(AGGREGATION_TIME);
 		}
 	}
+
+	public com.blaybus.backend.dto.SceneDetailResponse getSceneDetail(Long sceneId) {
+		SceneInformation sceneInformation = sceneInformationRepository.findById(sceneId)
+			.orElseThrow(() -> new IllegalArgumentException("Scene not found with id: " + sceneId));
+
+		return com.blaybus.backend.dto.SceneDetailResponse.from(
+			sceneInformation.getTitle(),
+			sceneInformation.getEngTitle(),
+			sceneInformation.getDescription());
+	}
 }

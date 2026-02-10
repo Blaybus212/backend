@@ -15,11 +15,13 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import com.blaybus.backend.domain.quiz.Quiz;
+import com.blaybus.backend.domain.quiz.QuizType;
 import com.blaybus.backend.domain.scene.SceneCategory;
 import com.blaybus.backend.domain.scene.SceneInformation;
 import com.blaybus.backend.domain.scene.SceneStatistics;
-import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.domain.user.ThemeColor;
+import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.domain.user.UserGrass;
 import com.blaybus.backend.repository.ComponentRepository;
 import com.blaybus.backend.repository.QuizRepository;
@@ -56,15 +58,16 @@ public class DataLoader implements ApplicationRunner {
 	private final QuizRepository quizRepository;
 
 	public DataLoader(
-			UserRepository userRepository,
-			PasswordEncoder passwordEncoder,
-			ComponentRepository componentRepository,
-			@Qualifier("objectMapper") ObjectMapper objectMapper,
-			ResourcePatternResolver resourcePatternResolver,
-			SceneInformationRepository sceneInformationRepository,
-			SceneStatisticsRepository sceneStatisticsRepository,
-			UserGrassRepository userGrassRepository,
-			QuizRepository quizRepository) {
+		UserRepository userRepository,
+		PasswordEncoder passwordEncoder,
+		ComponentRepository componentRepository,
+		@Qualifier("objectMapper")
+		ObjectMapper objectMapper,
+		ResourcePatternResolver resourcePatternResolver,
+		SceneInformationRepository sceneInformationRepository,
+		SceneStatisticsRepository sceneStatisticsRepository,
+		UserGrassRepository userGrassRepository,
+		QuizRepository quizRepository) {
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
 		this.componentRepository = componentRepository;
@@ -111,12 +114,12 @@ public class DataLoader implements ApplicationRunner {
 	private User createUserIfNotExists(String username, String rawPassword) {
 		return userRepository.findByUsername(username).orElseGet(() -> {
 			User user = User.builder()
-					.username(username)
-					.password(passwordEncoder.encode(rawPassword))
-					.onBoardingCompleted(false)
-					.isMockUser(true) // Mock 사용자로 표시
-					.themeColor(ThemeColor.GREEN)
-					.build();
+				.username(username)
+				.password(passwordEncoder.encode(rawPassword))
+				.onBoardingCompleted(false)
+				.isMockUser(true) // Mock 사용자로 표시
+				.themeColor(ThemeColor.GREEN)
+				.build();
 			userRepository.save(user);
 			log.info("Created mock user: {}", username);
 			return user;
@@ -124,30 +127,30 @@ public class DataLoader implements ApplicationRunner {
 	}
 
 	private void createSceneStatisticsIfNotExists(SceneInformation scene, LocalDateTime aggregatedTime,
-			Integer score, Integer rank, Integer difference) {
+		Integer score, Integer rank, Integer difference) {
 		if (!sceneStatisticsRepository.existsBySceneAndAggregatedTime(scene, aggregatedTime)) {
 			SceneStatistics statistics = SceneStatistics.builder()
-					.scene(scene)
-					.aggregatedTime(aggregatedTime)
-					.score(score)
-					.rank(rank)
-					.difference(difference)
-					.build();
+				.scene(scene)
+				.aggregatedTime(aggregatedTime)
+				.score(score)
+				.rank(rank)
+				.difference(difference)
+				.build();
 			sceneStatisticsRepository.save(statistics);
 			log.info("Created mock scene statistics for scene: {} at {}", scene.getTitle(), aggregatedTime);
 		}
 	}
 
 	private void createUserGrassIfNotExists(User user, LocalDate date, Integer score, Integer solvedCount,
-			Integer streak) {
+		Integer streak) {
 		if (userGrassRepository.findByUserAndDate(user, date).isEmpty()) {
 			UserGrass grass = UserGrass.builder()
-					.user(user)
-					.date(date)
-					.score(score)
-					.solvedCount(solvedCount)
-					.streak(streak)
-					.build();
+				.user(user)
+				.date(date)
+				.score(score)
+				.solvedCount(solvedCount)
+				.streak(streak)
+				.build();
 			userGrassRepository.save(grass);
 			log.info("Created mock user-grass for user: {} at {}", user.getUsername(), date);
 		}
@@ -180,20 +183,20 @@ public class DataLoader implements ApplicationRunner {
 				} catch (IllegalArgumentException e) {
 					// 한글 displayName인 경우 처리
 					category = java.util.Arrays.stream(SceneCategory.values())
-							.filter(c -> c.getDisplayName().equals(categoryText))
-							.findFirst()
-							.orElseThrow(() -> new IllegalArgumentException("Unknown category: " + categoryText));
+						.filter(c -> c.getDisplayName().equals(categoryText))
+						.findFirst()
+						.orElseThrow(() -> new IllegalArgumentException("Unknown category: " + categoryText));
 				}
 
 				SceneInformation scene = SceneInformation.builder()
-						.title(node.path("title").asText())
-						.engTitle(engTitle)
-						.assetPath(node.path("asset_path").asText())
-						.category(category)
-						.description(node.path("description").asText())
-						.participantsCount(node.path("participants_count").asLong(0))
-						.defaultAlignmentId(0L) // 기본값 설정
-						.build();
+					.title(node.path("title").asText())
+					.engTitle(engTitle)
+					.assetPath(node.path("asset_path").asText())
+					.category(category)
+					.description(node.path("description").asText())
+					.participantsCount(node.path("participants_count").asLong(0))
+					.defaultAlignmentId(0L) // 기본값 설정
+					.build();
 
 				sceneInformationRepository.save(scene);
 				log.info("Created scene: {}", engTitle);
@@ -273,12 +276,12 @@ public class DataLoader implements ApplicationRunner {
 				String filename = assetsNode.path(assetId).asText(assetId + ".gltf");
 
 				var component = com.blaybus.backend.domain.alignment.Component.builder()
-						.name(assetId)
-						.description(meta.path("description").asText())
-						.texture(meta.path("texture").asText())
-						.usage(meta.path("usage").asText())
-						.assetPath(filename)
-						.build();
+					.name(assetId)
+					.description(meta.path("description").asText())
+					.texture(meta.path("texture").asText())
+					.usage(meta.path("usage").asText())
+					.assetPath(filename)
+					.build();
 
 				componentRepository.save(component);
 				log.info("Created component: {} (Asset: {})", assetId, filename);
@@ -312,17 +315,17 @@ public class DataLoader implements ApplicationRunner {
 				sceneInformationRepository.findByTitle(sceneTitle).ifPresentOrElse(scene -> {
 					try {
 						Quiz quiz = Quiz.builder()
-								.scene(scene)
-								.targetPurpose(node.path("target_purpose").asText())
-								.type(QuizType.valueOf(node.path("type").asText().toUpperCase()))
-								.question(question)
-								.answer(node.path("answer").asText())
-								.build();
+							.scene(scene)
+							.targetPurpose(node.path("target_purpose").asText())
+							.type(QuizType.valueOf(node.path("type").asText().toUpperCase()))
+							.question(question)
+							.answer(node.path("answer").asText())
+							.build();
 						quizRepository.save(quiz);
 						log.info("Created quiz for scene: {}", sceneTitle);
 					} catch (IllegalArgumentException e) {
 						log.warn("Skipping quiz with invalid type for question [{}]: {}", question,
-								node.path("type").asText());
+							node.path("type").asText());
 					}
 				}, () -> log.warn("Scene not found for quiz: {}", sceneTitle));
 			}
@@ -350,15 +353,15 @@ public class DataLoader implements ApplicationRunner {
 				int daysAgo = node.path("days_ago").asInt();
 
 				LocalDateTime aggregatedTime = LocalDateTime.now().minusDays(daysAgo)
-						.withHour(7).withMinute(0).withSecond(0).withNano(0);
+					.withHour(7).withMinute(0).withSecond(0).withNano(0);
 
 				sceneInformationRepository.findByTitle(sceneTitle).ifPresentOrElse(scene -> {
 					createSceneStatisticsIfNotExists(
-							scene,
-							aggregatedTime,
-							node.path("score").asInt(),
-							node.path("rank").asInt(),
-							node.path("difference").asInt());
+						scene,
+						aggregatedTime,
+						node.path("score").asInt(),
+						node.path("rank").asInt(),
+						node.path("difference").asInt());
 				}, () -> log.warn("Scene not found for statistics: {}", sceneTitle));
 			}
 

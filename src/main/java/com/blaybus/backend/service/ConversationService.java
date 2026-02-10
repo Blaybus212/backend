@@ -20,11 +20,13 @@ import com.blaybus.backend.domain.conversation.Sender;
 import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.dto.ConversationDto.ComponentInfo;
 import com.blaybus.backend.dto.ConversationDto.ConversationResponse;
+import com.blaybus.backend.dto.ConversationDto.ConversationSummaryResponse;
 import com.blaybus.backend.dto.ConversationDto.MessageResponse;
 import com.blaybus.backend.dto.ConversationDto.PageInfo;
 import com.blaybus.backend.dto.ConversationDto.SendMessageRequest;
 import com.blaybus.backend.dto.ConversationDto.SendMessageResponse;
 import com.blaybus.backend.dto.OpenAiDto.AssistantResponse;
+import com.blaybus.backend.dto.OpenAiDto.SummaryResponse;
 import com.blaybus.backend.exception.BusinessException;
 import com.blaybus.backend.exception.CommonErrorCode;
 import com.blaybus.backend.repository.ComponentRepository;
@@ -183,6 +185,53 @@ public class ConversationService {
 			result.put(String.valueOf(component.getId()), ComponentInfo.from(component));
 		}
 		return result;
+	}
+
+	@Transactional(readOnly = true)
+	public ConversationSummaryResponse summarizeAllConversations(User user) {
+		List<Conversation> conversations = conversationRepository.findByUser(user);
+
+		if (conversations.isEmpty()) {
+			return new ConversationSummaryResponse("대화 내역이 없습니다.", 0, 0);
+		}
+
+		List<Message> allMessages = messageRepository.findByConversationInOrderByPostedAtAsc(conversations);
+
+		if (allMessages.isEmpty()) {
+			return new ConversationSummaryResponse("대화 내역이 없습니다.", conversations.size(), 0);
+		}
+
+		String conversationText = buildConversationText(allMessages);
+
+		String systemPrompt = """
+			당신은 대화 내역을 요약하는 AI입니다.
+			사용자와 AI 어시스턴트 간의 전체 대화 내역을 분석하여 핵심 내용을 종합적으로 요약해주세요.
+
+			## 규칙
+			1. 한국어로 요약합니다.
+			2. 주요 학습 주제, 질문한 내용, AI가 설명한 핵심 개념을 포함합니다.
+			3. 시간순으로 대화 흐름을 반영합니다.
+			4. 요약은 2~3문단으로 작성합니다.
+			""";
+
+		SummaryResponse summaryResponse = openAiService.summarize(systemPrompt, conversationText);
+
+		return new ConversationSummaryResponse(
+			summaryResponse.summary(),
+			conversations.size(),
+			allMessages.size());
+	}
+
+	private String buildConversationText(List<Message> messages) {
+		StringBuilder sb = new StringBuilder();
+		for (Message message : messages) {
+			String role = message.getSender() == Sender.USER ? "사용자" : "AI";
+			sb.append(String.format("[%s] %s: %s\n",
+				message.getPostedAt().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
+				role,
+				message.getContent()));
+		}
+		return sb.toString();
 	}
 
 	private PageInfo emptyPageInfo(int limit) {

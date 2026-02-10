@@ -24,6 +24,7 @@ import com.blaybus.backend.domain.scene.UserScene;
 import com.blaybus.backend.domain.user.User;
 import com.blaybus.backend.dto.scene.AssemblyRequestDto;
 import com.blaybus.backend.dto.scene.ComponentStateDto;
+import com.blaybus.backend.dto.scene.DisassemblyLevelDto;
 import com.blaybus.backend.dto.scene.SceneAssemblyDto;
 import com.blaybus.backend.dto.scene.SceneConfigDto;
 import com.blaybus.backend.dto.scene.SceneNodeDto;
@@ -92,27 +93,23 @@ public class SceneAssemblyService {
 	}
 
 	public void syncSceneState(Long userId, Long sceneId, SceneSyncDto dto) {
-		// 1. LookAt 업데이트 (UserScene)
+		// 1. 공통 User & Scene 조회 (트랜잭션 내에서 한 번만 조회)
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+		SceneInformation scene = sceneRepository.findById(sceneId)
+			.orElseThrow(() -> new IllegalArgumentException("Scene not found: " + sceneId));
+
+		// 2. LookAt 업데이트 (UserScene)
 		if (dto.getLookAt() != null) {
 			UserScene userScene = userSceneRepository.findByUserIdAndSceneId(userId, sceneId)
-				.orElseGet(() -> {
-					User user = userRepository.findById(userId)
-						.orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
-					SceneInformation scene = sceneRepository.findById(sceneId)
-						.orElseThrow(() -> new IllegalArgumentException("Scene not found: " + sceneId));
-
-					return UserScene.builder()
-						.user(user)
-						.scene(scene)
-						.lookAt("{}") // 필요 시 기본값 설정
-						.build();
-				});
+				.orElseGet(() -> UserScene.builder()
+					.user(user)
+					.scene(scene)
+					.lookAt("{}") // 필요 시 기본값 설정
+					.build());
 
 			try {
 				String lookAtJson = objectMapper.writeValueAsString(dto.getLookAt());
-				// Entity 업데이트. Setter가 없으므로 Builder를 사용하여 복사본 생성 (ID 유지).
-				// JPA에서는 Setters가 없는 불변 객체 패턴 시 "update" 메소드를 추가하거나,
-				// 이처럼 Builder로 동일 ID 객체를 생성하여 save()를 호출하는 방식을 사용 가능.
 
 				UserScene updatedUserScene = UserScene.builder()
 					.id(userScene.getId())
@@ -130,39 +127,103 @@ public class SceneAssemblyService {
 			}
 		}
 
-		// 2. Components 업데이트 (Alignment)
+		// 3. Components 업데이트 (Alignment)
 		if (dto.getComponents() != null) {
 			for (ComponentStateDto compState : dto.getComponents()) {
-				updateComponentState(userId, sceneId, compState);
+				updateComponentState(user, scene, compState);
 			}
 		}
 	}
 
-	private void updateComponentState(Long userId, Long sceneId, ComponentStateDto compState) {
+	private void updateComponentState(User user, SceneInformation scene, ComponentStateDto compState) {
 		String nodeName = compState.getNodeName();
-		alignmentRepository.findByUserIdAndSceneIdAndNodeName(userId, sceneId, nodeName)
-			.ifPresent(alignment -> {
-				try {
-					String matrixJson = objectMapper.writeValueAsString(compState.getMatrix());
+		String matrixJson;
+		try {
+			matrixJson = objectMapper.writeValueAsString(compState.getMatrix());
+		} catch (JsonProcessingException e) {
+			log.error("Sync를 위한 Matrix 직렬화 실패: {}", nodeName, e);
+			return;
+		}
 
-					// UserScene과 유사하게 ID를 사용하여 Builder로 업데이트
-					Alignment updatedAlignment = Alignment.builder()
-						.id(alignment.getId())
-						.user(alignment.getUser())
-						.scene(alignment.getScene())
-						.component(alignment.getComponent())
-						.nodeName(alignment.getNodeName())
-						.transformMatrix(matrixJson)
-						.build();
+		Alignment alignment = alignmentRepository
+			.findByUserIdAndSceneIdAndNodeName(user.getId(), scene.getId(), nodeName)
+			.orElse(null);
 
-					alignmentRepository.save(updatedAlignment);
+		if (alignment == null) {
+			// 신규 생성 (Upsert)
+			String componentName = deriveComponentName(nodeName);
+			Component component = componentRepository.findByName(componentName)
+				.orElseGet(() -> {
+					log.info("Creating new component during sync: {}", componentName);
+					return componentRepository.save(Component.builder()
+						.name(componentName)
+						.description("Auto-generated from sync")
+						.build());
+				});
 
-				} catch (JsonProcessingException e) {
-					log.error("Sync를 위한 Matrix 직렬화 실패: {}", nodeName, e);
-				}
+			alignment = Alignment.builder()
+				.user(user)
+				.scene(scene)
+				.component(component)
+				.nodeName(nodeName)
+				.transformMatrix(matrixJson)
+				.build();
+		} else {
+			// 기존 업데이트
+			alignment = Alignment.builder()
+				.id(alignment.getId())
+				.user(alignment.getUser())
+				.scene(alignment.getScene())
+				.component(alignment.getComponent())
+				.nodeName(alignment.getNodeName())
+				.transformMatrix(matrixJson)
+				.build();
+		}
+
+		alignmentRepository.save(alignment);
+	}
+
+	public DisassemblyLevelDto getDisassemblyLevel(Long userId, Long sceneId) {
+		UserScene userScene = userSceneRepository.findByUserIdAndSceneId(userId, sceneId)
+			.orElseThrow(() -> new IllegalArgumentException(
+				"UserScene not found for user " + userId + " and scene " + sceneId));
+
+		return DisassemblyLevelDto.builder()
+			.disassemblyLevel(userScene.getDisassemblyLevel())
+			.build();
+	}
+
+	public void updateDisassemblyLevel(Long userId, Long sceneId, Integer level) {
+		if (level < 0 || level > 100) {
+			throw new IllegalArgumentException("Disassembly level must be between 0 and 100");
+		}
+
+		UserScene userScene = userSceneRepository.findByUserIdAndSceneId(userId, sceneId)
+			.orElseGet(() -> {
+				User user = userRepository.findById(userId)
+					.orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+				SceneInformation scene = sceneRepository.findById(sceneId)
+					.orElseThrow(() -> new IllegalArgumentException("Scene not found: " + sceneId));
+				return UserScene.builder()
+					.user(user)
+					.scene(scene)
+					.lookAt("{}")
+					.disassemblyLevel(level)
+					.build();
 			});
-		// 찾지 못한 경우, "sync"는 일반적으로 기존 상태 업데이트를 의미하므로 무시함.
-		// Sync 시 새로운 인스턴스를 생성해야 한다면 추가 정보(Component 조회 등)가 필요함.
+
+		// Builder pattern for update because of immutability or preference
+		UserScene updatedUserScene = UserScene.builder()
+			.id(userScene.getId())
+			.user(userScene.getUser())
+			.scene(userScene.getScene())
+			.lookAt(userScene.getLookAt())
+			.note(userScene.getNote())
+			.lastAccessedAt(userScene.getLastAccessedAt())
+			.disassemblyLevel(level)
+			.build();
+
+		userSceneRepository.save(updatedUserScene);
 	}
 
 	// ... (existing methods)
@@ -245,20 +306,8 @@ public class SceneAssemblyService {
 			.assets(assetsMap);
 
 		// 2-3. Scene-level extras (lookAt, note) 추가
-		userSceneRepository.findByUserIdAndSceneId(userId, sceneId).ifPresent(us -> {
-			Map<String, Object> sceneExtras = new HashMap<>();
-			if (us.getLookAt() != null && !us.getLookAt().isEmpty()) {
-				try {
-					sceneExtras.put("lookAt", objectMapper.readTree(us.getLookAt()));
-				} catch (Exception e) {
-					log.warn("Failed to parse lookAt for userScene {}", us.getId());
-				}
-			}
-			if (us.getNote() != null) {
-				sceneExtras.put("note", us.getNote());
-			}
-			requestBuilder.extras(sceneExtras);
-		});
+		// TODO: 추후 viewer 요구사항에 따라 lookAt, note 등의 메타데이터 주입 로직 구현 필요
+		// 현재는 userSceneRepository 조회 및 주입 로직을 생략함. (별도의 api로 note 정보는 제공 중)
 
 		AssemblyRequestDto requestDto = requestBuilder.build();
 
@@ -271,7 +320,8 @@ public class SceneAssemblyService {
 
 			if (assetResources.length == 0) {
 				log.warn("No assets found in classpath for scene: {}. Trying file system...", assetPath);
-				// Fallback to local file system if classpath fails (can happen in some test runners)
+				// Fallback to local file system if classpath fails (can happen in some test
+				// runners)
 				File localAssets = new File("src/main/resources/assets/" + assetPath);
 				if (localAssets.exists()) {
 					org.springframework.core.io.Resource[] localRes = Arrays.stream(localAssets.listFiles())
@@ -416,7 +466,8 @@ public class SceneAssemblyService {
 				log.error("Failed to generate default GLTF", e);
 				// Decide if we should fail hard or just skip.
 				// For now, let's allow partial success or fail hard depending on requirements.
-				// Assuming "Viewer" needs requested files, fail hard is safer to detect configs.
+				// Assuming "Viewer" needs requested files, fail hard is safer to detect
+				// configs.
 				throw new RuntimeException("Failed to generate default GLTF", e);
 			}
 		}

@@ -38,30 +38,30 @@ class QuizServiceTest {
                 given(user.getId()).willReturn(1L);
                 SceneInformation scene = SceneInformation.builder().id(sceneId).build();
                 QuizUserProgress progress = QuizUserProgress.builder()
-                                .id(1L)
-                                .user(user)
-                                .scene(scene)
-                                .totalQuestions(5)
-                                .success(2)
-                                .failure(1)
-                                .solveTime(100)
-                                .isComplete(false)
-                                .build();
+                        .id(1L)
+                        .user(user)
+                        .scene(scene)
+                        .totalQuestions(5)
+                        .success(2)
+                        .failure(1)
+                        .solveTime(100)
+                        .isComplete(false)
+                        .build();
 
                 QuizDto.SyncProgressRequest request = new QuizDto.SyncProgressRequest(
-                                3L, 5, 4, 1, 250, true);
+                        3L, 5, 4, 1, 250, true);
 
                 given(progressRepository.findByUserIdAndSceneId(user.getId(), sceneId))
-                                .willReturn(Optional.of(progress));
+                        .willReturn(Optional.of(progress));
 
                 // when
                 quizService.syncProgress(sceneId, request, user);
 
                 // then
                 then(progressRepository).should().save(argThat(updated -> updated.getLastQuizId().equals(3L) &&
-                                updated.getSuccess().equals(4) &&
-                                updated.getSolveTime().equals(250) &&
-                                updated.isComplete()));
+                        updated.getSuccess().equals(4) &&
+                        updated.getSolveTime().equals(250) &&
+                        updated.isComplete()));
         }
 
         @Test
@@ -72,14 +72,14 @@ class QuizServiceTest {
                 User user = mock(User.class);
                 given(user.getId()).willReturn(1L);
                 QuizDto.SyncProgressRequest request = new QuizDto.SyncProgressRequest(
-                                3L, 5, 4, 1, 250, true);
+                        3L, 5, 4, 1, 250, true);
 
                 given(progressRepository.findByUserIdAndSceneId(user.getId(), sceneId))
-                                .willReturn(Optional.empty());
+                        .willReturn(Optional.empty());
 
                 // when & then
                 assertThatThrownBy(() -> quizService.syncProgress(sceneId, request, user))
-                                .isInstanceOf(BusinessException.class)
-                                .hasFieldOrPropertyWithValue("errorCode", CommonErrorCode.QUIZ_PROGRESS_NOT_FOUND);
+                        .isInstanceOf(BusinessException.class)
+                        .hasFieldOrPropertyWithValue("errorCode", CommonErrorCode.QUIZ_PROGRESS_NOT_FOUND);
         }
 }

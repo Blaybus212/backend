@@ -1,5 +1,6 @@
 package com.blaybus.backend.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,4 +16,6 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
 	Optional<Conversation> findByUserAndSceneId(@Param("user")
 	User user, @Param("sceneId")
 	Long sceneId);
+
+	List<Conversation> findByUser(User user);
 }

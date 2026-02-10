@@ -31,24 +31,24 @@ public class QuizService {
 	@Transactional
 	public QuizResponse getSceneQuizzes(Long sceneId, User user) {
 		SceneInformation scene = sceneRepository.findById(sceneId)
-				.orElseThrow(() -> new BusinessException(CommonErrorCode.SCENE_NOT_FOUND));
+			.orElseThrow(() -> new BusinessException(CommonErrorCode.SCENE_NOT_FOUND));
 
 		List<Quiz> quizzes = quizRepository.findAllBySceneIdOrderById(sceneId);
 
 		QuizUserProgress progress = progressRepository.findByUserIdAndSceneId(user.getId(), sceneId)
-				.orElseGet(() -> {
-					QuizUserProgress newProgress = QuizUserProgress.builder()
-							.user(user)
-							.scene(scene)
-							.lastQuizId(null)
-							.totalQuestions(quizzes.size())
-							.success(0)
-							.failure(0)
-							.isComplete(false)
-							.solveTime(0)
-							.build();
-					return progressRepository.save(newProgress);
-				});
+			.orElseGet(() -> {
+				QuizUserProgress newProgress = QuizUserProgress.builder()
+					.user(user)
+					.scene(scene)
+					.lastQuizId(null)
+					.totalQuestions(quizzes.size())
+					.success(0)
+					.failure(0)
+					.isComplete(false)
+					.solveTime(0)
+					.build();
+				return progressRepository.save(newProgress);
+			});
 
 		return mapToResponse(sceneId, progress, quizzes);
 	}
@@ -56,40 +56,40 @@ public class QuizService {
 	@Transactional
 	public void syncProgress(Long sceneId, QuizDto.SyncProgressRequest request, User user) {
 		QuizUserProgress progress = progressRepository.findByUserIdAndSceneId(user.getId(), sceneId)
-				.orElseThrow(() -> new BusinessException(CommonErrorCode.QUIZ_PROGRESS_NOT_FOUND));
+			.orElseThrow(() -> new BusinessException(CommonErrorCode.QUIZ_PROGRESS_NOT_FOUND));
 
 		QuizUserProgress updated = QuizUserProgress.builder()
-				.id(progress.getId())
-				.user(progress.getUser())
-				.scene(progress.getScene())
-				.lastQuizId(request.lastQuizId())
-				.totalQuestions(request.totalQuestions())
-				.success(request.success())
-				.failure(request.failure())
-				.solveTime(request.solveTime())
-				.isComplete(request.isComplete())
-				.build();
+			.id(progress.getId())
+			.user(progress.getUser())
+			.scene(progress.getScene())
+			.lastQuizId(request.lastQuizId())
+			.totalQuestions(request.totalQuestions())
+			.success(request.success())
+			.failure(request.failure())
+			.solveTime(request.solveTime())
+			.isComplete(request.isComplete())
+			.build();
 
 		progressRepository.save(updated);
 	}
 
 	private QuizResponse mapToResponse(Long sceneId, QuizUserProgress progress, List<Quiz> quizzes) {
 		QuizResponse.UserProgressDto progressDto = new QuizResponse.UserProgressDto(
-				progress.getId(),
-				progress.getLastQuizId(),
-				progress.getTotalQuestions(),
-				progress.getSuccess(),
-				progress.getFailure(),
-				progress.isComplete());
+			progress.getId(),
+			progress.getLastQuizId(),
+			progress.getTotalQuestions(),
+			progress.getSuccess(),
+			progress.getFailure(),
+			progress.isComplete());
 
 		List<QuizResponse.QuizItemDto> quizItemDtos = quizzes.stream()
-				.map(quiz -> new QuizResponse.QuizItemDto(
-						quiz.getId(),
-						quiz.getTargetPurpose(),
-						quiz.getType(),
-						quiz.getQuestion(),
-						quiz.getType().equals(QuizType.SELECT) ? quiz.getAnswer() : null))
-				.toList();
+			.map(quiz -> new QuizResponse.QuizItemDto(
+				quiz.getId(),
+				quiz.getTargetPurpose(),
+				quiz.getType(),
+				quiz.getQuestion(),
+				quiz.getType().equals(QuizType.SELECT) ? quiz.getAnswer() : null))
+			.toList();
 
 		return new QuizResponse(sceneId, progressDto, quizItemDtos);
 	}

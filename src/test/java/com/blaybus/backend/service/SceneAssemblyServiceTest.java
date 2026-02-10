@@ -128,7 +128,11 @@ class SceneAssemblyServiceTest {
 					.build()))
 			.build();
 
-		// Mock UserScene finding specifically with full package since imports might be missing or to be safe
+		given(userRepository.findById(userId)).willReturn(Optional.of(user));
+		given(sceneRepository.findById(sceneId)).willReturn(Optional.of(scene));
+
+		// Mock UserScene finding specifically with full package since imports might be
+		// missing or to be safe
 		com.blaybus.backend.domain.scene.UserScene mockUserScene = com.blaybus.backend.domain.scene.UserScene.builder()
 			.id(100L)
 			.user(user)
@@ -136,7 +140,8 @@ class SceneAssemblyServiceTest {
 			.lookAt("{}")
 			.build();
 
-		// Use lenient() because strictly unnecessary stubbing might be flagged if logic branches
+		// Use lenient() because strictly unnecessary stubbing might be flagged if logic
+		// branches
 		org.mockito.Mockito.lenient().when(userSceneRepository.findByUserIdAndSceneId(userId, sceneId))
 			.thenReturn(Optional.of(mockUserScene));
 		org.mockito.Mockito.lenient()
@@ -229,7 +234,8 @@ class SceneAssemblyServiceTest {
 		// Given
 		Long userId = 1L;
 		Long sceneId = 1L;
-		String target = "custom"; // Test custom only to reuse existing mocks and avoid file I/O for default config
+		String target = "custom"; // Test custom only to reuse existing mocks and avoid file I/O for default
+									// config
 
 		// Mock Scene
 		SceneInformation mockScene = SceneInformation.builder()
@@ -265,10 +271,76 @@ class SceneAssemblyServiceTest {
 		try {
 			byte[] zipBytes = sceneAssemblyService.getViewerZip(userId, sceneId, target);
 			assertNotNull(zipBytes);
-			// In a real unit test with mocked node execution, we'd open the zip and check entries.
-			// Here we mainly check that it doesn't crash before node execution or zip creation.
+			// In a real unit test with mocked node execution, we'd open the zip and check
+			// entries.
+			// Here we mainly check that it doesn't crash before node execution or zip
+			// creation.
 		} catch (RuntimeException e) {
 			System.out.println("Viewer Zip generation failed as expected in test env: " + e.getMessage());
+			System.out.println("Viewer Zip generation failed as expected in test env: " + e.getMessage());
 		}
+	}
+
+	@Test
+	void getDisassemblyLevel_ShouldReturnLevel() {
+		// Given
+		Long userId = 1L;
+		Long sceneId = 1L;
+		int level = 50;
+
+		com.blaybus.backend.domain.scene.UserScene mockUserScene = com.blaybus.backend.domain.scene.UserScene.builder()
+			.user(user)
+			.scene(scene)
+			.disassemblyLevel(level)
+			.build();
+
+		given(userSceneRepository.findByUserIdAndSceneId(userId, sceneId)).willReturn(Optional.of(mockUserScene));
+
+		// When
+		com.blaybus.backend.dto.scene.DisassemblyLevelDto result = sceneAssemblyService.getDisassemblyLevel(userId,
+			sceneId);
+
+		// Then
+		org.junit.jupiter.api.Assertions.assertEquals(level, result.getDisassemblyLevel());
+	}
+
+	@Test
+	void updateDisassemblyLevel_ShouldUpdateUserScene() {
+		// Given
+		Long userId = 1L;
+		Long sceneId = 1L;
+		int newLevel = 75;
+
+		com.blaybus.backend.domain.scene.UserScene existingUserScene = com.blaybus.backend.domain.scene.UserScene
+			.builder()
+			.id(100L)
+			.user(user)
+			.scene(scene)
+			.disassemblyLevel(0)
+			.build();
+
+		given(userSceneRepository.findByUserIdAndSceneId(userId, sceneId)).willReturn(Optional.of(existingUserScene));
+
+		// When
+		sceneAssemblyService.updateDisassemblyLevel(userId, sceneId, newLevel);
+
+		// Then
+		org.mockito.ArgumentCaptor<com.blaybus.backend.domain.scene.UserScene> captor = org.mockito.ArgumentCaptor
+			.forClass(com.blaybus.backend.domain.scene.UserScene.class);
+		verify(userSceneRepository).save(captor.capture());
+		org.junit.jupiter.api.Assertions.assertEquals(newLevel, captor.getValue().getDisassemblyLevel());
+	}
+
+	@Test
+	void updateDisassemblyLevel_ShouldThrowException_WhenLevelInvalid() {
+		// Given
+		Long userId = 1L;
+		Long sceneId = 1L;
+		int invalidLevel = 150;
+
+		// When & Then
+		org.junit.jupiter.api.Assertions.assertThrows(IllegalArgumentException.class, () -> {
+			sceneAssemblyService.updateDisassemblyLevel(userId, sceneId, invalidLevel);
+		});
 	}
 }

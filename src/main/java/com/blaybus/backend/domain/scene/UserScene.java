@@ -18,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -70,6 +71,7 @@ public class UserScene {
 	 * - scene에 대한 설명, 학습 메모, 작업 기록 용도
 	 */
 	@Column(name = "note", columnDefinition = "text")
+	@Size(max = 3000)
 	private String note;
 
 	/**
@@ -78,4 +80,13 @@ public class UserScene {
 	 */
 	@Column(name = "last_accessed_at")
 	private LocalDateTime lastAccessedAt;
+
+	/**
+	 * 분해 레벨
+	 * - 0: 완전 조립 상태 (기본값)
+	 * - 100: 완전 분해 상태
+	 */
+	@Column(name = "disassembly_level", nullable = false, columnDefinition = "integer default 0")
+	@Builder.Default
+	private Integer disassemblyLevel = 0;
 }

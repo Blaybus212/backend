@@ -72,20 +72,20 @@ public class ManualVerificationExportTest {
 	void exportAllScenes() throws Exception {
 		// Ensure data exists - DataLoader는 @Profile("!test")로 설정되어 있어서 직접 생성
 		DataLoader dataLoader = new DataLoader(
-				userRepository,
-				passwordEncoder,
-				componentRepository,
-				objectMapper,
-				resourcePatternResolver,
-				sceneRepository,
-				sceneStatisticsRepository,
-				userGrassRepository,
-				quizRepository);
+			userRepository,
+			passwordEncoder,
+			componentRepository,
+			objectMapper,
+			resourcePatternResolver,
+			sceneRepository,
+			sceneStatisticsRepository,
+			userGrassRepository,
+			quizRepository);
 		dataLoader.run(null);
 
 		// Get admin user
 		User admin = userRepository.findByUsername("admin")
-				.orElseThrow(() -> new RuntimeException("Admin user not found"));
+			.orElseThrow(() -> new RuntimeException("Admin user not found"));
 
 		List<SceneInformation> scenes = sceneRepository.findAll();
 		if (scenes.isEmpty()) {
