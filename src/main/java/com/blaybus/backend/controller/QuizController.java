@@ -24,13 +24,7 @@ import com.blaybus.backend.service.QuizService;
 
 import lombok.RequiredArgsConstructor;
 
-import com.blaybus.backend.dto.QuizResponse;
-import com.blaybus.backend.service.QuizService;
-
-import org.springframework.web.bind.annotation.GetMapping;
-
 @RestController
-@RequestMapping("/scenes/{sceneId}/quizzes")
 @RequestMapping("/scenes/{sceneId}/quizzes")
 @RequiredArgsConstructor
 public class QuizController {

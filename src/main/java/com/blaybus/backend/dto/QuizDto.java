@@ -22,13 +22,4 @@ public class QuizDto {
 		Integer solveTime,
 		boolean isComplete) {
 	}
-
-	public record SyncProgressRequest(
-		Long lastQuizId,
-		Integer totalQuestions,
-		Integer success,
-		Integer failure,
-		Integer solveTime,
-		boolean isComplete) {
-	}
 }
