@@ -161,4 +161,47 @@ class UserSceneNoteIntegrationTest {
 			.content(objectMapper.writeValueAsString(request)))
 			.andExpect(status().isBadRequest());
 	}
+
+	@Test
+	@DisplayName("처음 노트를 작성할 때 UserScene이 없으면 생성되고 lookAt 기본값이 설정된다.")
+	void createNoteWithDefaultLookAt() throws Exception {
+		// given
+		User user = userRepository.save(User.builder()
+			.username("note_user_3")
+			.password("pass")
+			.name("Note User 3")
+			.isMockUser(false)
+			.onBoardingCompleted(true)
+			.build());
+
+		CustomUserDetails userDetails = new CustomUserDetails(user.getId(), user.getUsername(), null);
+
+		SceneInformation scene = sceneInformationRepository.save(SceneInformation.builder()
+			.title("Note Test Scene 3")
+			.engTitle("Note Test Scene 3")
+			.category(SceneCategory.MANUFACTURING_ENGINEERING)
+			.assetPath("path")
+			.description("Desc")
+			.participantsCount(0L)
+			.defaultAlignmentId(0L)
+			.build());
+
+		String noteContent = "# Initial Note";
+		UserSceneNoteRequest request = new UserSceneNoteRequest(noteContent);
+
+		// when
+		mockMvc.perform(put("/scenes/" + scene.getId() + "/note")
+			.with(user(userDetails))
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(objectMapper.writeValueAsString(request)))
+			.andExpect(status().isOk());
+
+		// then
+		UserScene userScene = userSceneRepository.findByUserIdAndSceneId(user.getId(), scene.getId())
+			.orElseThrow();
+		assertThat(userScene.getNote()).isEqualTo(noteContent);
+		assertThat(userScene.getLookAt()).isNotNull();
+		// DEFAULT_LOOK_AT checking (optional, but good for verification)
+		assertThat(userScene.getLookAt()).contains("\"position\": {\"x\": 0");
+	}
 }

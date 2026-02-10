@@ -44,12 +44,17 @@ public class UserSceneService {
 		UserScene userScene = userSceneRepository.findByUserIdAndSceneId(userId, sceneId)
 			.orElseGet(() -> createNewUserScene(userId, sceneId));
 
+		String lookAt = userScene.getLookAt();
+		if (lookAt == null) {
+			lookAt = DEFAULT_LOOK_AT;
+		}
+
 		UserScene updatedUserScene = UserScene.builder()
 			.id(userScene.getId())
 			.user(userScene.getUser())
 			.scene(userScene.getScene())
 			.note(content)
-			.lookAt(userScene.getLookAt()) // 기존 lookAt 유지
+			.lookAt(lookAt) // null 방지 및 기존 값 유지
 			.disassemblyLevel(userScene.getDisassemblyLevel()) // 기존 disassemblyLevel 유지
 			.lastAccessedAt(LocalDateTime.now())
 			.build();

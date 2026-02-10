@@ -305,21 +305,21 @@ public class SceneAssemblyService {
 			.instances(instanceDtos)
 			.assets(assetsMap);
 
-		// 2-3. Scene-level extras (lookAt, note) 추가
-		userSceneRepository.findByUserIdAndSceneId(userId, sceneId).ifPresent(us -> {
-			Map<String, Object> sceneExtras = new HashMap<>();
-			if (us.getLookAt() != null && !us.getLookAt().isEmpty()) {
-				try {
-					sceneExtras.put("lookAt", objectMapper.readTree(us.getLookAt()));
-				} catch (Exception e) {
-					log.warn("Failed to parse lookAt for userScene {}", us.getId());
-				}
-			}
-			if (us.getNote() != null) {
-				sceneExtras.put("note", us.getNote());
-			}
-			requestBuilder.extras(sceneExtras);
-		});
+		// // 2-3. Scene-level extras (lookAt, note) 추가
+		// userSceneRepository.findByUserIdAndSceneId(userId, sceneId).ifPresent(us -> {
+		// Map<String, Object> sceneExtras = new HashMap<>();
+		// if (us.getLookAt() != null && !us.getLookAt().isEmpty()) {
+		// try {
+		// sceneExtras.put("lookAt", objectMapper.readTree(us.getLookAt()));
+		// } catch (Exception e) {
+		// log.warn("Failed to parse lookAt for userScene {}", us.getId());
+		// }
+		// }
+		// if (us.getNote() != null) {
+		// sceneExtras.put("note", us.getNote());
+		// }
+		// requestBuilder.extras(sceneExtras);
+		// });
 
 		AssemblyRequestDto requestDto = requestBuilder.build();
 
