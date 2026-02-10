@@ -11,14 +11,27 @@ public class OpenAiDto {
 		@JsonProperty("messages")
 		List<InputMessage> input,
 		@JsonProperty("response_format")
-		TextFormat text) {
+		TextFormat text,
+		@JsonProperty("max_completion_tokens")
+		Integer maxCompletionTokens) {
 		public static ResponsesRequest of(String model, String systemPrompt, String userMessage) {
 			return new ResponsesRequest(
 				model,
 				List.of(
 					new InputMessage("system", systemPrompt),
 					new InputMessage("user", userMessage)),
-				TextFormat.jsonObject());
+				TextFormat.structuredOutput(),
+				2048);
+		}
+
+		public static ResponsesRequest forSummary(String model, String systemPrompt, String userMessage) {
+			return new ResponsesRequest(
+				model,
+				List.of(
+					new InputMessage("system", systemPrompt),
+					new InputMessage("user", userMessage)),
+				TextFormat.summaryOutput(),
+				2048);
 		}
 	}
 
@@ -28,10 +41,63 @@ public class OpenAiDto {
 	}
 
 	public record TextFormat(
-		String type) {
-		public static TextFormat jsonObject() {
-			return new TextFormat("json_object");
+		String type,
+		@JsonProperty("json_schema")
+		JsonSchemaSpec jsonSchema) {
+
+		public static TextFormat structuredOutput() {
+			return new TextFormat("json_schema", JsonSchemaSpec.assistantResponse());
 		}
+
+		public static TextFormat summaryOutput() {
+			return new TextFormat("json_schema", JsonSchemaSpec.summaryResponse());
+		}
+	}
+
+	public record JsonSchemaSpec(
+		String name,
+		boolean strict,
+		JsonSchemaDefinition schema) {
+
+		public static JsonSchemaSpec assistantResponse() {
+			return new JsonSchemaSpec("assistant_response", true, JsonSchemaDefinition.assistantResponse());
+		}
+
+		public static JsonSchemaSpec summaryResponse() {
+			return new JsonSchemaSpec("summary_response", true, JsonSchemaDefinition.summaryResponse());
+		}
+	}
+
+	public record JsonSchemaDefinition(
+		String type,
+		java.util.Map<String, JsonSchemaProperty> properties,
+		List<String> required,
+		@JsonProperty("additionalProperties")
+		boolean additionalProperties) {
+
+		public static JsonSchemaDefinition assistantResponse() {
+			return new JsonSchemaDefinition(
+				"object",
+				java.util.Map.of(
+					"answer", new JsonSchemaProperty("string", "사용자 질문에 대한 답변"),
+					"summary", new JsonSchemaProperty("string", "대화 핵심 내용 1-2문장 요약")),
+				List.of("answer", "summary"),
+				false);
+		}
+
+		public static JsonSchemaDefinition summaryResponse() {
+			return new JsonSchemaDefinition(
+				"object",
+				java.util.Map.of(
+					"summary", new JsonSchemaProperty("string", "전체 대화 내역의 종합 요약")),
+				List.of("summary"),
+				false);
+		}
+	}
+
+	public record JsonSchemaProperty(
+		String type,
+		String description) {
 	}
 
 	public record ResponsesResponse(
@@ -54,6 +120,13 @@ public class OpenAiDto {
 			}
 			String finishReason = output.get(0).finishReason();
 			return "stop".equals(finishReason);
+		}
+
+		public String getFinishReason() {
+			if (output == null || output.isEmpty()) {
+				return "unknown";
+			}
+			return output.get(0).finishReason();
 		}
 	}
 
@@ -83,6 +156,10 @@ public class OpenAiDto {
 
 	public record AssistantResponse(
 		String answer,
+		String summary) {
+	}
+
+	public record SummaryResponse(
 		String summary) {
 	}
 

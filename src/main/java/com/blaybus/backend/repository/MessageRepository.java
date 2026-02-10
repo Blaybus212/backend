@@ -28,4 +28,9 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 		Pageable pageable);
 
 	List<Message> findByConversationOrderByPostedAtAsc(Conversation conversation);
+
+	@Query("SELECT m FROM Message m WHERE m.conversation IN :conversations ORDER BY m.conversation.id, m.postedAt ASC")
+	List<Message> findByConversationInOrderByPostedAtAsc(
+		@Param("conversations")
+		List<Conversation> conversations);
 }
