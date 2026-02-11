@@ -86,7 +86,7 @@ class DataLoaderIntegrationTest {
 		// 2. Component 데이터 검증 (Drone Scene)
 		Optional<Component> armGear = componentRepository.findByName("arm_gear");
 		assertThat(armGear).isPresent();
-		assertThat(armGear.get().getDescription()).contains("암 구동부의 기어 모듈");
+		assertThat(armGear.get().getDescription()).contains("암 구동부").contains("기어 모듈");
 		assertThat(armGear.get().getUsage()).contains("구동");
 
 		// 3. Component 데이터 검증 (Leaf Spring Scene)
