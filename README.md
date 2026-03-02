@@ -130,7 +130,7 @@ graph TD
     end
 
     subgraph External ["External Services"]
-        OpenAI["OpenAI API\n(GPT-5-mini / Embedding)"]
+        OpenAI["OpenAI API(GPT-5-mini / Embedding)"]
     end
 
     subgraph Infrastructure ["Infrastructure"]
@@ -146,7 +146,7 @@ graph TD
     subgraph CI_CD ["CI/CD"]
         GHA["GitHub Actions"]
         Docker["Docker Registry"]
-        Cloud["Cloud Server\n(GCP*, 포팅 가능)"]
+        Cloud["Cloud Server"]
     end
 
     FE -->|REST API| Security
@@ -268,7 +268,7 @@ erDiagram
 
     ALIGNMENT {
         Long id PK
-        Long user_id FK
+        Long user_id FK "기본 배치는 시스템 관리자의 user_id를 따른다"
         Long scene_id FK
         Long component_id FK
         String node_name
