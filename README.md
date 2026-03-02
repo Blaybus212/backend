@@ -32,13 +32,13 @@ SIMVEX 백엔드가 제공하는 핵심 기능입니다. 각 기능의 세부 �
 
 | 기능                    | 설명                                                                              | 서비스 README                                                        |
 | :---------------------- | :-------------------------------------------------------------------------------- | :------------------------------------------------------------------- |
-| **🔐 인증 & 온보딩**    | JWT 기반 로그인, 사용자 프로필(페르소나·학습레벨·선호 카테고리) 온보딩            | [AuthService](./src/main/java/com/blaybus/backend/service/)          |
-| **🧊 3D 씬 학습**       | 씬 목록 검색·필터·정렬, 상세 조회, 최근 학습 기록, 개인 학습 노트                 | [SceneService](./src/main/java/com/blaybus/backend/service/)         |
-| **🤖 AI 어시스턴트**    | Scene 컨텍스트 기반 AI 대화, 대화 요약, 부품 참조 기반 질의응답 (OpenAI GPT 연동) | [ConversationService](./src/main/java/com/blaybus/backend/service/)  |
-| **� 퀴즈 시스템**       | 씬별 객관식·주관식 퀴즈, AI 채점, 진척도 추적                                     | [QuizService](./src/main/java/com/blaybus/backend/service/)          |
-| **🔧 씬 조립 & 동기화** | 부품(Component) 배치 정보 저장, 카메라 시점 실시간 동기화, 3D Viewer ZIP 내보내기 | [SceneAssemblyService](./src/main/java/com/blaybus/backend/service/) |
-| **🌱 활동 기록 (잔디)** | 일별 학습 활동량 기록, 연속 학습 스트릭(Streak) 계산                              | [ActivityService](./src/main/java/com/blaybus/backend/service/)      |
-| **🏆 씬 랭킹**          | 배치 집계 기반 인기 씬 순위, 전일 대비 순위 변동 추적                             | [SceneService](./src/main/java/com/blaybus/backend/service/)         |
+| **🔐 인증 & 온보딩**    | JWT 기반 로그인, 사용자 프로필(페르소나·학습레벨·선호 카테고리) 온보딩            | [AuthService](./src/main/java/com/blaybus/backend/service/AuthService.java)          |
+| **🧊 3D 씬 학습**       | 씬 목록 검색·필터·정렬, 상세 조회, 최근 학습 기록, 개인 학습 노트                 | [SceneService](./src/main/java/com/blaybus/backend/service/SceneService.java)         |
+| **🤖 AI 어시스턴트**    | Scene 컨텍스트 기반 AI 대화, 대화 요약, 부품 참조 기반 질의응답 (OpenAI GPT 연동) | [ConversationService](./src/main/java/com/blaybus/backend/service/ConversationService.java)  |
+| **📝 퀴즈 시스템**       | 씬별 객관식·주관식 퀴즈, AI 채점, 진척도 추적                                     | [QuizService](./src/main/java/com/blaybus/backend/service/QuizService.java)          |
+| **🔧 씬 조립 & 동기화** | 부품(Component) 배치 정보 저장, 카메라 시점 실시간 동기화, 3D Viewer ZIP 내보내기 | [SceneAssemblyService](./src/main/java/com/blaybus/backend/service/SceneAssemblyService.java) |
+| **🌱 활동 기록 (잔디)** | 일별 학습 활동량 기록, 연속 학습 스트릭(Streak) 계산                              | [ActivityService](./src/main/java/com/blaybus/backend/service/ActivityService.java)      |
+| **🏆 씬 랭킹**          | 배치 집계 기반 인기 씬 순위, 전일 대비 순위 변동 추적                             | [SceneService](./src/main/java/com/blaybus/backend/service/SceneService.java)         |
 
 ---
 
